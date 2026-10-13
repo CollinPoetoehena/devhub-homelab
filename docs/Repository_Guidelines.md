@@ -2,17 +2,33 @@
 
 This is the shared guideline for the [public homelab](https://github.com/CollinPoetoehena/devhub-homelab) and [private homelab](https://github.com/CollinPoetoehena/devhub-homelab-private). The [public README](../README.md#why-two-homelab-repositories) explains why the split exists, primarily to avoid exposing home-network internals and secondarily to keep reusable knowledge separate from operational detail.
 
+---
+
+## Table of Contents
+
+- [Content ownership](#content-ownership)
+- [Writing design and setup documentation](#writing-design-and-setup-documentation)
+- [Publication boundary](#publication-boundary)
+- [Sanitization workflow](#sanitization-workflow)
+- [Secrets and sensitive artifacts](#secrets-and-sensitive-artifacts)
+- [If information is exposed](#if-information-is-exposed)
+
+---
+
 ## Content ownership
 
 | Information | Owner |
 |---|---|
 | General networking, Linux, AI, and development concepts useful beyond homelabs | [DevHub reference](https://github.com/CollinPoetoehena/DevHub/tree/main/reference) |
 | Homelab design patterns, options, trade-offs, buying criteria, generic setup and lessons | Public homelab |
-| Actual equipment, addresses, domains, topology, access paths, configuration, decisions and operating procedures | Private homelab |
+| Actual equipment, non-sensitive internal settings, topology, decisions and operating procedures | Private homelab |
+| Sensitive public IPs, global prefixes and identifying public domains/access endpoints | Encrypted/protected storage; private prose uses references |
 | Reusable Ansible roles, Terraform modules, Helm charts or packages | Independently maintained component repositories, indexed through [DevHub packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md) |
 | Credentials, private keys, decryption keys, sensitive state and raw backups | Protected secret/backup storage, not ordinary tracked files in either repository |
 
 The public repository is a knowledge base and portfolio, **not a sanitized deployment mirror**. Do not copy private inventory, manifests, Terraform roots, switch exports, or generated configuration into it just because credentials have been removed. Document those capabilities in Markdown. Extract genuinely reusable code only as an explicit, separately reviewed component with generic interfaces and tests; the repository split itself does not move or publish code.
+
+---
 
 ## Writing design and setup documentation
 
@@ -20,11 +36,17 @@ The public repository is a knowledge base and portfolio, **not a sanitized deplo
 
 **Private design:** link the relevant public document, then record the choice, date when known, specific rationale, accepted costs/risks, and a short explanation of why a few relevant alternatives were not selected. Do not reproduce the full alternatives catalog. Include actual topology, capacities, dependencies and open decisions; product names are welcome where they clarify the real design.
 
-**Public setup:** describe prerequisites, dependency order, configuration intent, validation, and rollback generically. Tool-specific instructions may link to official guides, but must not reveal the environment that inspired them.
+**Public implementation considerations:** describe prerequisites, dependency order, configuration intent, validation and rollback broadly inside the topic. Link official installation guides rather than maintaining an exact walkthrough or revealing the environment that inspired it.
 
-**Private setup:** record exact non-secret inputs, versions, port/SSID maps, executed steps, deviations, results, and recovery locations. An unverified example remains an example until someone confirms the actual value. Distinguish chosen, planned, installed, and verified; never infer deployment status from a document.
+Organize both repositories by the [category storyline](../README.md#documentation-structure): goals, HLD network/hosts, then LLD orchestration/services/monitoring/storage. Within a category, **design comes before implementation**. Keep hardware and software with the responsibility they support; setup is part of that category, not a separate public setup tree. Public implementation guidance stays broad and does not reproduce the private installation sequence. Private categories may contain detailed design and setup/runbook documents together.
 
-Use relative links within one repository. **Between repositories, always use full GitHub URLs on `main`**, for example `https://github.com/CollinPoetoehena/devhub-homelab/blob/main/docs/1_Design/3_Design_Network.md`. Do not use sibling filesystem paths, feature branches, or commit-specific links for this shared documentation boundary.
+Add a **Table of Contents** for documents with sections, and `---` dividers between `##` sections. Keep ToC links synchronized with headings; do not confuse Markdown dividers with a skill's YAML frontmatter.
+
+**Private setup:** record exact verified non-sensitive inputs, versions, port/SSID maps, executed steps, deviations, results and recovery references. Sensitive endpoint values remain encrypted/protected rather than plaintext in prose. An unverified example remains an example until someone confirms the actual value. Distinguish chosen, planned, installed, and verified; never infer deployment status from a document.
+
+Use relative links within one repository. **Between repositories, always use full GitHub URLs on `main`**, for example `https://github.com/CollinPoetoehena/devhub-homelab/blob/main/docs/2_HLD/Network/README.md`. Do not use sibling filesystem paths, feature branches, or commit-specific links for this shared documentation boundary.
+
+---
 
 ## Publication boundary
 
@@ -40,6 +62,8 @@ RFC 1918 addresses and VLAN numbers are not credentials, but **the actual mappin
 
 Use reserved domains such as `example.com` and documentation address ranges `192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24` and `2001:db8::/32` for written examples. They are not production address allocations. A practical isolated-lab example needing private addressing must be independently invented, explicitly labeled synthetic, and checked for overlap before use. Placeholders must be visibly nonfunctional; never insert a real secret temporarily.
 
+---
+
 ## Sanitization workflow
 
 1. Identify the reusable lesson and its intended audience. Select a narrow scope; do not mirror a directory.
@@ -51,17 +75,23 @@ Use reserved domains such as `example.com` and documentation address ranges `192
 
 The [public sanitization skill](../.github/skills/homelab-sanitize/SKILL.md) operationalizes this process.
 
+---
+
 ## Secrets and sensitive artifacts
 
-Private access is not encryption and can change accidentally. Real **non-secret** environment details may be tracked privately; plaintext credentials must not be tracked in either repository.
+Private access is not encryption and can change accidentally. Real ordinary non-secret environment details may be tracked privately, but **sensitive access/identifying values must not be exposed in plaintext even in the private repository**. This includes actual public IPv4 addresses, globally routable IPv6 prefixes, internet-facing hostnames/domains and VPN/management endpoints, as well as credentials. Use a named placeholder/reference in prose and store the actual value in Ansible Vault, SOPS-encrypted values or an approved external secret store when needed. Do not include decrypted values in screenshots, command history, logs or chat.
 
-- **Ansible:** encrypt necessary versioned values with Ansible Vault, verify the vault header, keep its password and private SSH keys outside Git, and prevent decrypted values leaking through task output, diffs or logs.
+Internal role/topology decisions can remain useful private records; classify actual values before writing them rather than assuming every non-password value is harmless. Encryption must have separately protected keys, access controls and a recovery process. A private endpoint variable and a Terraform `sensitive` label alone do not encrypt its value.
+
+- **Ansible:** encrypt necessary versioned values, including sensitive public endpoint/address data, with Ansible Vault; verify the vault header, keep its password and private SSH keys outside Git, and prevent decrypted values leaking through task output, diffs or logs.
 - **GitOps:** SOPS with age is one option; protect the private decryption key separately. Kubernetes Secret base64 encoding is not encryption. Ensure the chosen controller has an explicit, supported secret-delivery integration; choosing SOPS alone does not wire it into every controller.
-- **Terraform:** keep state, plans, backups and crash output in secured storage with encryption, access control, locking and backups as appropriate. `sensitive` redacts some display; it does not encrypt state. Private roots may contain non-secret endpoint configuration, but must obtain tokens at runtime.
+- **Terraform:** keep state, plans, backups and crash output in secured storage with encryption, access control, locking and backups as appropriate. `sensitive` redacts some display; it does not encrypt state. Private roots may contain ordinary non-sensitive configuration; obtain sensitive endpoints and tokens from protected runtime storage rather than plaintext tracked values.
 - **CI/CD:** use scoped platform secrets or an approved external secret manager, short-lived identities where supported, deployment approvals and protections against untrusted pull requests. Do not upload private operational artifacts to public jobs.
 - **Device backups:** store raw exports and recovery material in protected backup storage accessible during a lab outage, not public Git. Inspect an artifact before assuming it contains no secrets.
 
 Ignore rules are only a guardrail: they do not protect tracked files, history, arbitrary output filenames or accidentally staged content.
+
+---
 
 ## If information is exposed
 
