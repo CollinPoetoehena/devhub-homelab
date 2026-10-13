@@ -31,6 +31,7 @@ Read the [repository guideline](../../../docs/Repository_Guidelines.md), especia
 6. Remove real public/private addresses, prefixes, identifiers, domains, SSIDs, firewall exceptions, administrative paths, version inventories, account/device metadata and secrets. Review combinations of details; redacting passwords alone is insufficient. Do not add real values even temporarily.
 7. Review prose, diagrams, links, code blocks, comments, filenames and any assets/metadata against the guideline. Do not copy raw screenshots/logs/backups or private Git history. If uncertain, omit the detail and explain the omission without quoting it.
 8. Preserve document ToCs and `---` between `##` sections; validate links/anchors, synthetic-value consistency and factual claims. Cross-repository references must be GitHub URLs on `main`. Review the final public diff explicitly; a secret scan alone is not publication approval. Private Git also must not hold plaintext sensitive public IPs, global prefixes or identifying endpoints; refer to Ansible Vault or equivalent protected values instead.
+9. For project-structure requests, update only the final overview section of [Project Structure](../../../docs/Project_Structure.md) using a high-level responsibility summary. Do not paste directory output or operational filenames; distinguish existing integration from planned GitOps. This explicit exception permits sanitized code-organization context, not household topology or code publication. Implementation code is not required for this portfolio.
 
 ---
 

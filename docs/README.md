@@ -32,6 +32,10 @@ Start with the design problem and options; select the hardware/software that mee
 
 Actual selections, detailed runbooks and results belong in the matching private category. General protocols, commands and development workflows stay in [DevHub](https://github.com/CollinPoetoehena/DevHub/tree/main/reference).
 
+Use the comparison tables as an entry point, then read the explanation of trade-offs and responsibilities. A useful decision includes what problem is solved, which limitations remain and how success would be checked. The host/network categories go deeper into purchasing, lifecycle and isolation because mistakes there affect every workload above them.
+
+[Project structure](./Project_Structure.md) connects the documentation to implementation ownership. It explains a maintainable integration layout and contains a deliberately high-level homelab structure summary; publishing the private implementation is not required to demonstrate the design.
+
 ---
 
 ## Guidelines

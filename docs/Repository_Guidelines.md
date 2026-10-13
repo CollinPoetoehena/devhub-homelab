@@ -7,6 +7,7 @@ This is the shared guideline for the [public homelab](https://github.com/CollinP
 ## Table of Contents
 
 - [Content ownership](#content-ownership)
+- [Portfolio and Project Structure](#portfolio-and-project-structure)
 - [Writing design and setup documentation](#writing-design-and-setup-documentation)
 - [Publication boundary](#publication-boundary)
 - [Sanitization workflow](#sanitization-workflow)
@@ -30,9 +31,19 @@ The public repository is a knowledge base and portfolio, **not a sanitized deplo
 
 ---
 
+## Portfolio and Project Structure
+
+**You do not have to publish actual implementation code for this portfolio.** A high-level project structure can show how documentation, provisioning, configuration management and workload delivery connect. Combined with the generic design/setup explanations, it is sufficient for the intended architectural portfolio: reasoning, responsibilities and trade-offs matter more here than a concrete subnet value, credential or rendered manifest.
+
+Withholding private code is deliberate, not an incomplete public repository. The [publication boundary](#publication-boundary) explains why implementation relationships can reveal sensitive home-network internals even after passwords are removed. Structure alone is not proof that a system is deployed or tests passed; describe evidence honestly without exposing private outputs.
+
+Keep the single maintained overview at [Project Structure](./Project_Structure.md#general-homelab-project-structure). AI may regenerate that final section as a sanitized responsibility-level summary, **not raw `tree` output**. Include the main README, documentation and integration areas; omit device/application/environment listings and sensitive filenames. Label planned areas and do not invent directories. Reusable packages still follow [DevHub package guidance](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md), with separate authorization for extraction/publication.
+
+---
+
 ## Writing design and setup documentation
 
-**Public design:** explain the problem, realistic options, benefits, drawbacks, and when each fits. Use role-based diagrams and clearly synthetic examples independent of the actual setup. There is no universal best hardware, Wi-Fi system, or Kubernetes installer.
+**Public design:** explain the problem, realistic options, benefits, drawbacks and when each fits. Tables provide orientation; add enough narrative to explain how options work, what ownership they add and how to evaluate them. Go deeper on host purchasing/virtualization and network boundaries without turning guidance into an exact private installation. Use role-based diagrams and clearly synthetic examples independent of the actual setup. There is no universal best hardware, Wi-Fi system or Kubernetes installer.
 
 **Private design:** link the relevant public document, then record the choice, date when known, specific rationale, accepted costs/risks, and a short explanation of why a few relevant alternatives were not selected. Do not reproduce the full alternatives catalog. Include actual topology, capacities, dependencies and open decisions; product names are welcome where they clarify the real design.
 
@@ -60,6 +71,8 @@ Keep the following out of public documents, issues, comments, screenshots, commi
 
 RFC 1918 addresses and VLAN numbers are not credentials, but **the actual mapping still belongs privately**. Do not publish a real design with renamed labels: its relationships can remain identifying. Tool names and model families can be discussed as general options without saying which ones are installed at home.
 
+Actual non-sensitive internal VLAN IDs, subnets, gateways, host allocations, port mappings and SSID labels may be recorded directly in the **private** documentation. They do not need artificial example labels merely because the public repository uses generic content. A value confirmed by the owner as the chosen setting can be a real design input without claiming it has already been applied or tested. Preserve genuine illustrative commands and unresolved facts as such; private visibility is not evidence of deployment.
+
 Use reserved domains such as `example.com` and documentation address ranges `192.0.2.0/24`, `198.51.100.0/24`, `203.0.113.0/24` and `2001:db8::/32` for written examples. They are not production address allocations. A practical isolated-lab example needing private addressing must be independently invented, explicitly labeled synthetic, and checked for overlap before use. Placeholders must be visibly nonfunctional; never insert a real secret temporarily.
 
 ---
@@ -67,7 +80,7 @@ Use reserved domains such as `example.com` and documentation address ranges `192
 ## Sanitization workflow
 
 1. Identify the reusable lesson and its intended audience. Select a narrow scope; do not mirror a directory.
-2. Write a standalone generic explanation from that lesson, not a line-by-line redaction of the live configuration. Remove actual structure, counts, mappings, dependencies and personal narrative where they reveal the household.
+2. Write a standalone generic explanation from that lesson, not a line-by-line redaction of the live configuration. Remove actual topology, counts, mappings, dependencies and personal narrative where they reveal the household. A responsibility-level project structure may be shown under the [structure policy](#portfolio-and-project-structure), without operational paths or inventories.
 3. For design, replace the personal decision with neutral options and selection criteria. For setup, retain intent, prerequisites, validation and rollback without live inputs. For code, describe capabilities in Markdown or propose a separately maintained generic component.
 4. Check prose, diagrams, code blocks, URLs, comments, filenames, image metadata, generated output and the staged diff. Do not import private history or raw assets. Review combinations of details, not just individual tokens.
 5. Check link targets and example consistency. Do not claim tested behavior without evidence. If any detail cannot be confidently generalized, leave it private and report what was omitted.

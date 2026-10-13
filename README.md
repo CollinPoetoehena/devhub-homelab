@@ -46,6 +46,7 @@ This public repository is not a second general reference library. It applies kno
 
 - [Repository guidelines](./docs/Repository_Guidelines.md): public/private boundary, writing rules, sanitization, and security.
 - [Documentation storyline](./docs/README.md): the entry point and reading order.
+- [Project structure](./docs/Project_Structure.md): integration responsibilities, package reuse and an AI-maintained sanitized overview.
 - [Goals](./docs/1_Goals/README.md): purpose, constraints and household dependencies.
 - [High-level design](./docs/2_HLD/README.md): network, Wi-Fi, host selection, power/capacity, virtualization and host automation.
 - [Low-level design](./docs/3_LLD/README.md): container orchestration, services/delivery, monitoring, storage and backups.
@@ -68,3 +69,5 @@ High-level design (HLD) describes the foundation and its boundaries: network and
 Infrastructure as Code and configuration management are concepts within **host lifecycle**, with Terraform/OpenTofu/Pulumi and Ansible/Puppet/etc. as options. GitOps/CD and CI belong with **services and delivery**, with Argo CD/Flux and CI systems as options. Tool names are not top-level documentation folders.
 
 The private repository mirrors these categories, keeping actual design decisions before detailed setup and results in each category. It does not mirror the public prose. Tables of contents and `---` dividers between second-level sections keep both sides navigable; cross-repository references use GitHub URLs on `main`.
+
+Implementation code does not have to be public for this portfolio. The [project-structure overview](./docs/Project_Structure.md) and generic guidance explain design, ownership and setup approaches without household inputs. This is an intentional [publication boundary](./docs/Repository_Guidelines.md#portfolio-and-project-structure), not a promise to eventually mirror the private repository.
