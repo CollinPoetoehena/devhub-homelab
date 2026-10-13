@@ -22,6 +22,8 @@ Follow the story from purpose to infrastructure to workloads. Each category keep
 
 The [root README](../README.md#documentation-structure) explains the organization. HLD/LLD describe levels of detail, not separate phases to blindly complete: workload/storage requirements can send you back to revisit host capacity or network design.
 
+> **Old Design+Setup Approach:** Previously, design and setup were treated as separate phases, often leading to repeated adjustments and inefficiencies. The current approach integrates design and setup within the same topic to streamline the process and maintain context. It is now a complete and cohesive workflow that explains a story from start to finish with all necessary details included.
+
 ---
 
 ## How to Use Each Category
