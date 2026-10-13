@@ -54,8 +54,8 @@ terraform.tfvars
 # Ansible
 .facts
 ansible.log
-# Vault file is encrypted (AES-256) and safe to commit — allows secrets to be versioned and shared. The vault PASSWORD file (~/.vault_pass.txt) is stored outside the repo and must never be committed.
-!*vault.yml
+# Live vault data belongs in the private repository, not this public reference.
+*vault.yml
 
 
 
