@@ -14,24 +14,29 @@ Select coverage, backhaul, management and segmentation together with the [networ
 
 ## Design Options
 
-| Approach | Benefits | Drawbacks / checks | Choose when |
-|---|---|---|---|
-| ISP/all-in-one Wi-Fi | Few devices, often already available | Gateway location may be poor for signal; controls vary | Coverage and security requirements are modest and satisfied |
-| Consumer mesh | Convenient coordinated coverage | Router/AP mode, VLANs, cloud dependence and backhaul vary | Cabling is difficult and simple coverage is the priority |
-| Managed wired APs, e.g. UniFi/Omada | Predictable uplinks and coordinated SSID/VLAN management | Cabling, PoE/injectors and management requirements | Segmented wireless access and maintainable coverage matter |
-| Mixed-vendor wired APs | Independent choices and standards-based flexibility | Multiple update/configuration workflows | Interoperability and operations are understood |
+| Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| ISP/all-in-one Wi-Fi | Gateway and radio in one device | Few devices, often already available; economical if centrally located | Provider socket/cabinet may be a poor radio location; isolation and controls vary. **Maintenance:** relatively few settings/devices, but gateway maintenance also interrupts Wi-Fi; recheck guest isolation and credentials after reset/replacement | Coverage and security requirements are modest and verified |
+| Consumer mesh | Coordinated multi-unit wireless coverage, with wireless or supported wired backhaul | Convenient coverage expansion and lower setup effort where cabling is impractical | Check router/AP mode, VLAN SSIDs, guest isolation, subscription/cloud dependence and backhaul; mesh is not proof of segmentation. **Maintenance:** coordinated updates can simplify upkeep; still track unit support, app/account recovery and inter-node signal changes after moving furniture/units | Simple coverage is the priority and supported features satisfy policy |
+| Managed wired APs, e.g. [UniFi](https://help.ui.com/hc/en-us/categories/6583256751383-UniFi) / [Omada](https://www.tp-link.com/en/support/faq/) | Separate radios with Ethernet uplinks and coordinated SSID/VLAN management | Radio placement independent of routing; predictable uplinks and segmented wireless access | Cabling, controller availability/local recovery and compatible PoE/injectors; ecosystem features vary. **Maintenance:** more initial VLAN/PoE/coverage planning, then centralized profiles and updates; back up controller settings and verify SSID policy/roaming after changes | Maintainable coverage and wireless trust boundaries matter |
+| Mixed-vendor wired APs | Independently selected APs using supported networking standards | Purchasing freedom and standards-based flexibility | Several update/configuration workflows; roaming/security consistency needs coordination. **Maintenance:** higher manual coordination for channel/power/security settings and release cycles; retain exports and test client behavior across vendors | Interoperability and operations are understood |
+| Wireless repeater | A device retransmits an existing wireless connection | Low installation effort for limited reach extension | Adds a radio hop and airtime contention; cannot fix a poor upstream signal or internet link. **Maintenance:** another firmware/credential lifecycle and failure point; retest uplink quality after placement or upstream SSID changes | A bounded coverage gap with acceptable throughput/latency after testing |
 
-**ISP/all-in-one Wi-Fi** is economical when a centrally located device reaches the required rooms. Placement near an access cabinet or outside living areas can make it poor coverage even with a capable radio. Adding repeaters may improve reach but adds another radio hop; first distinguish a coverage problem from an internet/uplink problem.
-
-**Consumer mesh** coordinates multiple units and can reduce setup work where cabling is impractical. Check AP/bridge mode when another gateway already routes, support for wired backhaul, guest isolation, subscription/cloud features and whether VLAN-mapped SSIDs are available. Mesh is a coverage/management approach, not proof of advanced segmentation.
-
-**Managed wired APs** decouple routing from radio placement and can map SSIDs into the chosen trust networks. UniFi/Omada are ecosystem examples, not a recommendation for a particular installed model. Plan controller availability, local recovery and compatible switch/PoE support. Mixed vendors can achieve the same standards-based design, but consistent roaming/security settings and updates need more coordination.
+These are general approaches, not recommendations for the owner's installed models. First distinguish a coverage problem from an internet/uplink problem; adding radios does not fix every slow connection.
 
 ---
 
 ## Backhaul and Equipment
 
-Ethernet avoids radio-backhaul contention at the cost of installation. Wireless backhaul is useful without cable but depends on inter-node signal/interference; dedicated radios help without removing that dependency. Mesh products may support wired backhaul, and managed APs may support meshing: compare features, not labels.
+| Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| Ethernet backhaul | AP/mesh units connect to the network by cable | Predictable uplink; leaves more airtime for clients; can carry compatible PoE | Cable installation, port capacity and power budget. **Maintenance:** initial physical work, then relatively stable links; diagnose cable, port and PoE faults separately | Cabling is feasible and stable capacity is important |
+| Wireless backhaul | Units use inter-node radio links | Coverage without new cable runs | Signal/interference and shared airtime constrain capacity; dedicated radios help but do not remove dependency. **Maintenance:** less installation work but potentially more recurring signal/channel diagnosis; review after environmental changes | Installation constraints outweigh performance costs and inter-node links test well |
+| 2.4 GHz | Lower-frequency Wi-Fi band used by many legacy/IoT clients | Useful reach and broad compatibility | Crowding and limited channel capacity; compatibility exceptions need containment. **Maintenance:** No separate software lifecycle beyond the AP; periodically review congestion, legacy-client exceptions and channel/power choices without weakening every SSID for one device. | Legacy devices and coverage-focused use |
+| 5 GHz | Higher-frequency band with more channel choices than 2.4 GHz in many regions | Capacity/channel-reuse opportunities for supported clients | Range/material losses and local DFS/channel rules; wide channels may reduce reuse. **Maintenance:** Review interference and local DFS/channel behavior after AP updates or placement changes; verify client coverage and roaming rather than maximizing channel width by default. | General modern-client capacity within measured coverage |
+| 6 GHz | Additional spectrum for compatible Wi-Fi generations/clients | Additional channel space where permitted | Client, security-mode and local regulatory support; reach remains placement-dependent. **Maintenance:** Keep AP/client firmware and permitted channel/security settings compatible; recheck coverage and local regulatory support as clients or deployment regions change. | Supported clients and justified spectrum/capacity needs |
+
+Mesh products may support wired backhaul, and managed APs may support meshing: compare features, not labels.
 
 Survey placement/building materials before AP count. Compare client support, bands, local spectrum rules, uplink and PoE budget; advertised PHY rates are not application throughput. More APs or maximum transmit power is not automatically better.
 

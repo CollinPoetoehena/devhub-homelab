@@ -18,12 +18,12 @@ A homelab may be a disposable learning environment, a development sandbox, a sel
 
 Record learning topics, useful services, data importance, acceptable downtime/data loss, budget, electricity, space/noise, cabling and maintenance time. Decide whether remote access is actually needed and who administers the system.
 
-| Purpose | What to optimize | What to avoid assuming |
-|---|---|---|
-| Disposable learning | Fast rebuilds, isolated experiments, useful diagnostics | That every exercise needs permanent hardware or HA |
-| Development/testing | Reproducible environments and realistic integration paths | That test credentials/data can share production trust |
-| Household services | Predictable maintenance, backups and usable recovery | That family members accept lab-style downtime |
-| Enterprise-platform practice | Specific management, upgrade and failure exercises | That copying an enterprise topology is required for other goals |
+| Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| Disposable learning | Short-lived isolated exercises | Fast rebuilds, bounded scope and useful diagnostics | Remove/promote deliberately; not every exercise needs permanent hardware or HA. **Maintenance:** Little permanent upkeep if exercises are removed; refresh rebuild inputs and clean up resources/credentials after each exercise. | Explore tools/protocols without household dependencies |
+| Development/testing | Reproducible environments for application integration | Realistic test paths and repeatable development | Test credentials/data must not share production trust; cleanup and capacity still matter. **Maintenance:** Keep test images, dependencies and fixtures current; reset environments and verify that stale credentials or data do not persist. | Build/test applications and infrastructure changes |
+| Household services | Self-hosted useful services with ongoing users/data | Practical value and operational learning | Predictable maintenance, backups and usable recovery; household users may not accept lab-style downtime. **Maintenance:** Recurring patching, backup checks and restore exercises are essential; schedule changes around users and retain usable recovery instructions. | You can own the service's reliability/data lifecycle |
+| Enterprise-platform practice | Targeted management, upgrade and failure exercises | Experience with specific enterprise concepts | Cost/resources and operational scope; copying enterprise topology is unnecessary for unrelated goals. **Maintenance:** Budget time for supported release paths and management components; retire exercises that no longer serve the learning goal. | Enterprise learning itself is the requirement |
 
 Write requirements as outcomes: "restore important data within the accepted time" or "keep household connectivity working during compute maintenance," not "buy three nodes." Identify must-haves, useful learning goals and deferred ideas. A tool is a means of achieving those outcomes, not the goal unless learning that tool is explicitly the exercise.
 

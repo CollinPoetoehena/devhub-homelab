@@ -1,5 +1,7 @@
 # DevHub Homelab
 
+> **TODO: Final documentation review.** Once most of the homelab is complete, thoroughly review the entire public documentation again. Use practical lessons to correct, expand and improve the generic guidance, not to publish the actual installation. Revisit goals, HLD/LLD categories, option tables, project structure and guidelines; verify official documentation links and update release-dependent features, support/lifecycle assumptions and recommendations to the current supported versions at review time. Recheck completeness, consistency, Table of Contents, anchors and cross-repository `main` links. Review the final public diff against the [publication boundary](./docs/Repository_Guidelines.md#publication-boundary), keeping actual internals, secrets and operational results private. This is a future review milestone, not a claim that the homelab or documentation is finished now.
+
 **The public entry point, knowledge base, and portfolio for my homelab project.** This repository collects homelab-focused design guidance, trade-offs, setup approaches, and reusable lessons. It is not a description of my live home network or a deployable copy of it.
 
 ---
@@ -9,7 +11,7 @@
 - [Why two homelab repositories?](#why-two-homelab-repositories)
 - [Why separate from DevHub?](#why-separate-from-devhub)
 - [Documentation](#documentation)
-- [Documentation Structure](#documentation-structure)
+- [AI and Copilot Skills](#ai-and-copilot-skills)
 
 ---
 
@@ -21,6 +23,8 @@ The primary reason is **security**. Publishing the internals of a home network c
 |---|---|---|
 | [devhub-homelab](https://github.com/CollinPoetoehena/devhub-homelab) (public) | Homelab knowledge base, portfolio, and entry point | Options, selection criteria, generic designs, sanitized setup guidance, reusable lessons, and links to reusable components |
 | [devhub-homelab-private](https://github.com/CollinPoetoehena/devhub-homelab-private) (private; access required) | Actual implementation and operational record | Chosen hardware/software, decision rationale, internal topology and inventory, configuration, runbooks, validation results, and recovery details |
+
+> **Tip: Open both repositories in one VS Code workspace.** Clone them into a shared parent folder, such as `homelab/`, and open that folder in VS Code, or add both repositories to a multi-root workspace. This makes it easier to give AI chat context from both repositories, use the appropriate public or private Copilot skills, and coordinate documentation changes without switching windows. Explicitly select the relevant files and skills and read their referenced guidelines; opening both repositories does not guarantee that every instruction or skill is automatically loaded. Keep the repositories as separate Git projects and preserve the publication boundary: access to private context is not permission to copy it into public documentation.
 
 One repository forced an awkward compromise: either publish too much, or replace useful operational details with examples and leave the real setup undocumented in my head. The split lets the private record be genuinely useful while the public reference remains safe and reusable.
 
@@ -56,18 +60,12 @@ Examples are synthetic and must be adapted to the reader's requirements. A docum
 
 ---
 
-## Documentation Structure
+## AI and Copilot Skills
 
-The documentation tells one story: **goals → high-level infrastructure → low-level platform and services**. Start by deciding what the lab should achieve, design its network and compute foundation, then decide what runs there and how it will be observed and recovered.
+Use the focused [public skills](./.github/skills/README.md) for this knowledge base and the [private skills](https://github.com/CollinPoetoehena/devhub-homelab-private/blob/main/.github/skills/README.md) for actual implementation records. They add homelab-specific context to reusable DevHub workflows; they are not separate copies of the general development guidance.
 
-Categories keep connected decisions together. Network architecture needs networking gear and management software; host selection needs hardware, electricity, virtualization and OS choices. Splitting all hardware into one catalog and all software into another makes readers jump between unrelated topics instead of following a decision through.
+**Skills reference policy; documentation owns it.** The [repository guidelines](./docs/Repository_Guidelines.md) are the central policy source, including the [Documentation Structure & Guideline](./docs/Repository_Guidelines.md#documentation-structure--guideline). This is the authoritative documentation guideline for Copilot and for links from READMEs, instructions and other documents. Keep a skill focused on its trigger, scope, execution steps and validation; link the applicable guideline rather than repeating table columns, structure rules or their rationale. This avoids conflicting copies and lets one policy update reach every workflow that reads it.
 
-Likewise, there is **no separate public setup tree**. Each category starts with design and options, then ends with broad implementation/verification considerations. Think before installing. Setup is part of the topic's complete documentation, not a parallel book duplicating its structure. Exact commands and vendor installation details belong in official guides or private runbooks, not an imitation of my own deployment.
+When a guideline changes, update its references and check the affected skills rather than rewriting the rule in each skill. AI must read the referenced guidance, preserve public/private boundaries, distinguish planned work from verified results and validate its changes; links alone do not guarantee that a workflow was loaded or followed. Publication and live infrastructure operations still require appropriate authorization.
 
-High-level design (HLD) describes the foundation and its boundaries: network and physical hosts, including any hypervisor cluster. Low-level design (LLD) describes the platforms and services using it: a Kubernetes/container-orchestration cluster, workload delivery, monitoring and data protection. These categories can feed requirements back to the HLD; the order is a reasoning path, not an inflexible waterfall.
-
-Infrastructure as Code and configuration management are concepts within **host lifecycle**, with Terraform/OpenTofu/Pulumi and Ansible/Puppet/etc. as options. GitOps/CD and CI belong with **services and delivery**, with Argo CD/Flux and CI systems as options. Tool names are not top-level documentation folders.
-
-The private repository mirrors these categories, keeping actual design decisions before detailed setup and results in each category. It does not mirror the public prose. Tables of contents and `---` dividers between second-level sections keep both sides navigable; cross-repository references use GitHub URLs on `main`.
-
-Implementation code does not have to be public for this portfolio. The [project-structure overview](./docs/Project_Structure.md) and generic guidance explain design, ownership and setup approaches without household inputs. This is an intentional [publication boundary](./docs/Repository_Guidelines.md#portfolio-and-project-structure), not a promise to eventually mirror the private repository.
+See [DevHub's AI reference](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/AI.md) for broader AI usage and GitHub Copilot guidance, and the [DevHub skills guide](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/README.md) for shared workflows. A GitHub link is a reference, not a skill installation; make generic skills available explicitly or read their linked guidance when accessible.

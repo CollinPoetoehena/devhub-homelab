@@ -1,5 +1,7 @@
 # Homelab Repository Guidelines
 
+> **Central repository guidelines:** This file is the shared source of truth for repository policies, including documentation conventions, content ownership, publication boundaries and protected-data handling. Both homelab repositories, their Copilot customizations and other documentation reference the applicable sections here.
+
 This is the shared guideline for the [public homelab](https://github.com/CollinPoetoehena/devhub-homelab) and [private homelab](https://github.com/CollinPoetoehena/devhub-homelab-private). The [public README](../README.md#why-two-homelab-repositories) explains why the split exists, primarily to avoid exposing home-network internals and secondarily to keep reusable knowledge separate from operational detail.
 
 ---
@@ -8,7 +10,11 @@ This is the shared guideline for the [public homelab](https://github.com/CollinP
 
 - [Content ownership](#content-ownership)
 - [Portfolio and Project Structure](#portfolio-and-project-structure)
-- [Writing design and setup documentation](#writing-design-and-setup-documentation)
+- [Documentation Structure & Guideline](#documentation-structure--guideline)
+  - [Category Storyline](#category-storyline)
+  - [Option Comparisons and Table Rationale](#option-comparisons-and-table-rationale)
+  - [Design, Implementation and Evidence](#design-implementation-and-evidence)
+  - [Navigation, Links and Maintained Overviews](#navigation-links-and-maintained-overviews)
 - [Publication boundary](#publication-boundary)
 - [Sanitization workflow](#sanitization-workflow)
 - [Secrets and sensitive artifacts](#secrets-and-sensitive-artifacts)
@@ -41,21 +47,57 @@ Keep the single maintained overview at [Project Structure](./Project_Structure.m
 
 ---
 
-## Writing design and setup documentation
+## Documentation Structure & Guideline
 
-**Public design:** explain the problem, realistic options, benefits, drawbacks and when each fits. Tables provide orientation; add enough narrative to explain how options work, what ownership they add and how to evaluate them. Go deeper on host purchasing/virtualization and network boundaries without turning guidance into an exact private installation. Use role-based diagrams and clearly synthetic examples independent of the actual setup. There is no universal best hardware, Wi-Fi system or Kubernetes installer.
+> **Central documentation guideline:** This section is the authoritative place for documentation structure and writing conventions for both homelab repositories. Copilot skills, repository instructions, READMEs and other documentation reference it. Maintain the rules and their reasoning here rather than duplicating them wherever they are used.
+
+### Category Storyline
+
+The documentation tells one story: **goals → high-level infrastructure → low-level platform and services**. Start by deciding what the lab should achieve, design its network and compute foundation, then decide what runs there and how it will be observed and recovered.
+
+Categories keep connected decisions together. Network architecture needs networking gear and management software; host selection needs hardware, electricity, virtualization and OS choices. Splitting all hardware into one catalog and all software into another makes readers jump between unrelated topics instead of following a decision through.
+
+Likewise, there is **no separate public setup tree**. Each category starts with design and options, then ends with broad implementation/verification considerations. Think before installing. Setup is part of the topic's complete documentation, not a parallel book duplicating its structure. Exact commands and vendor installation details belong in official guides or private runbooks, not an imitation of my own deployment.
+
+High-level design (HLD) describes the foundation and its boundaries: network and physical hosts, including any hypervisor cluster. Low-level design (LLD) describes the platforms and services using it: a Kubernetes/container-orchestration cluster, workload delivery, monitoring and data protection. These categories can feed requirements back to the HLD; the order is a reasoning path, not an inflexible waterfall.
+
+Infrastructure as Code and configuration management are concepts within **host lifecycle**, with Terraform/OpenTofu/Pulumi and Ansible/Puppet/etc. as options. GitOps/CD and CI belong with **services and delivery**, with Argo CD/Flux and CI systems as options. Tool names are not top-level documentation folders.
+
+The private repository mirrors these categories, keeping actual design decisions before detailed setup and results in each category. It does not mirror the public prose.
+
+Implementation code does not have to be public for this portfolio. The [project-structure overview](./Project_Structure.md) and generic guidance explain design, ownership and setup approaches without household inputs. This is an intentional [publication boundary](#portfolio-and-project-structure), not a promise to eventually mirror the private repository.
+
+### Option Comparisons and Table Rationale
+
+**Public design:** explain the problem, then put **all alternative/option comparisons in detailed Markdown tables**, not separate prose-only tool catalogs. Use the consistent columns **Option / tool**, **What it is**, **Benefits**, **Drawbacks / responsibilities**, and **Use cases / when to choose**. Link each named tool/product to its official documentation in the first column using its name as the link text, for example `[Talos Linux](https://docs.siderolabs.com/)`; generic patterns without an official documentation owner need no invented link. Split materially different tools into separate rows when their lifecycle or limitations differ.
+
+**Why tables are the preferred format for comparisons:** readers can scan the available options, read across one row to understand an option, or read down one column to compare the same aspect across alternatives. Keeping benefits next to drawbacks and use cases makes trade-offs visible without jumping between scattered paragraphs or remembering each tool's explanation. The consistent columns also help newcomers distinguish what a tool actually does from why they might choose it, while experienced readers can quickly find the maintenance or compatibility constraint relevant to them.
+
+This structure encourages balanced coverage: every option must explain both its value and its responsibilities, so a longer or more enthusiastic description does not accidentally become a recommendation. Missing use cases or limitations are easier to spot during review, and later updates can revise the relevant row without maintaining a second prose catalog. Official-documentation links provide a clear path from comparison to authoritative implementation detail. Tables are best **for this comparison task**, not for every kind of explanation: dependencies, reasoning sequences and verification still need prose. Keep cells readable, group large comparisons into focused tables and retain meaningful detail rather than trading understanding for compactness.
+
+Preserve the existing explanatory depth in the cells: describe how each option works, the work it reduces, the ownership/limitations it adds and the requirements that make it appropriate. Do not compress a detailed comparison into slogans merely to fit a table. Group tables by the category's responsibility; use surrounding prose for shared principles, dependencies and evaluation/verification guidance rather than duplicating each row as a prose catalog. Factual measurement, quorum, role/policy and navigation tables may retain their purpose-specific columns because they are not option comparisons.
+
+Include an explicit **Maintenance:** explanation in **Drawbacks / responsibilities for every option row**, not just selected tools or installation difficulty. Describe applicable updates, compatibility checks, configuration drift, credential handling, backups and tested recovery. For passive hardware, purchasing channels or conceptual choices, explain the limited direct upkeep and the ongoing responsibilities they leave with the operator rather than inventing a software lifecycle. Qualitative effort descriptions should explain what creates the work and which dependencies remain; they are not measured time estimates or universal product rankings. Keep initial setup effort distinct from recurring operations. Networking comparisons should have greater explanatory depth overall, but every category still requires maintenance coverage for every row.
+
+Go deeper on host purchasing/virtualization and network boundaries without turning guidance into an exact private installation. Use role-based diagrams and clearly synthetic examples independent of the actual setup. There is no universal best hardware, Wi-Fi system or Kubernetes installer. Check official sources when revising claims, and distinguish release-specific behavior from stable concepts; do not claim a current release/support status without verification.
+
+### Design, Implementation and Evidence
 
 **Private design:** link the relevant public document, then record the choice, date when known, specific rationale, accepted costs/risks, and a short explanation of why a few relevant alternatives were not selected. Do not reproduce the full alternatives catalog. Include actual topology, capacities, dependencies and open decisions; product names are welcome where they clarify the real design.
 
 **Public implementation considerations:** describe prerequisites, dependency order, configuration intent, validation and rollback broadly inside the topic. Link official installation guides rather than maintaining an exact walkthrough or revealing the environment that inspired it.
 
-Organize both repositories by the [category storyline](../README.md#documentation-structure): goals, HLD network/hosts, then LLD orchestration/services/monitoring/storage. Within a category, **design comes before implementation**. Keep hardware and software with the responsibility they support; setup is part of that category, not a separate public setup tree. Public implementation guidance stays broad and does not reproduce the private installation sequence. Private categories may contain detailed design and setup/runbook documents together.
+**Private setup:** record exact verified non-sensitive inputs, versions, port/SSID maps, executed steps, deviations, results and recovery references. Sensitive endpoint values remain encrypted/protected under the [security guideline](#secrets-and-sensitive-artifacts), rather than plaintext in prose. An unverified example remains an example until someone confirms the actual value. Distinguish chosen, planned, installed, and verified; never infer deployment status from a document.
+
+### Navigation, Links and Maintained Overviews
 
 Add a **Table of Contents** for documents with sections, and `---` dividers between `##` sections. Keep ToC links synchronized with headings; do not confuse Markdown dividers with a skill's YAML frontmatter.
 
-**Private setup:** record exact verified non-sensitive inputs, versions, port/SSID maps, executed steps, deviations, results and recovery references. Sensitive endpoint values remain encrypted/protected rather than plaintext in prose. An unverified example remains an example until someone confirms the actual value. Distinguish chosen, planned, installed, and verified; never infer deployment status from a document.
-
 Use relative links within one repository. **Between repositories, always use full GitHub URLs on `main`**, for example `https://github.com/CollinPoetoehena/devhub-homelab/blob/main/docs/2_HLD/Network/README.md`. Do not use sibling filesystem paths, feature branches, or commit-specific links for this shared documentation boundary.
+
+When project-structure changes are in scope, update the final overview in [Project Structure](./Project_Structure.md#maintaining-the-structure-summary-with-ai) according to that page's maintenance rules; do not create another drifting summary in skills.
+
+The final documentation review TODO at the top of the [public README](../README.md) stays open until most of the homelab is complete and a thorough review has actually been performed. Use the experience to improve generic guidance, update documentation links and release-dependent claims, and recheck the [publication boundary](#publication-boundary); do not turn that review into a private deployment mirror or mark it complete after an individual document update.
 
 ---
 

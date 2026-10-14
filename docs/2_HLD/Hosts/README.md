@@ -31,17 +31,24 @@ Separate **physical hosts** from **logical nodes**. A host supplies real CPU, RA
 
 Start a capacity budget with host overhead, always-on management, required workloads and temporary experiments. CPU can often be shared when guests are idle; memory pressure and storage latency are harder to hide. Leave room for updates, snapshots, backup jobs and moving workloads off a host for maintenance. If failover matters, size the remaining hosts for the workloads they must inherit, not merely normal balanced operation.
 
+| Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| One consolidated host | Several guests/services share physical capacity | Lower equipment/lifecycle overhead; upgrades may avoid another always-on machine | Host failure stops its guests; no physical redundancy. **Maintenance:** One host lifecycle is simpler, but reboots affect all guests; monitor capacity/disks and keep independent recovery copies. | Capacity fits and outages are acceptable |
+| Independent hosts | Separate hosts without a shared hypervisor-cluster lifecycle | Extra capacity and independent maintenance; limited cluster coupling | Placement/recovery remain explicit; no automatic failover. **Maintenance:** Patch and monitor each host and its guests; maintain explicit placement and recovery records without relying on cluster automation. | Several experiments or distinct roles without HA requirements |
+| Hypervisor cluster | Hosts share supported management/migration/HA mechanisms | Central management and potential workload movement | Quorum, fencing, shared/replicated storage, network and surviving capacity must be designed. **Maintenance:** Coordinate member updates, quorum/fencing and storage compatibility; test migration, surviving capacity and recovery after topology changes. | Explicit migration or availability requirements justify coupling |
+
 ---
 
 ## Buying and Sizing Nodes
 
-| Option | Benefits | Drawbacks / fit |
-|---|---|---|
-| Owned laptop/PC | Little purchase cost, quick start | Check battery/health, sustained cooling and expansion |
-| Refurbished business mini PC | Compact, often upgradeable RAM/SSD and good value | Few bays/NICs/PCIe slots; seller testing/terms vary |
-| New low-power mini PC | Compact, current hardware | Firmware/support, compatibility and upgradeability vary |
-| Tower/workstation/rack server | More storage/expansion/capacity | Space, noise and idle power; choose for a demonstrated requirement |
-| ARM single-board computer | Embedded/ARM learning and small services | Include storage, power/case/cooling and image compatibility in total cost |
+| Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| Owned laptop/PC | Repurpose an available general-purpose machine | Little purchase cost and quick start | Check health, cooling, expansion and power; laptops need safe batteries, lid/sleep behavior and wired networking. **Maintenance:** Inspect cooling, disks and firmware; laptops also need battery safety and sleep/power behavior checks during prolonged use. | First experiments or capacity already available |
+| Refurbished business mini PC | Used compact office system, e.g. OptiPlex Micro, ThinkCentre Tiny or EliteDesk Mini families | Quiet VM lab; often replaceable RAM/SSD, service manuals and established firmware | Few bays/NICs/PCIe slots; exact generation, memory ceiling, health, seller testing and support vary; ECC/out-of-band management not guaranteed. **Maintenance:** Track firmware support, disk wear and cooling; retain compatible replacement RAM/storage/adapters and account for aging parts. | Value-oriented small VM hosts with sufficient expansion |
+| New low-power mini PC | Current compact consumer/efficiency-focused hardware | Small footprint, modern interfaces and potentially efficient operation | Soldered components, firmware updates, parts access and compatibility vary; include adapters/cooling. **Maintenance:** Monitor vendor firmware/support availability and cooling; verify replacement parts and image/driver compatibility before upgrades. | New hardware/support or specific interface needs justify delivered cost |
+| Tower/workstation | Larger general-purpose host with drive bays and PCIe expansion | Multiple disks, NICs, GPUs or controller passthrough | More space/power; firmware/IOMMU and device compatibility still matter. **Maintenance:** Maintain fans, disks and expansion-device drivers/firmware; document passthrough dependencies and inspect cooling under sustained load. | Demonstrated storage or expansion requirements |
+| Rack server | Server chassis with model-dependent management/redundancy features | Enterprise management and hardware-failure practice | Noise, idle power, rails, fans and replacement disks can outweigh a low purchase price. **Maintenance:** More fans, disks, controllers and management firmware need attention; retain suitable spares and monitor power/noise as well as hardware health. | Specific server-management/capacity goals and suitable space |
+| ARM single-board computer | Small ARM system for supported services or experiments | Embedded/architecture learning and dedicated light workloads | Include reliable storage, power, case and cooling; verify images and virtualization; not automatically the cheapest complete VM host. **Maintenance:** Keep supported OS/images current and monitor storage wear, power stability and cooling; retest architecture-specific workloads after updates. | ARM/embedded learning or modest supported services |
 
 Compare exact CPU generation/model, sustained performance, virtualization/IOMMU support, firmware, memory limits and SSD interfaces/health. CPU tier names and power ratings are not whole-system measurements. RAM/SSD headroom can matter more than a small CPU-tier difference.
 
@@ -49,23 +56,17 @@ Compare new/refurbished/second-hand by delivered cost, inspection, warranty, ret
 
 ### Choosing a Form Factor
 
-**Business mini PCs**, such as Dell OptiPlex Micro, Lenovo ThinkCentre Tiny or HP EliteDesk Mini families, are often attractive for quiet VM labs. Retired office machines can provide service manuals, replaceable memory/storage and an established firmware ecosystem. Check the exact generation: soldered components, expansion bays, memory ceilings and vendor support differ. A business label is not a guarantee of health or enterprise-server features such as ECC or remote out-of-band management.
-
-**New consumer mini PCs** can offer modern efficiency, integrated graphics and faster interfaces, but some have soldered RAM, limited firmware updates or less accessible spare parts. Compare the complete configuration rather than assuming a new low-end CPU outperforms an older business CPU. For either option, include the correct power adapter, cooling and any Ethernet/storage adapters in the price.
-
-**Towers and workstations** suit several drives, PCIe NICs, GPUs or storage-controller passthrough. **Rack servers** can add management and redundant-component features useful for enterprise learning, but old cheap servers may cost more in electricity, fans, rails and replacement disks than the purchase price suggests. Choose them for an actual expansion or management requirement, not because a rack makes a lab more professional.
-
-**Laptops** are a good reuse option, but verify battery safety, cooling, wired networking and operation with the lid closed; prevent unexpected sleep. **ARM boards** are useful for architecture/embedded learning and small dedicated services. Count the power supply, case, cooling and reliable storage, and verify multi-architecture images and virtualization support. They are not automatically the cheapest complete VM host.
+The table compares complete form factors, not CPU badges. A new low-end CPU need not outperform an older business CPU; inspect the complete configuration. Include the correct power adapter, cooling and Ethernet/storage adapters in delivered cost. Choose expansion or server-management features for actual requirements, not because a rack makes a lab more professional.
 
 ### Purchasing and Inspection
 
-| Channel | Why it can fit | What to verify |
-|---|---|---|
-| New retail / vendor | Predictable supply, current support and straightforward returns | Exact specifications, warranty jurisdiction and delivered price |
-| Professional refurbisher | Tested used business machines and potential cost savings | Test scope, SSD health, RAM configuration, condition grading and return terms |
-| Private second-hand | Low price and local inspection opportunities | Ownership, missing parts, firmware locks, wear and limited recourse |
-| Marketplace seller | Broad selection, including specialist appliances | Seller-specific warranty, import/VAT costs, shipping/returns and authentic specification |
-| Approved employer retirement | Reuse equipment that would otherwise leave service | Written transfer, permitted disposal and verified data sanitization |
+| Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| New retail / vendor | Purchase new equipment through a retailer/manufacturer | Predictable supply, current support and clearer returns | Exact specifications, warranty jurisdiction and delivered price; higher purchase cost. **Maintenance:** The channel adds no separate runtime task; retain proof of purchase/support terms and monitor the device vendor’s firmware/support lifecycle. | Support/availability outweigh used-equipment savings |
+| Professional refurbisher | Used machines sold under an explicit testing/condition process | Potential savings with testing and return terms | Verify test scope, SSD health, RAM layout and grading; refurbishment quality varies. **Maintenance:** Retain test/warranty records and check aging components; seller testing does not replace ongoing firmware and health monitoring. | Used business machines with documented condition/support |
+| Private second-hand | Direct resale of used equipment | Low price and local inspection opportunities | Ownership, wear, missing parts, firmware locks and limited recourse. **Maintenance:** Expect more self-supported repairs; record exact components, check health early and establish a replacement path without relying on a warranty. | You can inspect it and accept the risk |
+| Marketplace seller | Seller-specific listings on a broad marketplace | Wide selection, including specialist appliances | Verify authentic specifications, seller warranty, import/VAT, shipping and returns. **Maintenance:** Preserve exact device/revision and seller support details; verify firmware provenance and spare-part availability rather than assuming marketplace-wide support. | A suitable product is available with acceptable seller terms |
+| Approved employer retirement | Formally transferred equipment leaving service | Reuse without another retail purchase | Written ownership transfer, permitted disposal and verified sanitization. **Maintenance:** Retain transfer/sanitization evidence; ongoing firmware, wear and replacement responsibility transfers with the machine. | Explicit authorization and safe data removal are established |
 
 Refurbed, Back Market and local refurbishers are examples of channels to compare, not blanket endorsements. Amazon, eBay or AliExpress are marketplaces, not a single quality-control process. A specialist multi-NIC appliance listing and a refurbished office PC are different buying decisions; inspect the actual seller and product.
 
@@ -73,13 +74,25 @@ Before relying on a used host, check firmware passwords, secure-boot/virtualizat
 
 ### CPU, Memory, Storage and Networking
 
-CPU labels such as i5/i7 or Ryzen 5/7 are tiers **within generations**, not reliable cross-generation rankings. Compare core/thread count, single-thread responsiveness, sustained multi-core performance and virtualization features. Intel N-series can fit light services and efficiency-focused hosts, while mainstream Core/Ryzen systems often offer more VM headroom; measure the workload rather than using the badge as a recommendation.
+CPU labels such as i5/i7 or Ryzen 5/7 are tiers **within generations**, not reliable cross-generation rankings. Compare core/thread count, single-thread responsiveness, sustained multi-core performance and virtualization features. Measure the workload rather than using the badge as a recommendation.
+
+| Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| Efficiency-focused CPU/platform | Low-power class of host, including Intel N-series examples | Can fit light services in compact systems | Exact performance, memory limits and interfaces vary; low CPU power is not measured whole-system consumption. **Maintenance:** Keep firmware and cooling healthy and remeasure capacity/power as workloads grow; a low-power label does not guarantee sufficient headroom. | Light always-on services with verified capacity |
+| Mainstream desktop CPU/platform | Core/Ryzen-class general-purpose host | Often more sustained VM/workload headroom | Generation, cooling and full-system idle/load draw matter more than tier labels. **Maintenance:** Review cooling, firmware and sustained load; reassess whole-system consumption and guest allocations as capacity is used. | Several concurrent guests or demonstrated CPU/memory needs |
 
 Choose RAM from the sum of concurrent guest needs and host/storage overhead. Check the manufacturer's supported capacity and module type. GPU or PCIe passthrough also depends on firmware, IOMMU groups and device compatibility; a CPU feature alone does not guarantee a usable passthrough setup.
 
 SSD capacity is not its only property: latency, endurance, sustained writes, health and replacement cost matter for VM disks. Separate working data from recovery copies according to [storage and backup design](../../3_LLD/Storage_Backups/README.md). A host with one drive can be a useful learning machine if downtime/data loss are acceptable and important data has independent backups.
 
-Gigabit Ethernet can be sufficient for small VM labs. Faster NICs become useful for measured storage, migration or backup traffic, but require suitable switches, cabling and disks to benefit. Extra NICs can separate traffic physically; VLANs can separate it logically on a shared link. Neither choice removes the need to protect hypervisor administration.
+| Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| Gigabit host uplink | Conventional 1 GbE network connection | Often sufficient with lower equipment cost | Shared storage/migration/backup traffic can saturate it. **Maintenance:** Low configuration overhead; monitor errors and saturation and recheck cable/driver health before assuming more bandwidth is needed. | Small VM labs with acceptable measured throughput |
+| Faster host uplink | Higher-capacity NIC/link and matching network path | Can reduce measured transfer bottlenecks | Requires suitable switch ports, cable and disks; bandwidth does not fix every latency problem. **Maintenance:** Coordinate NIC drivers/firmware, switch compatibility and link settings; monitor thermals, errors and end-to-end throughput. | Storage/migration/backup demand justifies capacity |
+| Extra physical NICs | Separate physical interfaces for selected traffic roles | Distinct links and potential bandwidth separation | Ports, cabling, drivers and configuration; shared host/power remain. **Maintenance:** Track interface identity, cabling and drivers; verify bridge/routing roles after replacement or host updates. | Physical path separation or link capacity is needed |
+| VLANs on a shared NIC | Logical traffic roles carried by a controlled trunk | Segmentation without extra physical interfaces | Shared bandwidth/failure domain and correct tagging/policy required. **Maintenance:** Maintain explicit trunk membership and tagging across host/switch changes; test administration and denied cross-segment paths. | Logical separation is sufficient |
+
+Neither extra NICs nor VLANs removes the need to protect hypervisor administration.
 
 ---
 
@@ -125,37 +138,39 @@ Two hosts do not automatically provide HA. Distinct hosts, surviving capacity, s
 
 ## Virtualization and Operating Systems
 
-| Choice | Benefits | Costs / fit |
-|---|---|---|
-| Proxmox VE | Integrated KVM/LXC, UI/API and lifecycle tooling | Maintain hosts, storage and any cluster/quorum |
-| XCP-ng/Xen Orchestra | Xen-based management and backup ecosystem | Different tooling/support/build choices |
-| VMware ESXi/vSphere | Enterprise-platform learning | Check current licensing, HCL and management/API access |
-| KVM/libvirt or Hyper-V | Linux- or Windows-native virtualization | More assembly or platform-specific requirements |
-| Bare-metal services/containers | Fewer layers | Less guest isolation/lifecycle flexibility |
+| Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| [Proxmox VE](https://pve.proxmox.com/pve-docs/) | Supported Debian-based platform integrating KVM VMs, LXC, storage/networking and web UI/API | Multiple OSes, templates and automation without assembling every management component; works on one host | Host/storage updates, repository/subscription choices and backup integration; clustering needs quorum, fencing and surviving capacity. **Maintenance:** review host releases, coordinate reboots/guest movement, monitor disks and test guest restores; the UI does not make HA or recovery automatic | Integrated virtualization and API-driven provisioning at homelab scale |
+| [XCP-ng](https://docs.xcp-ng.org/) with [Xen Orchestra](https://docs.xen-orchestra.com/) | Xen hypervisor plus management/backup ecosystem | VM-centric centralized management and backup workflows | Different storage/network concepts, appliance deployment, support/build and automation choices. **Maintenance:** Coordinate hypervisor and management-appliance updates, backup jobs and restore tests; protect appliance configuration and credentials. | Xen-based learning or a suitable VM-management ecosystem |
+| [VMware ESXi/vSphere](https://techdocs.broadcom.com/us/en/vmware-cis/vsphere.html) | Enterprise virtualization and management platform | Practice with that specific enterprise ecosystem | Verify current licensing, HCL, consumer-NIC support and required API/management access; historical free-license assumptions may not apply. **Maintenance:** Track supported host/management versions, hardware drivers and entitlement changes; test upgrades and restore access before relying on the platform. | VMware learning is an explicit goal |
+| [KVM/libvirt](https://libvirt.org/docs.html) | Linux-native VM control and management APIs | Flexible VM configuration with fewer integrated-platform assumptions | Assemble fleet management, backups and HA yourself. **Maintenance:** more custom integration for host/network/storage updates and recovery than an integrated management platform | Linux virtualization fundamentals or a custom supported management stack |
+| [Hyper-V](https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/overview) | Windows-oriented virtualization | Fits Windows administration and guest requirements | Edition, licensing and management constraints; platform-specific lifecycle. **Maintenance:** Coordinate Windows/host updates and guest maintenance; protect virtual-switch settings and validate checkpoints, backups and supported recovery. | Windows ecosystem learning/integration |
+| Bare-metal services/containers | Workloads run directly on the host without a hypervisor | Fewer layers and less virtualization overhead | Host maintenance affects workloads directly; less guest isolation and rebuild flexibility. **Maintenance:** fewer platform components, but OS/runtime updates and service recovery are tightly coupled | One-purpose hosts or tight resource limits |
 
 Use the platform's supported host OS. Ubuntu/Debian or RHEL-family utility guests fit different learning/ecosystem needs; immutable Kubernetes nodes are chosen with the [cluster platform](../../3_LLD/Cluster/README.md).
 
 ### Proxmox VE
 
-Proxmox VE combines KVM virtual machines, LXC system containers, storage/network management and a web UI/API on a supported Debian-based platform. It suits a homelab that wants several operating systems and API-driven provisioning without assembling every management component. It can run as a single host; creating a cluster is not a prerequisite for using it.
-
-VMs provide their own kernels and are a natural fit for different operating systems or dedicated Kubernetes nodes. LXC shares the host kernel and can be lighter for supported Linux services, but has different isolation and compatibility constraints; it is not the same thing as deploying application containers with Compose or Kubernetes.
+| Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| KVM virtual machine | Guest with its own kernel and allocated virtual resources | Different OSes and dedicated node isolation; replaceable guest lifecycle | Guest overhead/patching and resource budgeting; migration compatibility. **Maintenance:** Each guest needs its own OS updates and backups; maintain templates and test restore/boot and migration compatibility where required. | OS experiments and dedicated Kubernetes nodes |
+| [LXC system container](https://linuxcontainers.org/lxc/documentation/) | Linux system container sharing the host kernel | Lower overhead for supported Linux services | Different isolation and kernel/compatibility limits; not Compose/Kubernetes application packaging. **Maintenance:** Update guest userspace and the shared host kernel; verify compatibility and isolation after host changes and test container-data recovery. | Lightweight supported utility services |
 
 Clustering adds shared management and supported migration/HA capabilities, not automatic redundancy for every guest. Storage accessibility or replication, quorum, fencing, spare capacity and suitable networks still determine recovery behavior. Evaluate backup integration, repository/subscription choices and upgrade practices against the official [Proxmox documentation](https://pve.proxmox.com/pve-docs/).
 
 ### XCP-ng, VMware and Native Hypervisors
 
-**XCP-ng with Xen Orchestra** is a Xen-based alternative for VM-centric learning, centralized management and backups. Its storage/network concepts and automation ecosystem differ from Proxmox; assess supported hardware, management-appliance deployment, backup scope and available tooling rather than treating it as the same platform with another UI.
-
-**VMware ESXi/vSphere** can be useful when learning that enterprise ecosystem is the goal. Verify current licensing, hardware compatibility and access to the required management/API features before buying hosts. Do not assume historical free-license or consumer-NIC support applies to a current release.
-
-**KVM/libvirt** gives Linux-native VM control with fewer integrated management assumptions, but requires more assembly for fleet management, backup and HA. **Hyper-V** fits Windows-oriented administration and guest requirements; check the chosen Windows edition and its management/licensing constraints. Favor the ecosystem you want to learn and can maintain, not simply the longest feature list.
+Use the platform table to compare hardware support, management-appliance deployment, backup scope, licensing and automation before buying hosts. These ecosystems are not interchangeable UIs. Favor what you want to learn and can maintain, not simply the longest feature list.
 
 ### Bare Metal and Guest Operating Systems
 
-Bare-metal Linux with services or containers removes the hypervisor layer and can suit one-purpose hosts or limited resources. It couples host maintenance more closely to workloads, and rebuilding experiments may be less convenient than replacing guests. Virtualization adds resource overhead but makes isolation, templates and different OS experiments easier.
+| Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| [Ubuntu](https://documentation.ubuntu.com/server/) / [Debian](https://www.debian.org/doc/) utility guest | General-purpose Linux VM | Familiar packages and broad supported cloud-init workflows; useful Linux practice | OS/users/services/SSH maintenance and configuration drift. **Maintenance:** Patch packages, maintain users/SSH/services and review drift; refresh images and test the management/recovery path after changes. | Management and utility roles needing mutable Linux |
+| [RHEL](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux) and compatible family guests | Enterprise-oriented RPM/SELinux Linux environment | Practice with enterprise-Linux administration | Distribution-specific support, licensing/repository and compatibility choices. **Maintenance:** Maintain supported repositories/releases, security policy and service configuration; test major-version and SELinux behavior changes. | RPM/SELinux or enterprise ecosystem learning |
+| Minimal / immutable node system | Purpose-limited OS with controlled configuration/update paths | Smaller mutable surface and repeatable node lifecycle | Different diagnostics, extensions and application support; not a general utility host. **Maintenance:** Use supported image/API upgrades rather than ad-hoc repairs; retain declarative configuration, extension compatibility and recovery access. | Dedicated roles, with [Kubernetes node choices](../../3_LLD/Cluster/README.md#kubernetes-node-lifecycle) assessed separately |
 
-Keep the hypervisor's supported base rather than replacing its distribution underneath it. For utility VMs, Ubuntu/Debian offer familiar packaging and broad cloud-init support; RHEL-family guests suit RPM/SELinux and enterprise-Linux practice. Minimal or immutable systems reduce mutable surface but change diagnostics and extension workflows. Choose each guest OS for its role, with a repeatable image/update process rather than one default for every machine.
+Keep the hypervisor's supported base rather than replacing its distribution underneath it. Choose each guest OS for its role, with a repeatable image/update process rather than one default for every machine.
 
 ---
 
