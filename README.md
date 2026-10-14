@@ -12,6 +12,7 @@
 - [Why separate from DevHub?](#why-separate-from-devhub)
 - [Documentation](#documentation)
 - [AI and Copilot Skills](#ai-and-copilot-skills)
+  - [AI usage](#ai-usage)
 
 ---
 
@@ -24,7 +25,7 @@ The primary reason is **security**. Publishing the internals of a home network c
 | [devhub-homelab](https://github.com/CollinPoetoehena/devhub-homelab) (public) | Homelab knowledge base, portfolio, and entry point | Options, selection criteria, generic designs, sanitized setup guidance, reusable lessons, and links to reusable components |
 | [devhub-homelab-private](https://github.com/CollinPoetoehena/devhub-homelab-private) (private; access required) | Actual implementation and operational record | Chosen hardware/software, decision rationale, internal topology and inventory, configuration, runbooks, validation results, and recovery details |
 
-> **Tip: Open both repositories in one VS Code workspace.** Clone them into a shared parent folder, such as `homelab/`, and open that folder in VS Code, or add both repositories to a multi-root workspace. This makes it easier to give AI chat context from both repositories, use the appropriate public or private Copilot skills, and coordinate documentation changes without switching windows. Explicitly select the relevant files and skills and read their referenced guidelines; opening both repositories does not guarantee that every instruction or skill is automatically loaded. Keep the repositories as separate Git projects and preserve the publication boundary: access to private context is not permission to copy it into public documentation.
+> **Tip: Open both repositories in one VS Code workspace.** Clone them into a shared parent folder, such as `homelab/`, and open that folder in VS Code, or add both repositories to a multi-root workspace. This makes it easier to give AI chat context from both repositories and coordinate documentation changes without switching windows. See [AI usage](#ai-usage) for making shared and homelab-specific customizations available. Explicitly select the target repository and relevant files and read its instructions and guidelines; opening both repositories does not guarantee that every instruction or skill is automatically loaded. Keep the repositories as separate Git projects and preserve the publication boundary: access to private context is not permission to copy it into public documentation.
 
 One repository forced an awkward compromise: either publish too much, or replace useful operational details with examples and leave the real setup undocumented in my head. The split lets the private record be genuinely useful while the public reference remains safe and reusable.
 
@@ -42,7 +43,7 @@ See [Repository guidelines](./docs/Repository_Guidelines.md) for content ownersh
 
 The [DevHub separate-projects explanation](https://github.com/CollinPoetoehena/DevHub#separate-projects) describes the distinction: a homelab is related to development, but is still a distinct project with its own purpose, design, lifecycle, issues, automation, and maintenance.
 
-This public repository is not a second general reference library. It applies knowledge to **homelabs**: buying small always-on hosts, separating household infrastructure from experiments, choosing a cluster platform, providing wireless coverage, and planning recovery at home scale. DevHub continues to own concepts and tooling that apply beyond the homelab, such as [networking fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/network), [AI workflows](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/AI.md), and [reusable packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md). Link to those resources rather than duplicating them here.
+This public repository is not a second general reference library. It applies knowledge to **homelabs**: buying small always-on hosts, separating household infrastructure from experiments, choosing a cluster platform, providing wireless coverage, and planning recovery at home scale. DevHub continues to own concepts and tooling that apply beyond the homelab, such as [networking fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/network), [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md), and [reusable packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md). Link to those resources rather than duplicating them here.
 
 ---
 
@@ -54,7 +55,7 @@ This public repository is not a second general reference library. It applies kno
 - [Goals](./docs/1_Goals/README.md): purpose, constraints and household dependencies.
 - [High-level design](./docs/2_HLD/README.md): network, Wi-Fi, host selection, power/capacity, virtualization and host automation.
 - [Low-level design](./docs/3_LLD/README.md): container orchestration, services/delivery, monitoring, storage and backups.
-- [Copilot skills](.github/skills/README.md): public-focused context and documentation workflows, including an explicit sanitization skill.
+- [Local Copilot skills](.github/skills/README.md): the homelab-specific sanitization workflow; generic skills come from DevHub.
 
 Examples are synthetic and must be adapted to the reader's requirements. A documented design or checklist is not evidence of a completed deployment. The private repository references these documents through GitHub `blob/main` URLs; access to it is not required to use the public guidance.
 
@@ -62,10 +63,40 @@ Examples are synthetic and must be adapted to the reader's requirements. A docum
 
 ## AI and Copilot Skills
 
-Use the focused [public skills](./.github/skills/README.md) for this knowledge base and the [private skills](https://github.com/CollinPoetoehena/devhub-homelab-private/blob/main/.github/skills/README.md) for actual implementation records. They add homelab-specific context to reusable DevHub workflows; they are not separate copies of the general development guidance.
+> **Central reference:** This section is the single place for the homelab repositories' shared-skill mapping and AI usage guidance. The public and private `.github/skills/README.md` files intentionally link here instead of duplicating this information; other README references should do the same.
 
-**Skills reference policy; documentation owns it.** The [repository guidelines](./docs/Repository_Guidelines.md) are the central policy source, including the [Documentation Structure & Guideline](./docs/Repository_Guidelines.md#documentation-structure--guideline). This is the authoritative documentation guideline for Copilot and for links from READMEs, instructions and other documents. Keep a skill focused on its trigger, scope, execution steps and validation; link the applicable guideline rather than repeating table columns, structure rules or their rationale. This avoids conflicting copies and lets one policy update reach every workflow that reads it.
+Use [DevHub's AI Customizations guide](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md) as the source of general explanations, customization choices, design principles and setup guidance. Only add local customizations for genuinely homelab-specific needs, not wrappers around generic documentation or implementation workflows.
 
-When a guideline changes, update its references and check the affected skills rather than rewriting the rule in each skill. AI must read the referenced guidance, preserve public/private boundaries, distinguish planned work from verified results and validate its changes; links alone do not guarantee that a workflow was loaded or followed. Publication and live infrastructure operations still require appropriate authorization.
+The main shared skills used in this repository are:
 
-See [DevHub's AI reference](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/AI.md) for broader AI usage and GitHub Copilot guidance, and the [DevHub skills guide](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/README.md) for shared workflows. A GitHub link is a reference, not a skill installation; make generic skills available explicitly or read their linked guidance when accessible.
+| DevHub skill | Use here |
+|---|---|
+| [devhub-docs](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/devhub-docs/SKILL.md) | Write and maintain public homelab documentation using discovered local guidelines and structure |
+| [devhub-generic-change](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/devhub-generic-change/SKILL.md) | Implement and verify generic changes using discovered project conventions |
+| [devhub-terraform-change](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/devhub-terraform-change/SKILL.md) | Authorized changes to genuinely reusable Terraform examples/components, not importing or deploying private roots |
+| [devhub-ansible-change](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/devhub-ansible-change/SKILL.md) | Authorized changes to genuinely reusable Ansible examples/components, not importing private inventories or targeting live hosts |
+
+These skills are maintained and installed through DevHub; they do **not** need to be present in this project. Choose the matching skill directly rather than invoking the generic change skill before a tool-specific one. Public automation topics normally remain Markdown explanations; listing these skills does not authorize code extraction or live operations.
+
+A project-context skill is unnecessary: DevHub skills automatically discover instructions, documentation structure, guidelines and relevant validation commands. Keep any additional persistent homelab context in [copilot-instructions.md](./.github/copilot-instructions.md). The only [local skill](./.github/skills/README.md) is [homelab-sanitize](./.github/skills/homelab-sanitize/SKILL.md), for explicitly authorized publication preparation.
+
+**Do not chain skills.** Each skill must be self-contained and usable without another skill being invoked first or afterward. Background and project-policy links are fine; required cross-skill invocation is not. See [DevHub's design principles](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md#general-design-principles) and its [skill design explanation](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/README.md#create-a-skill) for why dependency chains are unreliable and how to keep skills self-contained.
+
+**Documentation owns project policy.** The [repository guidelines](./docs/Repository_Guidelines.md), including the [Documentation Structure & Guideline](./docs/Repository_Guidelines.md#documentation-structure--guideline), remain authoritative for both homelab repositories. Reference them rather than duplicating their rules in skills. AI must read applicable guidance, preserve the publication boundary, distinguish planned work from verified results and validate changes. Publication and live infrastructure operations still require explicit authorization.
+
+### AI usage
+
+Install the shared DevHub skills using [Use external or centralized customizations across repositories](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md#use-external-or-centralized-customizations-across-repositories), which also links the DevHub installer and explains manual copies and symbolic links. A GitHub link is a reference, not an installation. Verify discovery in the selected host, on the machine where the agent runs.
+
+For the shared parent `homelab/` workspace described [above](#why-two-homelab-repositories), you can add a workspace-local `.github/skills/` directory and symbolic links to the **additional homelab-specific** skill directories. For example, from that parent folder on a host supporting symlink discovery:
+
+```sh
+mkdir -p .github/skills
+ln -s /absolute/path/to/homelab/devhub-homelab/.github/skills/homelab-sanitize .github/skills/homelab-sanitize
+```
+
+Replace the absolute source path with your clone location, ensure the destination does not already exist, and link the complete skill directory so its resources remain available. Keep the clone at that path. Add links for future genuinely homelab-specific skills in the same way; no private-specific skill is currently needed. Do not commit these machine-local workspace links into either repository. If the host does not discover symlinks, use the supported copy/setup options in the DevHub guide instead.
+
+**Centralizing homelab-specific customizations is not necessary.** They are specific to my homelab projects, unlike the generic DevHub customizations reused across unrelated projects. Keep their source in the owning repository; parent-workspace links are optional convenience, not a reason to move them into DevHub or install them globally.
+
+Opening the parent folder does not guarantee discovery of nested repository instructions. Explicitly select the target repository and provide its [public instructions](./.github/copilot-instructions.md) or [private instructions](https://github.com/CollinPoetoehena/devhub-homelab-private/blob/main/.github/copilot-instructions.md) as context when necessary. Verify that the intended skills are available. Access to both repositories never authorizes publishing private content.

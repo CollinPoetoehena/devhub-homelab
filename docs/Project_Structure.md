@@ -48,7 +48,7 @@ The [publication boundary](./Repository_Guidelines.md#publication-boundary) expl
 
 ## Maintaining the Structure Summary with AI
 
-**Update the final section of this page in place** when documentation or integration responsibilities change. Use [homelab-public-docs](../.github/skills/homelab-public-docs/SKILL.md) and [homelab-sanitize](../.github/skills/homelab-sanitize/SKILL.md). Do not create another drifting structure overview elsewhere.
+**Update the final section of this page in place** when documentation or integration responsibilities change. Use the shared [devhub-docs](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/devhub-docs/SKILL.md) for documentation maintenance; it discovers local guidance and structure. When the task is authorized preparation of private-derived material for publication, use the self-contained [homelab-sanitize](../.github/skills/homelab-sanitize/SKILL.md) instead, not a required chain of skills. See [AI usage](../README.md#ai-usage) for setup. Do not create another drifting structure overview elsewhere.
 
 Inspect only the authorized, relevant top-level structure locally. Summarize responsibility-level folders rather than pasting `tree` output or enumerating hosts, inventories, applications, environment names, secret filenames or generated artifacts. Review the summary against the guideline before publication.
 
@@ -63,7 +63,7 @@ This is an **AI-maintained, sanitized responsibility view**, not an exact direct
 ```text
 Public homelab knowledge base
   README.md                 purpose, split and entry point
-  .github/                  public-context instructions and skills
+  .github/                  public-context instructions and sanitization skill
   docs/
     Repository_Guidelines.md
     Project_Structure.md     this maintained overview
@@ -73,7 +73,7 @@ Public homelab knowledge base
 
 Private homelab integration
   README.md                 actual project context and navigation
-  .github/                  private-context instructions and skills
+  .github/                  private-context instructions; no local skills needed
   docs/                     matching goals/HLD/LLD categories;
                             actual decisions, setup, checks and recovery
   ansible/                  host/platform configuration composition;
