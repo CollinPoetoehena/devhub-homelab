@@ -10,6 +10,7 @@
 
 - [Why two homelab repositories?](#why-two-homelab-repositories)
 - [Why separate from DevHub?](#why-separate-from-devhub)
+- [Task Tracking](#task-tracking)
 - [Documentation](#documentation)
 - [AI and Copilot Skills](#ai-and-copilot-skills)
   - [AI usage](#ai-usage)
@@ -44,6 +45,26 @@ See [Repository guidelines](./docs/Repository_Guidelines.md) for content ownersh
 The [DevHub separate-projects explanation](https://github.com/CollinPoetoehena/DevHub#separate-projects) describes the distinction: a homelab is related to development, but is still a distinct project with its own purpose, design, lifecycle, issues, automation, and maintenance.
 
 This public repository is not a second general reference library. It applies knowledge to **homelabs**: buying small always-on hosts, separating household infrastructure from experiments, choosing a cluster platform, providing wireless coverage, and planning recovery at home scale. DevHub continues to own concepts and tooling that apply beyond the homelab, such as [networking fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/network), [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md), and [reusable packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md). Link to those resources rather than duplicating them here.
+
+---
+
+## Task Tracking
+
+**Why GitHub Projects?** It is free to use for this task-tracking setup, so no paid planning subscription is needed. The repositories already live on GitHub, so task tracking stays close to the documentation and implementation it describes. Issues provide descriptions and discussion, pull requests can link the related work, and a project brings tasks from both repositories into one overview. This avoids a separate planning tool, another account or self-hosted service to maintain, and copying or synchronizing task details between systems. GitHub hosts the tool; I only need to maintain the tasks, statuses and access settings. For a personal homelab, that low overhead makes it easier to keep the board useful instead of spending time administering the planning system.
+
+Track **all homelab tasks, both public and private**, in one **private** GitHub Project named **Homelab**: [Backlog · Homelab](https://github.com/users/CollinPoetoehena/projects/7), linked to [devhub-homelab-private](https://github.com/CollinPoetoehena/devhub-homelab-private) and not the public repository because it should remain private. This includes improvements to [devhub-homelab](https://github.com/CollinPoetoehena/devhub-homelab), implementation, maintenance and operational work. Project access is required.
+
+Both repositories belong to the same homelab, so one board avoids splitting related work or coordinating two backlogs. Tasks may contain private information, and the planning is only for myself, so publishing it is unnecessary even when the resulting documentation is public. It is a hobby, not a team delivery process; sprints, estimates, deadlines and formal planning are unnecessary. Technical design and safe-change checks still matter.
+
+I used GitHub's existing **Team Planning** template because it already has the main task-tracking aspects I wanted. I do not need to use everything it provides: extra views and sprint/current-iteration features can remain unused, or serve as a loose grouping of current work without committing to a time-based schedule. One status board remains the everyday workflow.
+
+> **Warning: explicitly set the GitHub Project's visibility to Private before adding tasks.** Linking it to a private repository does not make the project private automatically. A private project also does not hide public issues: keep private details in private-repository issues or private project draft items, never in public issues. Follow the [publication boundary](./docs/Repository_Guidelines.md#publication-boundary); secrets still belong in [protected storage](./docs/Repository_Guidelines.md#secrets-and-sensitive-artifacts).
+
+1. Start from the **Team Planning** template, keep the GitHub Project private and use one **Board** view for everyday tracking. Link it to the private repository. In the project description, link to [this Task Tracking explanation](https://github.com/CollinPoetoehena/devhub-homelab/blob/main/README.md#task-tracking) so the workflow is easy to find.
+2. Use a **Status** field with **TODO**, **In progress** and **Done**. Add an issue or draft item for each useful task, with a short description of what completion means. Public-repository issues may be added when their contents are safe to publish; keep other tasks private.
+3. Pick a TODO when ready, move it to In progress, then close the issue (if applicable) and move the item to Done after checking the result. Keep ideas in TODO; no extra boards or planning ceremony are needed.
+
+> **Central reference:** The [private homelab README](https://github.com/CollinPoetoehena/devhub-homelab-private/blob/main/README.md#task-tracking) references this section instead of repeating the task-tracking explanation. Both repositories use the same private project; there is no separate public planning board. Only the workflow explanation and safe documentation are published.
 
 ---
 
