@@ -27,6 +27,10 @@ The network is one of the most consequential parts of a homelab: it connects eve
   - [Should You Build Your Own Firewall or Buy an Appliance?](#should-you-build-your-own-firewall-or-buy-an-appliance)
   - [Switching, Power and Cabling](#switching-power-and-cabling)
     - [Unmanaged, Managed, and Smart](#unmanaged-managed-and-smart)
+- [Location, Placement and Cabling](#location-placement-and-cabling)
+  - [Meter Cabinet and Ethernet Runs](#meter-cabinet-and-ethernet-runs)
+  - [Mini PCs and Repurposed Laptops](#mini-pcs-and-repurposed-laptops)
+  - [Beyond a Homelab: Racks and Rack Units](#beyond-a-homelab-racks-and-rack-units)
 - [Availability, Backups and Recovery](#availability-backups-and-recovery)
   - [Backups That Survive the Outage](#backups-that-survive-the-outage)
   - [Temporary Virtual-Gateway Recovery](#temporary-virtual-gateway-recovery)
@@ -372,6 +376,74 @@ Buy managed switching for VLAN membership controls, management restrictions and 
 PoE simplifies AP placement, but check the required standard, maximum per-port delivery and the switch's total budget simultaneously. Include future powered devices and supported injectors where appropriate. Passive PoE is not interchangeable with negotiated IEEE PoE. Keep gateway power requirements distinct from AP power; not every gateway supplies PoE or Wi-Fi.
 
 Choose copper by required speed, installation length, termination quality and PoE suitability. Fibre can suit distance or electrical separation, but adds transceivers and compatibility checks. Avoid replacing good cabling solely for a higher category number. Buying new supported gateway/switch equipment can be justified for household recovery/support, while refurbished compute has a different risk profile; compare warranty and delivered costs rather than declaring one channel always best.
+
+---
+
+## Location, Placement and Cabling
+
+Physical placement should make the network easy to maintain, not just hide the equipment. Keep essential networking accessible independently of lab compute, with room to reach connectors, replace power adapters and trace labeled cables. The [switching and cabling criteria](#switching-power-and-cabling) still apply wherever the equipment is installed.
+
+**Design assumption:** this placement example uses mini PCs because that is the form factor I chose for my homelab, rather than tower servers or rack-mounted equipment. It is not a requirement for every lab. See [Hosts and Nodes: Buying and Sizing Nodes](../Hosts/README.md#buying-and-sizing-nodes) for hardware selection, sizing and form-factor trade-offs.
+
+The role-based diagram below illustrates the full placement pattern, not an installed inventory or an exact map of my home. Connections show physical paths, not unrestricted access between trust networks.
+
+```text
+ISP connection
+  |
+  v
+Meter cabinet (only if space, ventilation and utility access are suitable)
+  ISP modem/router
+    | Ethernet handoff
+    v
+  Gateway WAN
+  Gateway LAN                         Gateway and main switch:
+    | short Ethernet patch            accessible wall mounts where supported
+    v
+  Main managed switch (PoE where required)
+    +-- Ethernet --------------------> Mini PCs on a ventilated shelf
+    +-- fixed in-wall Ethernet ------> Room outlets / wired clients
+    +-- fixed in-wall Ethernet + PoE -> APs at coverage locations outside cabinet
+    +-- optional Ethernet uplink -----> Downstream switch near a device group
+                                         +-- Ethernet -> additional lab devices
+
+Power: suitable local supplies for modem, gateway, switch and compute;
+       compatible APs receive power from the PoE switch over Ethernet.
+```
+
+### Meter Cabinet and Ethernet Runs
+
+A meter cabinet can be a practical starting point where the ISP modem/router, utility connections and room Ethernet runs already converge. Place the separate gateway near the ISP equipment: connect the modem/router's Ethernet handoff directly to the gateway's **WAN** port, then a gateway **LAN** port to the main switch. This is a physical connection plan, not a reason to assume bridge mode is supported; use the [ISP handoff guidance](#isp-handoff-nat-and-remote-access) to decide which device routes upstream.
+
+Keeping the main switch and gateway together makes their patch cables and power supplies easy to inspect or replace. A suspect gateway-to-switch patch cable can be tested locally rather than traced through a wall. Room and AP runs still need end-to-end testing; central placement does not eliminate faults in fixed cabling. Label both ends, record destinations and leave accessible service slack without tight bends or connector strain.
+
+If more devices need wired connections than the main switch can accommodate, allow for expansion rather than forcing everything onto too few ports:
+
+| Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| Larger main switch, for example [UniFi Lite 16 PoE](https://techspecs.ui.com/unifi/switching/usw-lite-16-poe) | Choose a suitable 16-port model instead of an 8-port switch | Keeps connections accessible in one place without another switch-to-switch uplink | Check cabinet space, cooling, uplink speed and PoE port count/budget; more total ports does not guarantee more PoE capacity. **Maintenance:** retain the port map and configuration backup, update firmware and recheck connectivity after replacement | More cables converge at the cabinet and a larger compatible switch fits the available space and budget |
+| Additional downstream switch | Connect another switch to the main switch for a device group or location, such as the homelab | Adds local ports near the devices and can reuse the existing main switch | The uplink consumes a port on each switch and its bandwidth is shared by traffic crossing it; another powered device adds a failure dependency. **Maintenance:** label the uplink, maintain the extra switch and verify VLAN membership and management access after changes | A group needs more local ports, or replacing the main switch is impractical |
+
+A downstream homelab switch groups physical connections; it does **not** create a separate security domain by itself. Use VLAN-capable managed switching wherever multiple trust networks must cross that uplink, permit only the required VLANs and retain gateway firewall policy. Use one uplink unless deliberately configuring supported link aggregation or another loop-safe topology.
+
+Use fixed Ethernet runs through suitable wall conduits to reach rooms and AP locations, with accessible terminations and short patch leads at the equipment. Compatible PoE switching can carry both data and AP power over that run; check the [per-port standard and total power budget](#switching-power-and-cabling). Place APs for coverage outside the cabinet rather than assuming a radio inside it will cover the house. Follow the [Wi-Fi placement guidance](./WiFi.md).
+
+Existing equipment and ventilation can make the meter cabinet the most convenient location, but **ventilation must be checked, not assumed**. A closed cabinet may retain heat, especially after adding compute or PoE load. Check temperatures under realistic load with the door closed and follow each device's ambient-temperature and clearance requirements. Keep vents, utility meters, isolation controls and service access unobstructed. Follow local requirements for separation from mains wiring and permitted mounting; do not alter electrical installations or drill near concealed wiring to fit networking gear. If space, cooling or safe access is inadequate, use a suitable nearby location instead.
+
+### Mini PCs and Repurposed Laptops
+
+Use the [host hardware selection guidance](../Hosts/README.md#buying-and-sizing-nodes) to choose the actual mini PCs and their CPU, RAM, storage and networking; this section covers where to put them, not another hardware shortlist.
+
+Mini PCs can fit on a small, stable shelf in a suitable meter cabinet without needing a rack. Compact size alone does not establish cooling suitability: leave air around intake/exhaust vents, keep power bricks ventilated and leave room to remove each device. If stacking is permitted by the hardware's installation guidance, use a stable ventilated stand or spacers so one chassis does not block another's vents; otherwise place them side by side or on separate shelves. Recheck cabinet temperatures after adding hosts.
+
+For an old laptop, use a stable ventilated shelf or stand with access to its power button and connectors; do not bury it under other equipment. Check the battery and charger condition before reuse, follow the manufacturer's charging/temperature guidance and stop using a swollen or damaged battery. Only operate with the lid closed if the model's cooling guidance permits it, and deliberately configure and test the host OS's lid-close/suspend behavior. Verify wired networking, recovery after a reboot and the intended response to power loss. An aging laptop battery is not a substitute for a planned, tested UPS.
+
+### Beyond a Homelab: Racks and Rack Units
+
+A large homelab with substantial networking, storage and server hardware can become closer to a small data center. A rack organizes rack-mount equipment, patch panels and shelves, but its size should follow the equipment rather than the other way around.
+
+Rack height is measured in **rack units (U)**: **1U is 1.75 inches / 44.45 mm** of vertical mounting space. A 2U device occupies two units; a 12U rack provides twelve units of nominal mounting space. Add the U requirements of equipment, patch panels and shelves, plus any manufacturer-required clearances and realistic expansion allowance. A shelf-mounted desktop device also occupies the height above the shelf, not merely the shelf's own U rating. U does not describe depth, width, weight capacity or cooling: verify the usual 19-inch mounting format, usable depth, rail compatibility, load limits, cable clearance, airflow and power requirements separately. A shallow wall cabinet suitable for switches may not fit a deep server.
+
+Rack and small-data-center design is not explored further here. My complete personal goals stay in the private repository; in short, this lab is for **learning and experimenting, not real production or the highest availability**. I do not want to operate a home data center, and the additional rack infrastructure, cooling, power, noise and cost are not justified for that goal. Learning enterprise patterns does not require reproducing their full physical infrastructure; see [goals and availability trade-offs](../../1_Goals/README.md#learn-enterprise-patterns-without-enterprise-availability).
 
 ---
 
