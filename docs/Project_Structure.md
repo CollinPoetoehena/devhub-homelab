@@ -85,3 +85,36 @@ Private homelab integration
 ```
 
 The GitOps line is a planned area, not an existing `gitops/` folder or verified deployment. Reusable packages may have their own repositories linked through DevHub. Credentials, decrypted values, state/plans and raw backups are intentionally not represented as public paths.
+
+TODO: later add the full setup for the private repo, such as (example from ):
+```
+/
+├── ansible/                    # Configuration management playbooks and roles
+│   ├── playbooks/              # Ansible playbooks for setup and configuration
+│   │   ├── 01-network-setup.yml
+│   │   └── 02-security-hardening.yml
+│   ├── roles/                  # Reusable Ansible roles
+│   │   ├── common/             # Common system configuration
+│   │   ├── firewall/           # UFW firewall management
+│   │   ├── network-config/     # Network and hostname configuration
+│   │   ├── security-hardening/ # SSH, fail2ban, kernel params, auditd
+│   │   ├── containerd/         # Container runtime (Article 5)
+│   │   └── kubernetes/         # K8s cluster setup (Article 5)
+│   ├── inventory/              # Inventory files (gitignored - use examples)
+│   │   └── hosts.ini.example   # Example inventory template
+│   └── ansible.cfg             # Ansible configuration
+├── scripts/                    # Helper scripts for automation
+│   ├── proxmox/                # VM creation, snapshot, and management
+│   ├── network/                # Network configuration and testing
+│   └── kubernetes/             # Kubernetes helper scripts
+├── terraform/                  # Infrastructure as Code (Article 10)
+│   ├── proxmox-vms/            # VM provisioning configurations
+│   └── modules/                # Reusable Terraform modules
+├── Kubernetes/                 # K8s manifests and configs (Article 6+)
+│   ├── manifests/              # Kubernetes resource definitions
+│   └── helm-charts/            # Custom Helm charts
+├── docs/                       # Documentation and guides
+│   ├── architecture/           # Network design and system architecture
+│   └── setup-guides/           # Step-by-step setup instructions
+└── examples/                   # Sample applications
+```

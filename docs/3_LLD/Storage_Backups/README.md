@@ -35,6 +35,8 @@ Recreating a container elsewhere does not recreate its local data. Choose suppor
 
 Redundancy supports availability; snapshots aid rollback; backups provide independent recovery. None automatically replaces the others. Git records intent but not all data or device/runtime state.
 
+For network equipment, use the [gateway availability, backup and recovery guidance](../../2_HLD/Network/README.md#availability-backups-and-recovery): retain protected local offline and cloud/off-site configuration copies accessible without the gateway or lab. A cold spare, temporary router VM and automatic HA have different costs and recovery guarantees; none is established by backing up workloads alone. This follows the central [lab-scale availability principle](../../1_Goals/README.md#learn-enterprise-patterns-without-enterprise-availability).
+
 Choose backup tools by scope. Check application consistency, encryption, retention, keys and restore workflow rather than only archive size.
 
 A 3-2-1 approach is a useful baseline, not proof of resilience. Choose independent/off-site copies and deletion/ransomware protection against the risks that matter. Keep recovery keys separately protected but accessible during failure.

@@ -58,6 +58,8 @@ Select by the complete lifecycle you want to operate, supported hardware and int
 
 Choose pod/service/node ranges without household/VPN overlap. Use a compatible enforcing solution if isolation is required.
 
+See [Networks Inside the Lab](../../2_HLD/Network/README.md#networks-inside-the-lab) for the node/Pod/Service distinction, household application access and DMZ limitations. Kubernetes nodes can share the Lab VLAN; Pod and Service address spaces do not normally require separate physical VLANs.
+
 | Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
 |---|---|---|---|---|
 | [Cilium](https://docs.cilium.io/) | eBPF-based networking/policy with optional Hubble visibility and service features | Policy and flow visibility in an integrated ecosystem | Kernel/platform/version prerequisites; extra resource/debugging costs; advanced routing/proxy replacement adds complexity. **Maintenance:** Track kernel/Kubernetes compatibility, controller/agent health and policy behavior; retest allowed/denied flows and any advanced routing after upgrades. | Policy/observability learning with supported compatible nodes |

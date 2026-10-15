@@ -22,6 +22,8 @@ Follow the story from purpose to infrastructure to workloads. Each category keep
 
 The [Documentation Structure & Guideline](Repository_Guidelines.md#documentation-structure--guideline) explains the organization and writing conventions. HLD/LLD describe levels of detail, not separate phases to blindly complete: workload/storage requirements can send you back to revisit host capacity or network design.
 
+Start with [learning enterprise patterns without enterprise availability](./1_Goals/README.md#learn-enterprise-patterns-without-enterprise-availability): shared hardware and accepted recovery downtime can be deliberate cost choices, not incomplete enterprise designs. Each category should identify the resulting failure domains rather than imply production-grade resilience.
+
 > **Old Design+Setup Approach:** Previously, design and setup were treated as separate phases, often leading to repeated adjustments and inefficiencies. The current approach integrates design and setup within the same topic to streamline the process and maintain context. It is now a complete and cohesive workflow that explains a story from start to finish with all necessary details included.
 
 ---
