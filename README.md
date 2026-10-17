@@ -10,6 +10,7 @@
 
 - [Why two homelab repositories?](#why-two-homelab-repositories)
 - [Why separate from DevHub?](#why-separate-from-devhub)
+- [How DevHub and the Homelab Repositories Fit Together](#how-devhub-and-the-homelab-repositories-fit-together)
 - [Task Tracking](#task-tracking)
 - [Documentation](#documentation)
 - [AI and Copilot Skills](#ai-and-copilot-skills)
@@ -44,7 +45,27 @@ See [Repository guidelines](./docs/Repository_Guidelines.md) for content ownersh
 
 The [DevHub separate-projects explanation](https://github.com/CollinPoetoehena/DevHub#separate-projects) describes the distinction: a homelab is related to development, but is still a distinct project with its own purpose, design, lifecycle, issues, automation, and maintenance.
 
-This public repository is not a second general reference library. It applies knowledge to **homelabs**: buying small always-on hosts, separating household infrastructure from experiments, choosing a cluster platform, providing wireless coverage, and planning recovery at home scale. DevHub continues to own concepts and tooling that apply beyond the homelab, such as [networking fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/network), [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md), and [reusable packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md). Link to those resources rather than duplicating them here.
+The split is about **reusable principles versus their application**, not theory versus design. DevHub covers general architecture as well as fundamentals; this repository applies those ideas to homelabs. The [division of responsibilities below](#how-devhub-and-the-homelab-repositories-fit-together) explains where to read and maintain each kind of information.
+
+---
+
+## How DevHub and the Homelab Repositories Fit Together
+
+**DevHub explains the reusable principle; the public homelab explains how to apply it at home scale; the private homelab records what I actually chose and implemented.** Keep one authoritative explanation of each subject and link to it from the places that use it.
+
+| Location | Owns | Examples |
+|---|---|---|
+| [DevHub reference](https://github.com/CollinPoetoehena/DevHub/tree/main/reference) | General theory, architectural principles, commands, and workflows useful across projects and environments | Networking layers, segmentation, trust zones, permitted traffic flows, OS/hardware fundamentals, and general development practices |
+| Public homelab (this repository) | Homelab applications, generic example designs, options, and practical trade-offs | Shared versus separate home/lab gateways, isolated routing exercises, small-host purchasing and capacity, power/noise constraints, equipment placement, and home-scale recovery |
+| [Private homelab](https://github.com/CollinPoetoehena/devhub-homelab-private) (access required) | Actual selected design, implementation, and operations | Equipment and topology, confirmed internal settings, decision rationale, runbooks, verification results, and recovery records |
+
+For example, [DevHub's network design reference](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md) owns the detailed segmentation/access explanation and illustrative trust-zone model. The [public network guide](./docs/2_HLD/Network/README.md) applies those principles to keeping household connectivity independent of lab experiments, selecting a gateway/switch/AP arrangement, and exposing a lab application deliberately. The private network category records the chosen configuration and what was actually verified. A reader designing a business or cloud network should not need a homelab project as the authoritative source for general network architecture.
+
+The same rule applies to hardware and other topics. General [OS and hardware references](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/os_hardware) explain the underlying concepts and inspection commands; [Hosts and Nodes](./docs/2_HLD/Hosts/README.md) evaluates their use for small lab machines, capacity, electricity, and accepted failure domains. Actual inventory, allocations, and operational results stay private. Keep reusable [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md) and [packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md) in their own shared lifecycle rather than copying them into the homelab.
+
+Brief contextual summaries and safety reminders are useful in an applied guide; a second full tutorial, comparison, or identical general-purpose diagram is not. Link to the authoritative explanation, then add the homelab-specific requirements, reasoning, constraints, and checks. Cross-links may work in both directions to help readers navigate, but they do not make either repository a mirror of the other. The private record can link directly to DevHub when the relevant material is general rather than a homelab example.
+
+The [repository guidelines](./docs/Repository_Guidelines.md#content-ownership) turn this relationship into maintenance and publication rules. This separation does not authorize moving private configuration into either public repository.
 
 ---
 

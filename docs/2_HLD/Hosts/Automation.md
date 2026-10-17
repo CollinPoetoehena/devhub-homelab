@@ -2,6 +2,8 @@
 
 Automation belongs to the lifecycle it manages, not a top-level folder named after a selected tool.
 
+This category evaluates automation for lab hosts and recovery. Follow the [repository relationship](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together): shared workflows and reusable components stay in DevHub, public examples explain lab integration, and actual composition, inputs, and results stay private.
+
 ---
 
 ## Table of Contents

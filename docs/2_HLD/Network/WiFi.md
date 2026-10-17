@@ -2,6 +2,8 @@
 
 Select coverage, backhaul, management and segmentation together with the [network design](./README.md).
 
+> **Scope:** This page evaluates home-scale coverage and equipment. Use [DevHub's network-design principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md) for general segmentation/access rules, and the [repository relationship](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together) for where shared explanations and private measurements belong.
+
 ---
 
 ## Table of Contents

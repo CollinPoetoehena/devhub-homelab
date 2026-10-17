@@ -26,12 +26,14 @@ This is the shared guideline for the [public homelab](https://github.com/CollinP
 
 | Information | Owner |
 |---|---|
-| General networking, Linux, AI, and development concepts useful beyond homelabs | [DevHub reference](https://github.com/CollinPoetoehena/DevHub/tree/main/reference) |
+| General networking theory/architecture, OS/hardware fundamentals, Linux, AI, and development concepts useful beyond homelabs | [DevHub reference](https://github.com/CollinPoetoehena/DevHub/tree/main/reference) |
 | Homelab design patterns, options, trade-offs, buying criteria, generic setup and lessons | Public homelab |
 | Actual equipment, non-sensitive internal settings, topology, decisions and operating procedures | Private homelab |
 | Sensitive public IPs, global prefixes and identifying public domains/access endpoints | Encrypted/protected storage; private prose uses references |
 | Reusable Ansible roles, Terraform modules, Helm charts or packages | Independently maintained component repositories, indexed through [DevHub packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md) |
 | Credentials, private keys, decryption keys, sensitive state and raw backups | Protected secret/backup storage, not ordinary tracked files in either repository |
+
+The [main README's repository relationship](../README.md#how-devhub-and-the-homelab-repositories-fit-together) explains the rationale and examples: reusable principles belong in DevHub, homelab application belongs publicly here, and actual selections and operations belong privately. General architecture is not an exception to this rule; [network design principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md) such as segmentation and trust zones belong in DevHub alongside protocol theory.
 
 The public repository is a knowledge base and portfolio, **not a sanitized deployment mirror**. Do not copy private inventory, manifests, Terraform roots, switch exports, or generated configuration into it just because credentials have been removed. Document those capabilities in Markdown. Extract genuinely reusable code only as an explicit, separately reviewed component with generic interfaces and tests; the repository split itself does not move or publish code.
 
@@ -64,6 +66,8 @@ High-level design (HLD) describes the foundation and its boundaries: network and
 Infrastructure as Code and configuration management are concepts within **host lifecycle**, with Terraform/OpenTofu/Pulumi and Ansible/Puppet/etc. as options. GitOps/CD and CI belong with **services and delivery**, with Argo CD/Flux and CI systems as options. Tool names are not top-level documentation folders.
 
 The private repository mirrors these categories, keeping actual design decisions before detailed setup and results in each category. It does not mirror the public prose.
+
+Start a public category from the homelab problem rather than reproducing general theory. Link DevHub for the reusable principles and use a short reminder only when needed to understand the local application or safety constraint. Keep generic illustrative network-zone tables and diagrams in the general reference; keep home/lab role examples and equipment/recovery choices here. When moving an explanation, update its navigation and incoming links instead of maintaining two copies.
 
 Implementation code does not have to be public for this portfolio. The [project-structure overview](./Project_Structure.md) and generic guidance explain design, ownership and setup approaches without household inputs. This is an intentional [publication boundary](#portfolio-and-project-structure), not a promise to eventually mirror the private repository.
 

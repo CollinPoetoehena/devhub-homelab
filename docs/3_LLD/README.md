@@ -2,6 +2,8 @@
 
 Choose what runs on the [infrastructure foundation](../2_HLD/README.md). Each topic combines design, relevant tools and broad implementation/verification considerations without reproducing a specific deployment.
 
+Apply the [repository relationship](../../README.md#how-devhub-and-the-homelab-repositories-fit-together) here too: link shared concepts and general workflows in DevHub, explain their use and trade-offs for a homelab in these categories, and keep actual configuration and results private.
+
 ---
 
 ## Table of Contents

@@ -2,6 +2,8 @@
 
 Define boundaries, dependencies and capacity before selecting the platforms that run on them.
 
+> **Scope:** These categories apply shared principles to home-and-lab infrastructure. Read the [repository relationship](../../README.md#how-devhub-and-the-homelab-repositories-fit-together) for what belongs in DevHub, the public guide, and the private implementation record.
+
 ---
 
 ## Table of Contents
@@ -14,7 +16,7 @@ Define boundaries, dependencies and capacity before selecting the platforms that
 
 ## Network Foundation
 
-[Network](./Network/README.md) covers household/lab boundaries, layered responsibilities, segmentation, gateway/switch choices and safe implementation considerations. [Wi-Fi](./Network/WiFi.md) covers coverage and backhaul as part of that network, not as a second independent routing stack.
+[Network](./Network/README.md) applies [DevHub's network design principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md) to household/lab boundaries, gateway/switch choices and safe implementation considerations. [Wi-Fi](./Network/WiFi.md) covers coverage and backhaul as part of that network, not as a second independent routing stack.
 
 Choose which connectivity must remain available independently of experiments, then locate routing, switching, wireless access and policy enforcement. A small network can collapse several logical layers into one switch while still having clear ownership. Segmentation, equipment capabilities and recovery access should be decided together; an attractive gateway cannot implement a policy its switch/AP paths do not support.
 

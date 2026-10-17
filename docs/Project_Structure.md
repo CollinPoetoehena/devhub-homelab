@@ -2,6 +2,8 @@
 
 A useful structure makes responsibilities and dependencies understandable without publishing site-specific implementation code. This page describes how to organize homelab integration and ends with the maintained high-level structure summary for this project.
 
+The [main README's repository relationship](../README.md#how-devhub-and-the-homelab-repositories-fit-together) owns the broader explanation of DevHub, public examples, and private operations; this page applies it to integration layout.
+
 ---
 
 ## Table of Contents
@@ -62,7 +64,7 @@ This is an **AI-maintained, sanitized responsibility view**, not an exact direct
 
 ```text
 Public homelab knowledge base
-  README.md                 purpose, split and entry point
+  README.md                 purpose, three-repository relationship and entry point
   .github/                  public-context instructions and sanitization skill
   docs/
     Repository_Guidelines.md

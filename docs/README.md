@@ -32,7 +32,7 @@ Start with [learning enterprise patterns without enterprise availability](./1_Go
 
 Start with the design problem and options; select the hardware/software that meets it; then read the short implementation and verification considerations. This public reference is a decision guide, **not a vendor installation manual or a copy of the private deployment sequence**.
 
-Actual selections, detailed runbooks and results belong in the matching private category. General protocols, commands and development workflows stay in [DevHub](https://github.com/CollinPoetoehena/DevHub/tree/main/reference).
+Follow the [repository relationship in the main README](../README.md#how-devhub-and-the-homelab-repositories-fit-together): DevHub owns general theory and architecture, this public guide applies them to homelab requirements, and actual selections, detailed runbooks and results belong in the matching private category. General protocols, design principles, commands and development workflows stay in [DevHub](https://github.com/CollinPoetoehena/DevHub/tree/main/reference); link them instead of repeating full explanations here.
 
 Use the detailed comparison tables to read what each option is, its benefits, drawbacks/responsibilities and use cases; named tools link to official documentation where available. Surrounding prose explains shared principles and evaluation/verification, rather than duplicating a tool catalog. A useful decision includes what problem is solved, which limitations remain and how success would be checked. The host/network categories go deeper into purchasing, lifecycle and isolation because mistakes there affect every workload above them.
 

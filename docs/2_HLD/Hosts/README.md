@@ -2,6 +2,8 @@
 
 Choose physical capacity and failure domains before allocating VMs or installing an orchestration platform. This category combines host roles, buying decisions, power costs and virtualization; there is no separate generic hardware/software catalog.
 
+> **Scope:** Use [DevHub's OS and hardware references](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/os_hardware) for shared fundamentals and inspection commands. This guide applies them to lab purchasing, capacity, power, and recovery; actual inventory and allocations remain private. See the [repository relationship](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together) rather than treating this as another general hardware reference.
+
 ---
 
 ## Table of Contents
@@ -92,7 +94,7 @@ SSD capacity is not its only property: latency, endurance, sustained writes, hea
 | Extra physical NICs | Separate physical interfaces for selected traffic roles | Distinct links and potential bandwidth separation | Ports, cabling, drivers and configuration; shared host/power remain. **Maintenance:** Track interface identity, cabling and drivers; verify bridge/routing roles after replacement or host updates. | Physical path separation or link capacity is needed |
 | VLANs on a shared NIC | Logical traffic roles carried by a controlled trunk | Segmentation without extra physical interfaces | Shared bandwidth/failure domain and correct tagging/policy required. **Maintenance:** Maintain explicit trunk membership and tagging across host/switch changes; test administration and denied cross-segment paths. | Logical separation is sufficient |
 
-Neither extra NICs nor VLANs removes the need to protect hypervisor administration.
+Neither extra NICs nor VLANs removes the need to protect hypervisor administration. Use [DevHub's segmentation and access principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md#segmentation-and-access) for the general policy, then select host NIC/bridge roles that support the [home-and-lab boundary](../Network/README.md#segmentation-and-access).
 
 ---
 
