@@ -1,5 +1,7 @@
 # Network
 
+> **How this guide relates to DevHub:** The general networking concepts and commands live in DevHub's [network reference](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/network). That index points here for homelab-focused network design examples, including trust zones and traffic flows. Those examples are maintained in this repository rather than duplicated in DevHub; this guide links back to DevHub for shared fundamentals.
+
 Design trust boundaries and recovery first. Networking gear and its management software are selected together to implement that design. Broad protocol theory belongs in [DevHub networking](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/network).
 
 The network is one of the most consequential parts of a homelab: it connects every platform and may also support household work, communication and entertainment. A failed experiment should not unnecessarily remove those services or the management path needed to fix it. Spend effort on understandable traffic paths, safe changes and recovery before adding features.
@@ -18,6 +20,7 @@ The network is one of the most consequential parts of a homelab: it connects eve
   - [Trust Roles and Minimum Access](#trust-roles-and-minimum-access)
   - [Routing, Gateway Services and Local Traffic](#routing-gateway-services-and-local-traffic)
   - [Addressing and VLAN Membership](#addressing-and-vlan-membership)
+- [Trust Zones and Traffic Flow](#trust-zones-and-traffic-flow)
 - [Networks Inside the Lab](#networks-inside-the-lab)
   - [Kubernetes Nodes, Pods and Services](#kubernetes-nodes-pods-and-services)
   - [Reaching Applications from Home](#reaching-applications-from-home)
@@ -238,6 +241,69 @@ Use a private address plan that will not collide with common VPN sites, existing
 Access ports usually carry one untagged client segment. Trunks carry only the tagged networks required by a switch, AP or hypervisor, with an explicitly agreed native/untagged behavior. A native mismatch or unrestricted host trunk can defeat an otherwise good design. Management over tags versus untagged access is a platform/port-design decision, not a universal rule.
 
 IPv6 requires a real plan for delegated prefixes, addressing, DNS, router advertisements and policy. Multiple addresses and global reachability do not imply that all inbound traffic should be allowed. Preserve essential ICMPv6/control traffic and verify both allowed and denied paths; disabling all ICMP is not a safe substitute for understanding it.
+
+---
+
+## Trust Zones and Traffic Flow
+
+> This section contains a larger body than other sections because it is a very important section to keep in mind when designing networks.
+
+A useful way to reason about a network is to group systems into **zones by trust and purpose**, then define which connections may cross each boundary. A zone is a policy boundary, not simply a label for a device type or a guarantee that every system inside it is safe. The colors below are mnemonic labels for this generic example only; they are not a standard, a prescribed number of networks, or a representation of any real network. "External" is relative to the specific protected environment, not to who owns the originating network: a remote employee, customer, partner, or another organization-owned network can still be external when traffic crosses into a separate security domain. Ownership does not prove that a device or connection is uncompromised.
+
+| Illustrative zone | Role and typical systems | Typical reachability and traffic path | Policy intent |
+|---|---|---|---|
+| **Black — external / untrusted** | Networks, systems, and users outside the defined protected environment. This can include the public Internet, remote users, customer or partner networks, and separately administered networks owned by the same organization. | May initiate connections only to explicitly published services or separately approved access gateways. It is not an internal zone simply because its operator is familiar or has the same organizational owner. | Treat incoming traffic as untrusted; monitor and inspect it at appropriate boundaries. Where the threat and service justify it, upstream filtering or traffic-scrubbing services may help absorb attacks before they reach the service edge; their availability and behavior depend on the provider and design. |
+| **Upper Red — external-facing DMZ** | The outer part of a Red/DMZ boundary. Typical systems include public-facing reverse proxies, web application firewalls, load balancers, TLS termination points, and other edge services. | Receives the deliberately published connections from Black and terminates, validates, or filters them. It may pass only specifically allowed application flows toward Lower Red, or toward a narrowly scoped application endpoint if the design has no Lower Red tier. | Expose only the required service interfaces. Do not treat traffic as trusted just because it reached this tier; constrain both inbound and onward connections, protect the components themselves, and avoid routes to Green or Blue management interfaces. |
+| **Lower Red — internal-facing DMZ** | An optional inner part of the Red/DMZ boundary, placed between the external-facing edge and internal application services. It can host or connect to components that relay already-filtered service traffic inward. | Accepts only specified traffic from Upper Red and forwards only approved service flows toward Orange. It may also support narrowly defined internal service access, but must not become a general bridge between external and internal networks. | Enforce a separate policy boundary from Upper Red. Where a system has interfaces in both Red tiers, carefully restrict and inspect forwarding; do not bridge the interfaces or assume that filtering at Upper Red makes all onward traffic safe. |
+| **Orange — application** | Application-tier systems that implement service or business logic, such as application and API servers, middleware, backend services, and data stores whose classification permits this tier. | Receives only the service calls required from an approved Red edge or other explicitly authorized client. It may initiate narrowly scoped requests to Green for data needed by the application; responses should return to the authorized requester. It has no direct Black-facing service path in this model. | Keep application services behind the service edge. Allow only required protocols, destinations, and identities; do not use Orange as an unrestricted transit path between Red and Green or between unrelated applications. |
+| **Green — protected data** | Systems holding sensitive, confidential, personal, or otherwise higher-classification data, commonly databases or protected storage services. | Accepts only the specific data operations required from authorized Orange services and separately approved Blue management paths. External clients and Red edge systems do not connect directly to Green in this model. | Minimize reachable systems and permitted operations. Apply data-layer authentication and authorization as well as network controls; an allowed application connection does not mean that the application should have unrestricted access to every record or operation. |
+| **Blue — privileged management** | A logical management-connectivity zone for approved administrators, secured access systems, and management tooling used to operate systems across the other zones. It is not an ordinary end-user network. | Administrators enter through a separately secured and authorized access path; management tools then reach only the specific management interfaces and targets they are responsible for. The required route can differ by system and may use controlled stepping-stone access rather than direct administrator connectivity. | Treat management as privileged, not inherently safe. Require appropriate identity assurance and authorization, protect administrator endpoints and tooling, log sensitive actions, and limit each path to necessary targets and operations. |
+
+The table describes **common roles and candidate paths, not automatic reachability**. A zone being mentioned as a possible source does not mean every system in it may connect to every system in another zone. Define who may initiate each connection, the destination service and protocol, the enforcement point, and the expected response path. Apply a least-privilege policy to traffic in both directions; stateful return traffic for an approved connection is different from allowing the destination to start an unrelated new connection.
+
+Red can be implemented as one DMZ segment or split into **Upper Red** and **Lower Red**. When split, Upper Red faces Black and hosts the externally reachable edge; Lower Red is the internal-facing tier that relays only explicitly filtered traffic toward Orange. The split can make the boundary and review of permitted flows clearer, but requires additional interfaces, rules, monitoring, and maintenance. It is useful only when the risk model and operational capacity justify those costs. Separate segments or other controls must enforce the boundary: the tier names alone do not provide isolation. Any system connected to more than one zone needs special scrutiny because a compromised or misconfigured multi-homed host can become a path around the intended controls.
+
+Traffic from Black should be monitored and inspected at suitable points because it crosses a trust boundary. Depending on the exposure and threat model, protection may include rate limiting, application-layer filtering, or upstream DDoS mitigation; these are design choices, not properties guaranteed by a zone label. Filtering should not be confused with reachability: security controls can observe or reject a flow without granting it access to the next zone. Normal routing and any mitigation path, including its capacity and operational ownership, should be understood and tested where applicable.
+
+```text
+ BLACK: external to the protected environment
+ Internet, remote users, customer/partner or other separately managed networks
+                           |
+             published service / approved access only
+                           v
+ UPPER RED: external-facing edge (optional DMZ tier)
+ proxy / WAF / load balancer -> terminate, inspect, filter
+                           |
+       only explicitly permitted service traffic
+                           v
+ LOWER RED: internal-facing DMZ tier (optional)
+       relay only the authorized application flow
+                           |
+             only required application calls
+                           v
+ ORANGE: application / service logic
+                           |
+        specifically authorized data operations
+                           v
+ GREEN: protected data
+
+ BLUE: privileged management (separate logical access plane)
+ approved administrator -> secured access path -> authorized target
+                     -> specific management interface / operation
+
+ No direct Black-to-Green path in this model. Deny unneeded new
+ inter-zone connections; document and test every exception.
+```
+
+This is a representative request path, not a complete topology or universal rule set. When Lower Red is used, an external request is terminated or filtered in Upper Red, then only an approved service flow is relayed through Lower Red to Orange. In a simpler design without Lower Red, permit only the required edge-to-application flow; do not interpret that as permission for all Red systems to reach all Orange systems. Orange can query Green only for the specific data and operations needed by the service. Green replies to those authorized requests; that response path does not grant Green broad access to Orange. No direct Black-to-Green connection is part of this model.
+
+Blue is shown separately because administrative access is not an ordinary application path. A secured administrator or management tool may need carefully controlled interfaces in several zones, but should reach only approved targets and operations. Do not expose management interfaces through the public service edge. The secure access method, identity checks, approval requirements, and logging depend on the environment and must be designed explicitly.
+
+Segmentation limits which paths are available and can reduce lateral movement, but it does not make compromise harmless. An exposed edge service can still be vulnerable; an attacker who compromises an application may be able to use that application's permitted Green access; and an allowed management path can still be abused. Use network controls alongside host and application isolation, strong identity and authorization, least privilege, monitoring, patching, and recoverable backups. Do not assume that placing a database in Green makes its data safe if the application in Orange can retrieve it without appropriate authorization.
+
+The policy must be enforced at a point that actually sees the traffic. Same-segment traffic, Layer 3 switching, host bridges, and platform overlay networks may bypass a perimeter firewall. Choose enforcement points for each path, account for both IPv4 and IPv6, preserve necessary stateful replies and infrastructure services, and verify allowed **and denied** flows from representative systems. A VLAN, a firewall zone name, or a diagram alone does not enforce access policy.
+
+Use the model as a starting point for a network design: identify the assets and trust assumptions in each zone, map required service and management flows, choose the enforcement point, and state what must remain unreachable. Keep privileged management and recovery paths usable if an experiment fails. Document each exception with its owner and purpose, then test that it works as intended and that neighboring, unapproved paths remain blocked. The [segmentation and access guidance above](#segmentation-and-access) covers trust roles, routing, and VLAN considerations.
 
 ---
 

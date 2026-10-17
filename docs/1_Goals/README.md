@@ -7,6 +7,7 @@ Choose the purpose before buying equipment or installing tools.
 ## Table of Contents
 
 - [Design the Purpose](#design-the-purpose)
+  - [Why Build a Homelab?](#why-build-a-homelab)
 - [Keep the Scope Sustainable](#keep-the-scope-sustainable)
 - [Learn Enterprise Patterns Without Enterprise Availability](#learn-enterprise-patterns-without-enterprise-availability)
 - [From Goals to Categories](#from-goals-to-categories)
@@ -27,6 +28,12 @@ Record learning topics, useful services, data importance, acceptable downtime/da
 | Enterprise-platform practice | Targeted management, upgrade and failure exercises | Experience with specific enterprise concepts | Cost/resources and operational scope; copying enterprise topology is unnecessary for unrelated goals. **Maintenance:** Budget time for supported release paths and management components; retire exercises that no longer serve the learning goal. | Enterprise learning itself is the requirement |
 
 Write requirements as outcomes: "restore important data within the accepted time" or "keep household connectivity working during compute maintenance," not "buy three nodes." Identify must-haves, useful learning goals and deferred ideas. A tool is a means of achieving those outcomes, not the goal unless learning that tool is explicitly the exercise.
+
+### Why Build a Homelab?
+
+A homelab brings many layers of engineering together for hands-on exploration: hardware, networking, storage, software, observability, automation, and much more. An idea does not stay abstract: you can build it, see how its parts depend on one another, find out what happens when something changes, and work through how to make it better. That mix of curiosity, problem-solving, and tangible progress is a large part of the appeal for me. I love engineering, enjoy learning how complex things fit together, and find that time spent experimenting in my lab gives me both a sense of purpose and a way to relax.
+
+It is also a personal playground: a place to try unfamiliar ideas, make mistakes safely, recover, and decide what is worth keeping without turning every experiment into a permanent service. A homelab is not only a way to host things; it is a self-directed space to create, learn, and enjoy the process. And there is always more to it than any short description can capture: every experiment can reveal another connection, another question, or a new direction to explore.
 
 ---
 
