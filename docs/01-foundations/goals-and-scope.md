@@ -12,6 +12,7 @@ The chapter answers the first question of the storyline: **why am I building thi
 
 - [Design the Purpose](#design-the-purpose)
   - [Why Build a Homelab?](#why-build-a-homelab)
+  - [Relaxation and Enjoyment over Productivity](#relaxation-and-enjoyment-over-productivity)
 - [Keep the Scope Sustainable](#keep-the-scope-sustainable)
 - [Define What Is Out of Scope](#define-what-is-out-of-scope)
 - [From Goals to Requirements](#from-goals-to-requirements)
@@ -35,9 +36,19 @@ Write requirements as outcomes: "restore important data within the accepted time
 
 ### Why Build a Homelab?
 
-A homelab brings many layers of engineering together for hands-on exploration: hardware, networking, storage, software, observability, automation, and much more. An idea does not stay abstract: you can build it, see how its parts depend on one another, find out what happens when something changes, and work through how to make it better. That mix of curiosity, problem-solving, and tangible progress is a large part of the appeal for me. I love engineering, enjoy learning how complex things fit together, and find that time spent experimenting in my lab gives me both a sense of purpose and a way to relax.
+A homelab brings many layers of engineering together for hands-on exploration: hardware, networking, storage, software, observability, automation, and much more. An idea does not stay abstract: you can build it, see how its parts depend on one another, find out what happens when something changes, and work through how to make it better. That mix of curiosity, problem-solving, and tangible progress is a large part of the appeal for me. I love engineering, enjoy learning how complex things fit together, and find that time spent experimenting in my lab gives me both a sense of purpose and a way to relax (see also [Relaxation and Enjoyment over Productivity](#relaxation-and-enjoyment-over-productivity)).
 
 It is also a personal playground: a place to try unfamiliar ideas, make mistakes safely, recover, and decide what is worth keeping without turning every experiment into a permanent service. A homelab is not only a way to host things; it is a self-directed space to create, learn, and enjoy the process. And there is always more to it than any short description can capture: every experiment can reveal another connection, another question, or a new direction to explore.
+
+### Relaxation and Enjoyment over Productivity
+
+A homelab is a hobby and a place to learn, not another productivity target. Its success is not measured by how quickly something is deployed, how many services stay online, how much of a backlog gets completed, or how closely the setup resembles a production environment. There is no required pace, deadline, or finish line. Taking time to understand an idea, following curiosity, repeating an experiment, or deciding not to keep a project can all be worthwhile outcomes.
+
+For me, working on the lab is relaxing as well as interesting. A concrete, hands-on problem gives me something absorbing to focus on; I can see an idea take shape on real equipment, follow questions that arise naturally, and enjoy the satisfaction of making things work. The focus comes from curiosity, not a deadline, a customer, or pressure to deliver quickly. I can choose a small task, explore without knowing exactly where it will lead, and stop or return to it later. Some sessions are challenging or frustrating, of course; the freedom to experiment, learn from a mistake, and take a break is what keeps the overall experience enjoyable rather than an obligation.
+
+Make room for the parts of the process that make the hobby rewarding: exploring, building, observing, troubleshooting, and learning from mistakes. It is fine to leave an experiment unfinished, simplify a design, turn the lab off, or take a break and return when it feels interesting again. Do not add automation, complexity, or extra work just to appear efficient or to match someone else's setup; choose the amount of structure that helps you learn and enjoy the work.
+
+Relaxed does not mean careless. Keep experiments reversible and within the [scope you can sustain](#keep-the-scope-sustainable), and account for the responsibilities of any service that holds important data or affects other people. A deliberate boundary protects both the household and the enjoyment of experimenting; it is not a reason to turn the hobby into an uptime contest.
 
 ---
 
