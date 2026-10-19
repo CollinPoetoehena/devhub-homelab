@@ -11,6 +11,7 @@
 - [Why two homelab repositories?](#why-two-homelab-repositories)
 - [Why separate from DevHub?](#why-separate-from-devhub)
 - [How DevHub and the Homelab Repositories Fit Together](#how-devhub-and-the-homelab-repositories-fit-together)
+- [Working Across DevHub and the Homelab Repositories](#working-across-devhub-and-the-homelab-repositories)
 - [Task Tracking](#task-tracking)
 - [Documentation](#documentation)
 - [AI and Copilot Skills](#ai-and-copilot-skills)
@@ -27,7 +28,7 @@ The primary reason is **security**. Publishing the internals of a home network c
 | [devhub-homelab](https://github.com/CollinPoetoehena/devhub-homelab) (public) | Homelab knowledge base, portfolio, and entry point | Options, selection criteria, generic designs, sanitized setup guidance, reusable lessons, and links to reusable components |
 | [devhub-homelab-private](https://github.com/CollinPoetoehena/devhub-homelab-private) (private; access required) | Actual implementation and operational record | Chosen hardware/software, decision rationale, internal topology and inventory, configuration, runbooks, validation results, and recovery details |
 
-> **Tip: Open both repositories in one VS Code workspace.** Clone them into a shared parent folder, such as `homelab/`, and open that folder in VS Code, or add both repositories to a multi-root workspace. This makes it easier to give AI chat context from both repositories and coordinate documentation changes without switching windows. See [AI usage](#ai-usage) for making shared and homelab-specific customizations available. Explicitly select the target repository and relevant files and read its instructions and guidelines; opening both repositories does not guarantee that every instruction or skill is automatically loaded. Keep the repositories as separate Git projects and preserve the publication boundary: access to private context is not permission to copy it into public documentation.
+For a convenient local setup with all three projects, see [Working Across DevHub and the Homelab Repositories](#working-across-devhub-and-the-homelab-repositories).
 
 One repository forced an awkward compromise: either publish too much, or replace useful operational details with examples and leave the real setup undocumented in my head. The split lets the private record be genuinely useful while the public reference remains safe and reusable.
 
@@ -66,6 +67,16 @@ The same rule applies to hardware and other topics. General [OS and hardware ref
 Brief contextual summaries and safety reminders are useful in an applied guide; a second full tutorial, comparison, or identical general-purpose diagram is not. Link to the authoritative explanation, then add the homelab-specific requirements, reasoning, constraints, and checks. Cross-links may work in both directions to help readers navigate, but they do not make either repository a mirror of the other. The private record can link directly to DevHub when the relevant material is general rather than a homelab example.
 
 The [repository guidelines](./docs/Repository_Guidelines.md#content-ownership) turn this relationship into maintenance and publication rules. This separation does not authorize moving private configuration into either public repository.
+
+---
+
+## Working Across DevHub and the Homelab Repositories
+
+**For my own workflow, keeping DevHub, the public homelab and the private homelab together in one VS Code workspace is the easiest and most practical setup.** I can move between related projects in one window, compare their documentation side by side and make coordinated updates without repeatedly opening separate workspaces. Clone [DevHub](https://github.com/CollinPoetoehena/DevHub), [devhub-homelab](https://github.com/CollinPoetoehena/devhub-homelab) and [devhub-homelab-private](https://github.com/CollinPoetoehena/devhub-homelab-private) under a shared parent folder, such as `homelab/`, and open that folder in VS Code. Alternatively, add the three repositories to a multi-root workspace. Each clone remains its own Git repository.
+
+This setup is also useful when working with AI: workspace-aware tools can access relevant shared principles in DevHub, generic homelab guidance and private design records—even when a task changes only one repository. That context helps the AI follow the right ownership boundaries, reuse existing explanations and keep related documentation consistent. It can avoid effort and AI usage spent switching workspaces or retrieving context through separate GitHub URLs; private content may not be accessible through a URL at all, and remote retrieval can require extra steps and tokens. Local availability does not mean every file is automatically read, however: tools differ in how they access the workspace, so point the AI at the target repository, relevant files and applicable instructions.
+
+Opening an individual repository in its own workspace is still possible for deliberately isolated work, but it is not the recommended default. The AI may not be able to inspect another workspace, and links to other repositories are not a reliable substitute for local context. Keeping all three repositories together makes that context available when needed, even if the other two are not being changed. Preserve their information boundaries: DevHub owns reusable principles, the public homelab owns generic homelab applications, and the private homelab owns actual design and operations. Private access is not permission to publish private details; public changes still require deliberate review against the [publication boundary](./docs/Repository_Guidelines.md#publication-boundary). See [AI usage](#ai-usage) for making shared and homelab-specific customizations available across the workspace.
 
 ---
 
@@ -132,7 +143,7 @@ A project-context skill is unnecessary: DevHub skills automatically discover ins
 
 Install the shared DevHub skills using [Use external or centralized customizations across repositories](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md#use-external-or-centralized-customizations-across-repositories), which also links the DevHub installer and explains manual copies and symbolic links. A GitHub link is a reference, not an installation. Verify discovery in the selected host, on the machine where the agent runs.
 
-For the shared parent `homelab/` workspace described [above](#why-two-homelab-repositories), you can add a workspace-local `.github/skills/` directory and symbolic links to the **additional homelab-specific** skill directories. For example, from that parent folder on a host supporting symlink discovery:
+For a shared parent workspace as described in [Working Across DevHub and the Homelab Repositories](#working-across-devhub-and-the-homelab-repositories), you can add a workspace-local `.github/skills/` directory and symbolic links to the **additional homelab-specific** skill directories. For example, from that parent folder on a host supporting symlink discovery:
 
 ```sh
 mkdir -p .github/skills
@@ -143,4 +154,4 @@ Replace the absolute source path with your clone location, ensure the destinatio
 
 **Centralizing homelab-specific customizations is not necessary.** They are specific to my homelab projects, unlike the generic DevHub customizations reused across unrelated projects. Keep their source in the owning repository; parent-workspace links are optional convenience, not a reason to move them into DevHub or install them globally.
 
-Opening the parent folder does not guarantee discovery of nested repository instructions. Explicitly select the target repository and provide its [public instructions](./.github/copilot-instructions.md) or [private instructions](https://github.com/CollinPoetoehena/devhub-homelab-private/blob/main/.github/copilot-instructions.md) as context when necessary. Verify that the intended skills are available. Access to both repositories never authorizes publishing private content.
+Opening the parent folder does not guarantee discovery of nested repository instructions. Explicitly select the target repository and provide its [public instructions](./.github/copilot-instructions.md) or [private instructions](https://github.com/CollinPoetoehena/devhub-homelab-private/blob/main/.github/copilot-instructions.md) as context when necessary. Verify that the intended skills are available. Access to all three repositories never authorizes publishing private content.
