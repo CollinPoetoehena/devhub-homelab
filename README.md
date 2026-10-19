@@ -1,14 +1,17 @@
 # DevHub Homelab
 
-> **TODO: Final documentation review.** Once most of the homelab is complete, thoroughly review the entire public documentation again. Use practical lessons to correct, expand and improve the generic guidance, not to publish the actual installation. Revisit goals, HLD/LLD categories, option tables, project structure and guidelines; verify official documentation links and update release-dependent features, support/lifecycle assumptions and recommendations to the current supported versions at review time. Recheck completeness, consistency, Table of Contents, anchors and cross-repository `main` links. Review the final public diff against the [publication boundary](./docs/Repository_Guidelines.md#publication-boundary), keeping actual internals, secrets and operational results private. This is a future review milestone, not a claim that the homelab or documentation is finished now.
+> **TODO: Final documentation review.** Once most of the homelab is complete, thoroughly review the entire public documentation again. Use practical lessons to correct, expand and improve the generic guidance, not to publish the actual installation. Revisit the book structure (layers, parts and chapters), goals, requirements, option tables, project structure and guidelines; verify official documentation links and update release-dependent features, support/lifecycle assumptions and recommendations to the current supported versions at review time. Recheck completeness, consistency, Table of Contents, anchors and cross-repository `main` links. Review the final public diff against the [publication boundary](./docs/repository-guidelines.md#publication-boundary), keeping actual internals, secrets and operational results private. This is a future review milestone, not a claim that the homelab or documentation is finished now.
 
-**The public entry point, knowledge base, and portfolio for my homelab project.** This repository collects homelab-focused design guidance, trade-offs, setup approaches, and reusable lessons. It is not a description of my live home network or a deployable copy of it.
+**The public entry point, knowledge base and portfolio for my homelab project—written as a book you can read from start to finish.** This repository is the open-source version of my homelab journey: why I build a homelab, which requirements and principles guide it, which architecture and capabilities solve them, how it is implemented and how it is operated and recovered. It collects homelab-focused design guidance, trade-offs, recommendations, setup approaches and reusable lessons. It is not a description of my live home network or a deployable copy of it.
+
+**Start reading:** [The Homelab Book](./docs/README.md).
 
 ---
 
 ## Table of Contents
 
 - [Why two homelab repositories?](#why-two-homelab-repositories)
+- [Reading the Public Repository as a Book](#reading-the-public-repository-as-a-book)
 - [Why separate from DevHub?](#why-separate-from-devhub)
 - [How DevHub and the Homelab Repositories Fit Together](#how-devhub-and-the-homelab-repositories-fit-together)
 - [Working Across DevHub and the Homelab Repositories](#working-across-devhub-and-the-homelab-repositories)
@@ -25,8 +28,8 @@ The primary reason is **security**. Publishing the internals of a home network c
 
 | Repository | Purpose | What belongs there |
 |---|---|---|
-| [devhub-homelab](https://github.com/CollinPoetoehena/devhub-homelab) (public) | Homelab knowledge base, portfolio, and entry point | Options, selection criteria, generic designs, sanitized setup guidance, reusable lessons, and links to reusable components |
-| [devhub-homelab-private](https://github.com/CollinPoetoehena/devhub-homelab-private) (private; access required) | Actual implementation and operational record | Chosen hardware/software, decision rationale, internal topology and inventory, configuration, runbooks, validation results, and recovery details |
+| [devhub-homelab](https://github.com/CollinPoetoehena/devhub-homelab) (public) | **The homelab book:** the open-source storyline of my homelab journey and of a homelab in general, designed to be read from start to finish; knowledge base, portfolio and entry point | Goals, requirements and principles; options, selection criteria and trade-offs; generic reference designs; recommendations and hints about what I would choose; sanitized setup guidance, reusable lessons and links to reusable components. **Never** the exact architecture or low-level details that could help an attacker—they are not needed to tell the story |
+| [devhub-homelab-private](https://github.com/CollinPoetoehena/devhub-homelab-private) (private; access required) | **The actual implementation** behind the book, and its operational record | The real architecture, chosen hardware/software, decision rationale, internal topology, addressing and inventory, Ansible/Terraform code and configuration, runbooks, validation results and recovery details—organized in the same book structure |
 
 For a convenient local setup with all three projects, see [Working Across DevHub and the Homelab Repositories](#working-across-devhub-and-the-homelab-repositories).
 
@@ -34,11 +37,30 @@ One repository forced an awkward compromise: either publish too much, or replace
 
 Two repositories do add a little coordination: links must stay correct and a change may need documentation in both places. But **they make the content easier to maintain**. Public guidance owns the explanations and option comparisons once. Private designs link to that guidance and concentrate on what I chose, why, which relevant alternatives I rejected, and how the actual pieces fit together. There is no need to repeat a full Kubernetes distribution comparison inside my cluster decision record.
 
-The public side can stay curated, concise, and focused on material worth sharing. The private side can contain detailed working notes, incomplete investigations, exact configurations, and recovery procedures without making every note a portfolio item. This removes the pressure to sanitize every operational record or polish everything for an external audience.
+The public side can stay curated and focused on material worth sharing, and can be shaped as a readable story from start to finish. It may give hints about what I recommend or would choose, but it never exposes my exact architecture or low-level details such as addressing, inventory, firewall exceptions or management paths: an attacker could use them, and the story does not need them. The private side can contain detailed working notes, incomplete investigations, exact configurations, and recovery procedures without making every note a portfolio item. This removes the pressure to sanitize every operational record or polish everything for an external audience.
 
 **Private does not mean safe to commit secrets.** Both repositories still need deliberate access controls, protected secret storage, patching, and backups. Separation reduces disclosure risk; it is not a substitute for network security. Public changes are explicit publications, never an automatic mirror or a copy of private Git history.
 
-See [Repository guidelines](./docs/Repository_Guidelines.md) for content ownership, publication review, and secret handling.
+See [Repository guidelines](./docs/repository-guidelines.md) for content ownership, publication review, and secret handling.
+
+---
+
+## Reading the Public Repository as a Book
+
+The public documentation is deliberately designed as a **book with a storyline**, not as a collection of reference pages. It follows four documentation layers—**Foundations** (why are we doing it?), **Architecture** (what are we building?), **Implementation** (how is it realized, with Ansible, Terraform and delivery workflows?) and **Operations** (how do we run it?)—and, within them, seven questions: why build it, which principles and requirements guide it, which architecture solves them, which capabilities make it usable, how it is implemented, which services run on it, and how it is operated, observed and recovered.
+
+| Part | Layer | What it covers |
+|---|---|---|
+| [1 · Foundations](./docs/01-foundations/README.md) | Foundations | Goals and scope, requirements, design principles, cost and buying decisions |
+| [2 · Architecture](./docs/02-architecture/README.md) | Architecture | Physical environment, network (including Wi-Fi), compute, storage, workload platform |
+| [3 · Platform Services](./docs/03-platform-services/README.md) | Architecture | DNS, certificates, identity and access, secrets, scheduling and power |
+| [4 · Automation](./docs/04-automation/README.md) | Implementation | Infrastructure as code, configuration management, deployment, project structure |
+| [5 · Services](./docs/05-services/README.md) | Implementation | Workload design and lifecycle, self-hosted service options |
+| [6 · Operations](./docs/06-operations/README.md) | Operations | Observability, backups, disaster recovery, maintenance |
+
+Each part has one README as its entry point, and each subject—such as the network—is one chapter that moves from high-level design to low-level detail, implementation and verification. Earlier versions split the documentation into high-level design (HLD) and low-level design (LLD) folders; that created overlapping documents for the same subject and no readable story, so it was replaced. The [book overview](./docs/README.md) explains how to read it, and the [Documentation Structure & Guideline](./docs/repository-guidelines.md#documentation-structure--guideline) explains the design and its rules.
+
+The private repository uses the same structure for the actual implementation, so each public chapter has a matching private record where one exists. The public book can say *what I recommend and why*; the private record says *exactly what was built*.
 
 ---
 
@@ -60,13 +82,13 @@ The split is about **reusable principles versus their application**, not theory 
 | Public homelab (this repository) | Homelab applications, generic example designs, options, and practical trade-offs | Shared versus separate home/lab gateways, isolated routing exercises, small-host purchasing and capacity, power/noise constraints, equipment placement, and home-scale recovery |
 | [Private homelab](https://github.com/CollinPoetoehena/devhub-homelab-private) (access required) | Actual selected design, implementation, and operations | Equipment and topology, confirmed internal settings, decision rationale, runbooks, verification results, and recovery records |
 
-For example, [DevHub's network design reference](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md) owns the detailed segmentation/access explanation and illustrative trust-zone model. The [public network guide](./docs/2_HLD/Network/README.md) applies those principles to keeping household connectivity independent of lab experiments, selecting a gateway/switch/AP arrangement, and exposing a lab application deliberately. The private network category records the chosen configuration and what was actually verified. A reader designing a business or cloud network should not need a homelab project as the authoritative source for general network architecture.
+For example, [DevHub's network design reference](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md) owns the detailed segmentation/access explanation and illustrative trust-zone model. The [public network guide](./docs/02-architecture/network.md) applies those principles to keeping household connectivity independent of lab experiments, selecting a gateway/switch/AP arrangement, and exposing a lab application deliberately. The private network chapter records the chosen configuration and what was actually verified. A reader designing a business or cloud network should not need a homelab project as the authoritative source for general network architecture.
 
-The same rule applies to hardware and other topics. DevHub's [compute hardware fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/compute) and [operating-system references](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/os) explain the underlying concepts and inspection commands; the HLD [Systems](./docs/2_HLD/Systems/README.md) category applies them to compute capacity, storage, electricity, and accepted failure domains. Actual inventory, allocations, and operational results stay private. Keep reusable [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md) and [packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md) in their own shared lifecycle rather than copying them into the homelab.
+The same rule applies to hardware and other topics. DevHub's [compute hardware fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/compute) and [operating-system references](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/os) explain the underlying concepts and inspection commands; the [compute and storage chapters](./docs/02-architecture/README.md#compute-and-storage-together) apply them to compute capacity, storage, electricity, and accepted failure domains. Actual inventory, allocations, and operational results stay private. Keep reusable [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md) and [packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md) in their own shared lifecycle rather than copying them into the homelab.
 
 Brief contextual summaries and safety reminders are useful in an applied guide; a second full tutorial, comparison, or identical general-purpose diagram is not. Link to the authoritative explanation, then add the homelab-specific requirements, reasoning, constraints, and checks. Cross-links may work in both directions to help readers navigate, but they do not make either repository a mirror of the other. The private record can link directly to DevHub when the relevant material is general rather than a homelab example.
 
-The [repository guidelines](./docs/Repository_Guidelines.md#content-ownership) turn this relationship into maintenance and publication rules. This separation does not authorize moving private configuration into either public repository.
+The [repository guidelines](./docs/repository-guidelines.md#content-ownership) turn this relationship into maintenance and publication rules. This separation does not authorize moving private configuration into either public repository.
 
 ---
 
@@ -76,7 +98,7 @@ The [repository guidelines](./docs/Repository_Guidelines.md#content-ownership) t
 
 This setup is also useful when working with AI: workspace-aware tools can access relevant shared principles in DevHub, generic homelab guidance and private design records—even when a task changes only one repository. That context helps the AI follow the right ownership boundaries, reuse existing explanations and keep related documentation consistent. It can avoid effort and AI usage spent switching workspaces or retrieving context through separate GitHub URLs; private content may not be accessible through a URL at all, and remote retrieval can require extra steps and tokens. Local availability does not mean every file is automatically read, however: tools differ in how they access the workspace, so point the AI at the target repository, relevant files and applicable instructions.
 
-Opening an individual repository in its own workspace is still possible for deliberately isolated work, but it is not the recommended default. The AI may not be able to inspect another workspace, and links to other repositories are not a reliable substitute for local context. Keeping all three repositories together makes that context available when needed, even if the other two are not being changed. Preserve their information boundaries: DevHub owns reusable principles, the public homelab owns generic homelab applications, and the private homelab owns actual design and operations. Private access is not permission to publish private details; public changes still require deliberate review against the [publication boundary](./docs/Repository_Guidelines.md#publication-boundary). See [AI usage](#ai-usage) for making shared and homelab-specific customizations available across the workspace.
+Opening an individual repository in its own workspace is still possible for deliberately isolated work, but it is not the recommended default. The AI may not be able to inspect another workspace, and links to other repositories are not a reliable substitute for local context. Keeping all three repositories together makes that context available when needed, even if the other two are not being changed. Preserve their information boundaries: DevHub owns reusable principles, the public homelab owns generic homelab applications, and the private homelab owns actual design and operations. Private access is not permission to publish private details; public changes still require deliberate review against the [publication boundary](./docs/repository-guidelines.md#publication-boundary). See [AI usage](#ai-usage) for making shared and homelab-specific customizations available across the workspace.
 
 ---
 
@@ -92,7 +114,7 @@ Both repositories belong to the same homelab, so one board avoids splitting rela
 
 I used GitHub's existing **Team Planning** template because it already has the main task-tracking aspects I wanted. I do not need to use everything it provides: extra views and sprint/current-iteration features can remain unused, or serve as a loose grouping of current work without committing to a time-based schedule. One status board remains the everyday workflow.
 
-> **Warning: explicitly set the GitHub Project's visibility to Private before adding tasks.** Linking it to a private repository does not make the project private automatically. A private project also does not hide public issues: keep private details in private-repository issues or private project draft items, never in public issues. Follow the [publication boundary](./docs/Repository_Guidelines.md#publication-boundary); secrets still belong in [protected storage](./docs/Repository_Guidelines.md#secrets-and-sensitive-artifacts).
+> **Warning: explicitly set the GitHub Project's visibility to Private before adding tasks.** Linking it to a private repository does not make the project private automatically. A private project also does not hide public issues: keep private details in private-repository issues or private project draft items, never in public issues. Follow the [publication boundary](./docs/repository-guidelines.md#publication-boundary); secrets still belong in [protected storage](./docs/repository-guidelines.md#secrets-and-sensitive-artifacts).
 
 1. Start from the **Team Planning** template, keep the GitHub Project private and use one **Board** view for everyday tracking. Link it to the private repository. In the project description, link to [this Task Tracking explanation](https://github.com/CollinPoetoehena/devhub-homelab/blob/main/README.md#task-tracking) so the workflow is easy to find.
 2. Use a **Status** field with **TODO**, **In progress** and **Done**. Add an issue or draft item for each useful task, with a short description of what completion means. Public-repository issues may be added when their contents are safe to publish; keep other tasks private.
@@ -104,12 +126,14 @@ I used GitHub's existing **Team Planning** template because it already has the m
 
 ## Documentation
 
-- [Repository guidelines](./docs/Repository_Guidelines.md): public/private boundary, writing rules, sanitization, and security.
-- [Documentation storyline](./docs/README.md): the entry point and reading order.
-- [Project structure](./docs/Project_Structure.md): integration responsibilities, package reuse and an AI-maintained sanitized overview.
-- [Goals](./docs/1_Goals/README.md): purpose, constraints and household dependencies.
-- [High-level design](./docs/2_HLD/README.md): network, Wi-Fi, compute/storage selection, power/capacity and virtualization.
-- [Low-level design](./docs/3_LLD/README.md): container orchestration, services/delivery, monitoring, storage and backups.
+- [The Homelab Book](./docs/README.md): the entry point, layers, storyline, reading order and full table of contents.
+- [Part 1 · Foundations](./docs/01-foundations/README.md): goals and scope, requirements, design principles and the central [cost and scope guide](./docs/01-foundations/cost.md).
+- [Part 2 · Architecture](./docs/02-architecture/README.md): physical placement and power, network and Wi-Fi, compute, storage and the workload platform.
+- [Part 3 · Platform Services](./docs/03-platform-services/README.md): DNS, certificates, identity, secrets and scheduling.
+- [Part 4 · Automation](./docs/04-automation/README.md): infrastructure as code, configuration management, deployment and the [project structure](./docs/04-automation/project-structure.md).
+- [Part 5 · Services](./docs/05-services/README.md): workload design and self-hosted service options.
+- [Part 6 · Operations](./docs/06-operations/README.md): observability, backups, disaster recovery and maintenance.
+- [Repository guidelines](./docs/repository-guidelines.md): documentation structure, public/private boundary, writing rules, sanitization and security.
 - [Local Copilot skills](.github/skills/README.md): the homelab-specific sanitization workflow; generic skills come from DevHub.
 
 Examples are synthetic and must be adapted to the reader's requirements. A documented design or checklist is not evidence of a completed deployment. The private repository references these documents through GitHub `blob/main` URLs; access to it is not required to use the public guidance.
@@ -133,11 +157,11 @@ The main shared skills used in this repository are:
 
 These skills are maintained and installed through DevHub; they do **not** need to be present in this project. Choose the matching skill directly rather than invoking the generic change skill before a tool-specific one. Public automation topics normally remain Markdown explanations; listing these skills does not authorize code extraction or live operations.
 
-A project-context skill is unnecessary: DevHub skills automatically discover instructions, documentation structure, guidelines and relevant validation commands. Keep any additional persistent homelab context in [copilot-instructions.md](./.github/copilot-instructions.md). The only [local skill](./.github/skills/README.md) is [homelab-sanitize](./.github/skills/homelab-sanitize/SKILL.md), for explicitly authorized publication preparation.
+A project-context skill is unnecessary: DevHub skills automatically discover instructions, documentation structure, guidelines and relevant validation commands. Keep any additional persistent homelab context in [copilot-instructions.md](.github/copilot-instructions.md). The only [local skill](.github/skills/README.md) is [homelab-sanitize](.github/skills/homelab-sanitize/SKILL.md), for explicitly authorized publication preparation.
 
 **Do not chain skills.** Each skill must be self-contained and usable without another skill being invoked first or afterward. Background and project-policy links are fine; required cross-skill invocation is not. See [DevHub's design principles](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/AI.md#general-design-principles) and its [skill design explanation](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/README.md#create-a-skill) for why dependency chains are unreliable and how to keep skills self-contained.
 
-**Documentation owns project policy.** The [repository guidelines](./docs/Repository_Guidelines.md), including the [Documentation Structure & Guideline](./docs/Repository_Guidelines.md#documentation-structure--guideline), remain authoritative for both homelab repositories. Reference them rather than duplicating their rules in skills. AI must read applicable guidance, preserve the publication boundary, distinguish planned work from verified results and validate changes. Publication and live infrastructure operations still require explicit authorization.
+**Documentation owns project policy.** The [repository guidelines](./docs/repository-guidelines.md), including the [Documentation Structure & Guideline](./docs/repository-guidelines.md#documentation-structure--guideline), remain authoritative for both homelab repositories. Reference them rather than duplicating their rules in skills. AI must read applicable guidance, preserve the publication boundary, distinguish planned work from verified results and validate changes. Publication and live infrastructure operations still require explicit authorization.
 
 ### AI usage
 
@@ -154,4 +178,4 @@ Replace the absolute source path with your clone location, ensure the destinatio
 
 **Centralizing homelab-specific customizations is not necessary.** They are specific to my homelab projects, unlike the generic DevHub customizations reused across unrelated projects. Keep their source in the owning repository; parent-workspace links are optional convenience, not a reason to move them into DevHub or install them globally.
 
-Opening the parent folder does not guarantee discovery of nested repository instructions. Explicitly select the target repository and provide its [public instructions](./.github/copilot-instructions.md) or [private instructions](https://github.com/CollinPoetoehena/devhub-homelab-private/blob/main/.github/copilot-instructions.md) as context when necessary. Verify that the intended skills are available. Access to all three repositories never authorizes publishing private content.
+Opening the parent folder does not guarantee discovery of nested repository instructions. Explicitly select the target repository and provide its [public instructions](.github/copilot-instructions.md) or [private instructions](https://github.com/CollinPoetoehena/devhub-homelab-private/blob/main/.github/copilot-instructions.md) as context when necessary. Verify that the intended skills are available. Access to all three repositories never authorizes publishing private content.

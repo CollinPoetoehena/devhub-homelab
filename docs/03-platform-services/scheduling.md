@@ -1,6 +1,10 @@
-# Service Scheduling and Power
+# Scheduling and Power
+
+> **Part 3 · Platform Services** — [Part overview](./README.md) · Previous: [Secrets Management](./secrets.md) · Next: [Part 4 · Automation](../04-automation/README.md)
 
 Decide when each component needs to run rather than leaving every host and service powered on by default. Electricity is a recurring cost, and an always-on system that is only used at particular times may add expense without providing useful availability. Scheduling can reduce that cost, but shutdown and startup must preserve data and bring dependencies back in the right order.
+
+Scheduling is a platform capability rather than an afterthought because it changes what every other layer can assume: a scheduled host is intentionally unavailable outside its window, monitoring must distinguish planned from unexpected downtime, and backups must complete before shutdown. It turns the running-cost [constraint](../01-foundations/requirements.md#constraints) and the [cost chapter](../01-foundations/cost.md#count-purchase-and-operating-costs) into an operational design.
 
 ---
 
@@ -31,7 +35,7 @@ Do not apply one schedule to the entire homelab. Essential network equipment—m
 
 Monitoring may need to remain available to supervise shutdown/startup and detect failures. Silence or route alerts for intentionally offline nodes during their planned window, but keep alerts for unexpected outages outside the window. Storage and backup components must be on for their jobs; complete backups and confirm success before taking a required host or disk offline. Check that DNS, DHCP, identity, time, automation and wake mechanisms do not depend solely on the host being shut down.
 
-An energy-monitoring plug or UPS is an optional accessory; buy it only when measurement or shutdown requirements justify it. See the HLD [power accessories guidance](../../2_HLD/Placement.md#power-accessories) and the central [cost and scope guide](../../1_Goals/Cost_and_Scope.md).
+An energy-monitoring plug or UPS is an optional accessory; buy it only when measurement or shutdown requirements justify it. See the [power accessories guidance](../02-architecture/physical.md#power-accessories) in the physical chapter and the central [cost and scope guide](../01-foundations/cost.md).
 
 ---
 

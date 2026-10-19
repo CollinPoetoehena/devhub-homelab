@@ -1,6 +1,10 @@
-# Goals and Constraints
+# Goals and Scope
 
-Choose the purpose before buying equipment or installing tools.
+> **Part 1 · Foundations** — [Part overview](./README.md) · Next: [Requirements](./requirements.md)
+
+Choose the purpose before buying equipment or installing tools. This is the first chapter of the book because every later decision—how many hosts, which network boundaries, which services, how much automation, how much recovery effort—only makes sense against a clear answer to *why this homelab exists and what it should and should not become*.
+
+The chapter answers the first question of the storyline: **why am I building this?** It describes the kinds of purpose a homelab can serve, why the hands-on exploration is worth it, and how to keep the scope small enough to remain enjoyable and maintainable. The next chapters turn that purpose into [requirements](./requirements.md), [design principles](./design-principles.md) and a [cost boundary](./cost.md).
 
 ---
 
@@ -9,9 +13,8 @@ Choose the purpose before buying equipment or installing tools.
 - [Design the Purpose](#design-the-purpose)
   - [Why Build a Homelab?](#why-build-a-homelab)
 - [Keep the Scope Sustainable](#keep-the-scope-sustainable)
-- [Cost, Scope and Buying Decisions](./Cost_and_Scope.md)
-- [Learn Enterprise Patterns Without Enterprise Availability](#learn-enterprise-patterns-without-enterprise-availability)
-- [From Goals to Categories](#from-goals-to-categories)
+- [Define What Is Out of Scope](#define-what-is-out-of-scope)
+- [From Goals to Requirements](#from-goals-to-requirements)
 
 ---
 
@@ -44,7 +47,7 @@ Prefer a small stable foundation and disposable experiments. One host can teach 
 
 Self-hosting adds patching, backup and recovery obligations. Keep essential household routing separate from experimental compute dependencies. Automation is useful when it saves work or supports learning, not when it makes every simple task a development project.
 
-It is easy to overspend on equipment that looks impressive but is unnecessary for your goals; use the central [cost and scope guide](./Cost_and_Scope.md) before expanding.
+It is easy to overspend on equipment that looks impressive but is unnecessary for your goals; use the central [cost and scope guide](./cost.md) before expanding.
 
 Include time and operational cost as well as purchase cost. Software that is free to download still needs updates and recovery work; repurposed hardware still consumes electricity. Prefer one well-understood service with tested recovery over a long list that nobody can operate after an outage.
 
@@ -52,22 +55,24 @@ Define a stable foundation and an experiment lifecycle: create, observe, learn, 
 
 ---
 
-## Learn Enterprise Patterns Without Enterprise Availability
+## Define What Is Out of Scope
 
-**A homelab does not need an enterprise production-availability target to be useful.** Redundant gateways, independent physical hosts, switches, power paths and ISP links cost money to buy, power, support and replace. They also add configuration, monitoring, upgrades and failover tests. Most learning goals do not justify all of that recurring cost. Choose an acceptable outage and recovery process rather than copying an enterprise equipment list.
+A goal statement is incomplete until it also says what the homelab is **not**. Writing that down protects the budget, the household and spare time just as much as the goals themselves. Typical exclusions are:
 
-Learn the pattern at the scale you can afford. For example, several Kubernetes VMs on one hypervisor can teach scheduling, control-plane quorum, rolling upgrades and recovery from a guest failure. They **cannot** survive failure of their shared physical host, storage or power supply. Testing guest failure is useful evidence about that exercise, not proof of physical high availability. Similarly, VLANs can teach trust boundaries on shared hardware without making that hardware redundant.
+- **Not a production data center.** Enterprise availability, redundant everything and vendor support contracts are not targets unless a specific requirement demands them; see [Learn Enterprise Patterns Without Enterprise Availability](./design-principles.md#learn-enterprise-patterns-without-enterprise-availability).
+- **Not the only copy of important data.** If the lab stores something valuable, it also owns a [backup and restore process](../06-operations/backups.md); otherwise, keep that data elsewhere.
+- **Not a dependency for basic household connectivity.** Internet, Wi-Fi and essential name resolution should keep working while lab compute is off, broken or being rebuilt; the [network chapter](../02-architecture/network.md#design-options) explains how.
+- **Not a collection of every interesting tool.** A tool earns its place by serving a goal; evaluating it briefly and removing it again is a successful experiment, not a failure.
+- **Not a reason to buy equipment first.** Purchases follow measured needs and the [cost and scope test](./cost.md#the-most-important-constraint-buy-for-a-real-need).
 
-State the distinction explicitly in a design: "For a production service with a strict availability requirement, distribute these roles across independent failure domains; for this lab, share a host and accept host-level downtime to reduce cost." Enterprise requirements vary too: spend on redundancy because an agreed recovery target demands it, not because every enterprise must have the same topology.
-
-Do not confuse accepted downtime with accepted data loss or weak security. Protect important data, restrict access and keep recovery instructions and backups accessible independently of the failed system. Household internet may deserve a more stable foundation than disposable workloads without requiring an automatic-failover gateway pair. The [network availability and backup guidance](../2_HLD/Network/README.md#availability-backups-and-recovery) applies this trade-off to the shared home-and-lab network.
+Exclusions can change later—for example, a service may deliberately be promoted to a household dependency—but the change should be a conscious decision with its added obligations, not something that happens because an experiment kept running.
 
 ---
 
-## From Goals to Categories
+## From Goals to Requirements
 
-Turn goals into [high-level network/host requirements](../2_HLD/README.md), then select [platforms and services](../3_LLD/README.md). Revisit goals when a choice adds cost or operational work without supporting them.
+Goals are intentionally broad. The [requirements chapter](./requirements.md) turns them into measurable outcomes, and the [design principles](./design-principles.md) describe how to choose between options that meet them. Together with the [cost boundary](./cost.md), these foundations are what the [architecture](../02-architecture/README.md) is designed against. Revisit the goals when a choice adds cost or operational work without supporting them.
 
-Personal priorities and the actual decision record remain private under the [repository guidelines](../Repository_Guidelines.md).
+Personal priorities and the actual decision record remain private under the [repository guidelines](../repository-guidelines.md#content-ownership).
 
 For each major choice, record the requirement it satisfies and the cost/risk accepted. Review goals after changes in workload, available hardware or household reliance. This prevents expanding a cluster simply because a feature exists and helps explain the reasoning in a portfolio without publishing actual network inputs.

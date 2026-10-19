@@ -1,4 +1,10 @@
-# Container Orchestration and Cluster Lifecycle
+# Platform: Container Orchestration and Cluster Lifecycle
+
+> **Part 2 · Architecture** — [Part overview](./README.md) · Previous: [Storage](./storage.md) · Next: [Part 3 · Platform Services](../03-platform-services/README.md)
+
+The platform is the layer between the infrastructure and the services: it decides how workloads are packaged, scheduled, networked and given persistent storage. In this book, "platform" means the **workload platform**—Docker Compose, Kubernetes or an alternative orchestrator—and **not** the hypervisor host cluster, which belongs to [compute](./compute.md). A Kubernetes cluster made of VMs consumes compute capacity and inherits its failure domains; it does not replace them.
+
+This is the last chapter of the architecture part because it builds on all the others: nodes run on [compute](./compute.md), node and Pod networking sit inside the [network design](./network.md#networks-inside-the-lab), and persistent volumes depend on the [storage design](./storage.md#design-options). The [platform services](../03-platform-services/README.md) and [services](../05-services/README.md) that follow then run on it.
 
 Start with workload/learning needs, not a predetermined Kubernetes installation.
 
@@ -17,7 +23,7 @@ Start with workload/learning needs, not a predetermined Kubernetes installation.
 
 A hypervisor cluster is not an orchestration cluster. Compare workload models and lifecycle ownership before choosing a platform.
 
-Choose single-node/outage-tolerant operation versus an HA control plane deliberately. More virtual nodes on one physical host teach distributed behavior without physical resilience. See [quorum and failure domains](../../2_HLD/Systems/Compute.md#quorum-and-failure-domains).
+Choose single-node/outage-tolerant operation versus an HA control plane deliberately. More virtual nodes on one physical host teach distributed behavior without physical resilience. See [quorum and failure domains](./compute.md#quorum-and-failure-domains).
 
 | Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
 |---|---|---|---|---|
@@ -58,16 +64,16 @@ Select by the complete lifecycle you want to operate, supported hardware and int
 
 Choose pod/service/node ranges without household/VPN overlap. Use a compatible enforcing solution if isolation is required.
 
-See [Networks Inside the Lab](../../2_HLD/Network/README.md#networks-inside-the-lab) for the node/Pod/Service distinction, household application access and DMZ limitations. Kubernetes nodes can share the Lab VLAN; Pod and Service address spaces do not normally require separate physical VLANs.
+See [Networks Inside the Lab](./network.md#networks-inside-the-lab) for the node/Pod/Service distinction, household application access and DMZ limitations. Kubernetes nodes can share the Lab VLAN; Pod and Service address spaces do not normally require separate physical VLANs.
 
 | Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
 |---|---|---|---|---|
 | [Cilium](https://docs.cilium.io/) | eBPF-based networking/policy with optional Hubble visibility and service features | Policy and flow visibility in an integrated ecosystem | Kernel/platform/version prerequisites; extra resource/debugging costs; advanced routing/proxy replacement adds complexity. **Maintenance:** Track kernel/Kubernetes compatibility, controller/agent health and policy behavior; retest allowed/denied flows and any advanced routing after upgrades. | Policy/observability learning with supported compatible nodes |
 | [Calico](https://docs.tigera.io/calico/latest/about/) | Pod networking and policy platform with several routing/data-plane modes | Mature policy and routing choices | Choose supported modes and routing prerequisites; own integration and upgrades. **Maintenance:** Coordinate supported data-plane/routing modes with node updates; monitor agents/routes and test policy enforcement after configuration changes. | Networking/policy requirements fit its operational model |
 | [Flannel](https://github.com/flannel-io/flannel#readme) | Pod-connectivity networking component | Relatively focused connectivity role | Does not itself enforce NetworkPolicy; pair with a compatible enforcing solution if needed. **Maintenance:** Keep pod routes/overlay configuration compatible with nodes; separately maintain and test any added policy-enforcement component. | Simple connectivity with explicit separate isolation planning |
-| CSI-backed volumes | Kubernetes volume lifecycle through a compatible driver/backend | Workload attachment, supported expansion/snapshots and declarative storage use | Durability belongs to the backend; check access modes, node loss and backup integration. **Maintenance:** Coordinate driver/backend upgrades and credentials; monitor attachment failures and test node-loss, snapshot and application restore behavior. | Persistent workloads with a designed [storage/recovery backend](../Storage_Backups/README.md#design-options) |
+| CSI-backed volumes | Kubernetes volume lifecycle through a compatible driver/backend | Workload attachment, supported expansion/snapshots and declarative storage use | Durability belongs to the backend; check access modes, node loss and backup integration. **Maintenance:** Coordinate driver/backend upgrades and credentials; monitor attachment failures and test node-loss, snapshot and application restore behavior. | Persistent workloads with a designed [storage/recovery backend](./storage.md#design-options) |
 
-Namespaces alone do not isolate traffic. Decide policy, cluster DNS, ingress, external address allocation and CSI/persistence separately. Cluster and gateway policies cover different paths. Application/data recovery is part of [storage and backups](../Storage_Backups/README.md).
+Namespaces alone do not isolate traffic. Decide policy, cluster DNS, ingress, external address allocation and CSI/persistence separately. Cluster and gateway policies cover different paths. Application/data recovery is part of [storage and backups](../06-operations/backups.md).
 
 A CNI supplies pod networking and may enforce policy; a service implementation provides service reachability; ingress/gateway components route application traffic; an external address allocator solves yet another problem. Choose supported combinations before enabling advanced BGP, proxy replacement or overlays. Each adds prerequisites and new failure paths.
 
@@ -81,7 +87,7 @@ Storage classes/CSI expose volume lifecycle to workloads, but the backend determ
 
 After the design, pin compatible versions, prepare node images/configuration, bootstrap through the chosen supported workflow, and validate node readiness, DNS, service paths and actual policy enforcement. Do not enable advanced routing or proxy replacement just because available.
 
-Declare VM provisioning, node lifecycle and [GitOps workload delivery](../Services/README.md#gitops-and-continuous-delivery) ownership explicitly. Test staged upgrades and recovery; declarative manifests do not restore application data. Exact commands, node inputs and execution results belong in private runbooks or official product guides.
+Declare VM provisioning, node lifecycle and [GitOps workload delivery](../04-automation/deployment.md#gitops-and-continuous-delivery) ownership explicitly. Test staged upgrades and recovery; declarative manifests do not restore application data. Exact commands, node inputs and execution results belong in private runbooks or official product guides.
 
 Validate node health, DNS, pod-to-pod/service connectivity, external access, policy, volume attachment and controlled replacement separately. Drain/reboot experiments should account for disruption budgets, spare capacity and workloads that cannot move. A successful drain is not evidence of physical-host resilience.
 

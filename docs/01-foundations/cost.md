@@ -1,5 +1,11 @@
 # Cost, Scope and Buying Decisions
 
+> **Part 1 · Foundations** — [Part overview](./README.md) · Previous: [Design Principles](./design-principles.md) · Next: [Part 2 · Architecture](../02-architecture/README.md)
+
+**This is one of the most important chapters of the book.** Cost is not a detail to check after the design is finished; it is a foundation constraint that shapes every later chapter. Overspending on equipment that looks impressive but does not serve a real, continuing need is one of the easiest mistakes to make in a homelab—and one of the hardest to undo, because the purchase keeps costing electricity, space and maintenance time after the enthusiasm has passed.
+
+The architecture, platform, services and operations parts all link back here before recommending any purchase. Read this chapter before buying anything, and return to it whenever a later chapter suggests that more hardware, another appliance or a more advanced platform could be useful.
+
 > **For illustration:** Some people deliberately build a home data center with enterprise servers, network fabrics, redundant power, multiple storage systems and production-style availability. That can be a rewarding project, but this page is not saying that you need to build one. It illustrates the cost and ownership choices behind different scales of lab.
 
 ---
@@ -103,8 +109,8 @@ If a low-cost experiment meets the learning goal, do not buy the physical altern
 
 ## A Practical Expansion Rule
 
-Start with the smallest setup that can teach the planned concepts and meet actual service and recovery requirements. Some goals can be met with existing equipment and disposable software experiments; others justify a deliberate purchase. The storage-specific guide gives a concrete example of local active storage plus independent backup drives, while other categories explain their own equipment trade-offs. Choose a separate appliance, additional node or advanced platform only when shared access, capacity, availability, a required physical failure test or sustained learning goal needs it—not because a diagram or another person's setup says it is universally necessary.
+Start with the smallest setup that can teach the planned concepts and meet actual service and recovery requirements. Some goals can be met with existing equipment and disposable software experiments; others justify a deliberate purchase. The [storage chapter](../02-architecture/storage.md#match-the-design-to-the-need) gives a concrete example of local active storage plus independent backup drives, while other chapters explain their own equipment trade-offs. Choose a separate appliance, additional node or advanced platform only when shared access, capacity, availability, a required physical failure test or sustained learning goal needs it—not because a diagram or another person's setup says it is universally necessary.
 
-Expand only after measurements, a real limitation or a specific learning objective show what is missing. For every addition, record the benefit, unique evidence it enables, new failure modes, full purchase and operating costs, expected period of use, and recovery/retirement plan. Revisit the [network and host foundation](../2_HLD/README.md) and [storage/backups options](../3_LLD/Storage_Backups/README.md) with that constraint in mind.
+Expand only after measurements, a real limitation or a specific learning objective show what is missing. For every addition, record the benefit, unique evidence it enables, new failure modes, full purchase and operating costs, expected period of use, and recovery/retirement plan. Revisit the [architecture](../02-architecture/README.md)—especially [compute](../02-architecture/compute.md), [storage](../02-architecture/storage.md) and the [backup setups compared by cost](../06-operations/backups.md#cost-and-recovery-comparison)—with that constraint in mind.
 
 The goal is not to minimize every purchase at all costs; it is to spend in proportion to the value, use and evidence you will get. Keep the reusable learning after an experiment, even if the temporary infrastructure is removed. That lets a homelab remain enjoyable and financially sustainable instead of accumulating equipment that is impressive to own but rarely useful.

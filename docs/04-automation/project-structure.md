@@ -1,8 +1,10 @@
-# Homelab Project Structure
+# Project Structure
+
+> **Part 4 · Automation** — [Part overview](./README.md) · Previous: [Deployment](./deployment.md) · Next: [Part 5 · Services](../05-services/README.md)
 
 A useful structure makes responsibilities and dependencies understandable without publishing site-specific implementation code. This page describes how to organize homelab integration and ends with the maintained high-level structure summary for this project.
 
-The [main README's repository relationship](../README.md#how-devhub-and-the-homelab-repositories-fit-together) owns the broader explanation of DevHub, public examples, and private operations; this page applies it to integration layout.
+The [main README's repository relationship](../../README.md#how-devhub-and-the-homelab-repositories-fit-together) owns the broader explanation of DevHub, public examples, and private operations; this page applies it to integration layout.
 
 ---
 
@@ -18,7 +20,7 @@ The [main README's repository relationship](../README.md#how-devhub-and-the-home
 
 ## Structure by Responsibility
 
-Start with a root README explaining purpose, documentation entry points and operational boundaries. Keep goals, HLD and LLD together under documentation, with design before implementation/results in each category. Code can follow its tool's ecosystem conventions without turning tool names into competing documentation storylines.
+Start with a root README explaining purpose, documentation entry points and operational boundaries. Keep the documentation as one book under `docs/`, organized by the [reader's journey](../repository-guidelines.md#the-book-model-layers-and-storyline)—foundations, architecture, platform services, automation, services and operations—with one file per subject that moves from design to implementation and verification. Implementation code lives beside the documentation, not inside it. Code can follow its tool's ecosystem conventions without turning tool names into competing documentation storylines.
 
 Separate provisioning, host configuration and workload reconciliation because they have different inputs, credentials and lifecycles. Define which owns each property. Keep environment-specific composition close to its consumer, reusable components independently maintained, and secrets/state/generated outputs outside ordinary tracked content.
 
@@ -44,13 +46,13 @@ Pin compatible versions, review upgrades and test the consumer. A reusable compo
 
 Publishing actual code is **not required for this homelab portfolio**. The purpose is to explain how the system is designed, how responsibilities connect and how a generic setup is approached. A sanitized structure, options/trade-offs and validation methodology can communicate that without revealing which subnet, secret or live endpoint the implementation uses.
 
-The [publication boundary](./Repository_Guidelines.md#publication-boundary) explains why even password-free inventory/configuration can expose home-network internals. Keep implementation details private; share genuinely reusable packages only through their own review and lifecycle. Do not misrepresent a structure diagram as proof of deployment, test results or code availability.
+The [publication boundary](../repository-guidelines.md#publication-boundary) explains why even password-free inventory/configuration can expose home-network internals. Keep implementation details private; share genuinely reusable packages only through their own review and lifecycle. Do not misrepresent a structure diagram as proof of deployment, test results or code availability.
 
 ---
 
 ## Maintaining the Structure Summary with AI
 
-**Update the final section of this page in place** when documentation or integration responsibilities change. Use the shared [devhub-docs](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/devhub-docs/SKILL.md) for documentation maintenance; it discovers local guidance and structure. When the task is authorized preparation of private-derived material for publication, use the self-contained [homelab-sanitize](../.github/skills/homelab-sanitize/SKILL.md) instead, not a required chain of skills. See [AI usage](../README.md#ai-usage) for setup. Do not create another drifting structure overview elsewhere.
+**Update the final section of this page in place** when documentation or integration responsibilities change. Use the shared [devhub-docs](https://github.com/CollinPoetoehena/DevHub/blob/main/.github/skills/devhub-docs/SKILL.md) for documentation maintenance; it discovers local guidance and structure. When the task is authorized preparation of private-derived material for publication, use the self-contained [homelab-sanitize](../../.github/skills/homelab-sanitize/SKILL.md) instead, not a required chain of skills. See [AI usage](../../README.md#ai-usage) for setup. Do not create another drifting structure overview elsewhere.
 
 Inspect only the authorized, relevant top-level structure locally. Summarize responsibility-level folders rather than pasting `tree` output or enumerating hosts, inventories, applications, environment names, secret filenames or generated artifacts. Review the summary against the guideline before publication.
 
@@ -63,21 +65,26 @@ Mark absent/planned areas explicitly. AI must not create implementation folders,
 This is an **AI-maintained, sanitized responsibility view**, not an exact directory listing. The public repository contains documentation/customizations; implementation areas belong privately. Paths describe the main organization, not a deployable copy.
 
 ```text
-Public homelab knowledge base
+Public homelab book and knowledge base
   README.md                 purpose, three-repository relationship and entry point
   .github/                  public-context instructions and sanitization skill
   docs/
-    Repository_Guidelines.md
-    Project_Structure.md     this maintained overview
-    1_Goals/                generic purpose and constraints
-    2_HLD/                  network/Wi-Fi and Systems (Compute/Storage)
-    3_LLD/                  orchestration, delivery, monitoring, data protection
+    README.md               the book: layers, storyline and table of contents
+    repository-guidelines.md
+    01-foundations/         goals, requirements, design principles, cost
+    02-architecture/        physical, network (incl. Wi-Fi), compute, storage, platform
+    03-platform-services/   DNS, certificates, identity, secrets, scheduling
+    04-automation/          IaC, configuration management, deployment,
+                            this maintained project-structure overview
+    05-services/            workload design and self-hosted service options
+    06-operations/          observability, backups, disaster recovery, maintenance
 
 Private homelab integration
   README.md                 actual project context and navigation
   .github/                  private-context instructions; no local skills needed
-  docs/                     matching goals/HLD/LLD categories;
-                            actual decisions, setup, checks and recovery
+  docs/                     the same book parts (01-06), only where private
+                            content exists; actual decisions, setup, checks
+                            and recovery inside each subject file
   ansible/                  host/platform configuration composition;
                             reusable roles and protected variable references
   terraform/                provisioning composition and reusable modules;

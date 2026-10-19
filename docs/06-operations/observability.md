@@ -1,6 +1,10 @@
-# Monitoring and Observability
+# Observability and Monitoring
+
+> **Part 6 · Operations** — [Part overview](./README.md) · Next: [Backups](./backups.md)
 
 Decide which failures and questions matter before choosing dashboards or collecting every signal.
+
+Observability is how the homelab provides *ongoing evidence* that it works—the operational form of the principle [evidence over assumption](../01-foundations/design-principles.md#evidence-over-assumption). This chapter covers both observability (the ability to understand the system from its metrics, logs and traces) and monitoring (the checks and alerts that tell you when to act). They are kept in one chapter on purpose: monitoring is one use of the same signals, and splitting them would describe the same collectors, placement and failure domains twice.
 
 ---
 
@@ -59,7 +63,7 @@ Choose integrations and operational familiarity rather than expecting one system
 
 Set bounded resource/retention budgets, narrow scrape permissions and authenticated dashboards. Avoid unbounded labels and collection of sensitive identifiers. Configure ingestion/discovery, test queries and controlled alert delivery/grouping/silences.
 
-Monitor storage/backup health and consider whole-system power measurements for [electricity planning](../../2_HLD/Systems/Compute.md#electricity-and-consolidation). If the main stack shares the workload cluster, decide whether limited independent checks are useful. Record actual targets/output privately, not in the public reference.
+Monitor storage/backup health and consider whole-system power measurements for [electricity planning](../02-architecture/compute.md#electricity-and-consolidation). If the main stack shares the workload cluster, decide whether limited independent checks are useful. Record actual targets/output privately, not in the public reference.
 
 Alerts should name an impact and a next action, with a sensible delay to avoid transient noise. Test delivery through a controlled failure, then recovery and silence handling. Separate "the monitoring system has no data" from "the service is healthy": missing exporters or a failed pipeline can otherwise produce false reassurance.
 

@@ -1,8 +1,12 @@
 # Compute
 
-Choose physical capacity and failure domains before allocating VMs or installing an orchestration platform. This category combines host roles, buying decisions, power costs and virtualization; there is no separate generic hardware/software catalog.
+> **Part 2 · Architecture** — [Part overview](./README.md) · Previous: [Network](./network.md) · Next: [Storage](./storage.md)
 
-> **Scope:** Use DevHub's [compute hardware fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/compute) and [operating-system references](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/os) for shared fundamentals and inspection commands. This guide applies them to lab purchasing, capacity, power, and recovery; actual inventory and allocations remain private. See the [repository relationship](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together) rather than treating this as another general hardware reference.
+Compute is where the lab's workloads actually run: the physical hosts, their capacity and power use, and the virtualization layer that turns one or more machines into many guests. It sits directly on the [physical environment](./physical.md) and the [network](./network.md), and everything above it—[storage](./storage.md) on local disks, the [platform](./platform.md), [platform services](../03-platform-services/README.md) and [services](../05-services/README.md)—consumes its capacity and shares its failure domains.
+
+Choose physical capacity and failure domains before allocating VMs or installing an orchestration platform. This chapter combines host roles, buying decisions, power costs and virtualization; there is no separate generic hardware/software catalog.
+
+> **Scope:** Use DevHub's [compute hardware fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/compute) and [operating-system references](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/os) for shared fundamentals and inspection commands. This guide applies them to lab purchasing, capacity, power, and recovery; actual inventory and allocations remain private. See the [repository relationship](../../README.md#how-devhub-and-the-homelab-repositories-fit-together) rather than treating this as another general hardware reference.
 
 ---
 
@@ -25,9 +29,9 @@ Choose physical capacity and failure domains before allocating VMs or installing
 
 ## Design Roles and Capacity
 
-Possible roles include hypervisor hosts, management clients/VMs, utility guests and Kubernetes nodes. A VM per tool is not inherently simpler. Keep administration/recovery usable when the workload cluster fails. Storage capacity and backend choices are described separately in [Storage](./Storage.md); local disks remain part of the compute host's capacity and failure domain.
+Possible roles include hypervisor hosts, management clients/VMs, utility guests and Kubernetes nodes. A VM per tool is not inherently simpler. Keep administration/recovery usable when the workload cluster fails. Storage capacity and backend choices are described separately in [Storage](./storage.md); local disks remain part of the compute host's capacity and failure domain.
 
-Estimate active CPU, memory, storage/I/O, network and headroom. One host is often enough for learning; independent hosts add capacity without cluster coupling, while a hypervisor cluster introduces quorum, fencing, migration/storage and surviving-capacity requirements. Kubernetes orchestration is a [separate LLD concern](../../3_LLD/Cluster/README.md).
+Estimate active CPU, memory, storage/I/O, network and headroom. One host is often enough for learning; independent hosts add capacity without cluster coupling, while a hypervisor cluster introduces quorum, fencing, migration/storage and surviving-capacity requirements. Kubernetes orchestration is a [separate platform concern](./platform.md).
 
 Separate **physical hosts** from **logical nodes**. A host supplies real CPU, RAM, disks and NICs; a Kubernetes node can be a VM consuming those resources. Running several node VMs is a useful way to learn upgrades and scheduling, but their memory requirements still add up and a physical-host outage can remove several nodes together.
 
@@ -85,7 +89,7 @@ CPU labels such as i5/i7 or Ryzen 5/7 are tiers **within generations**, not reli
 
 Choose RAM from the sum of concurrent guest needs and host/storage overhead. Check the manufacturer's supported capacity and module type. GPU or PCIe passthrough also depends on firmware, IOMMU groups and device compatibility; a CPU feature alone does not guarantee a usable passthrough setup.
 
-SSD capacity is not its only property: latency, endurance, sustained writes, health and replacement cost matter for VM disks. Separate working data from recovery copies according to [storage and backup design](../../3_LLD/Storage_Backups/README.md). A host with one drive can be a useful learning machine if downtime/data loss are acceptable and important data has independent backups.
+SSD capacity is not its only property: latency, endurance, sustained writes, health and replacement cost matter for VM disks. Separate working data from recovery copies according to [storage and backup design](../06-operations/backups.md). A host with one drive can be a useful learning machine if downtime/data loss are acceptable and important data has independent backups.
 
 | Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
 |---|---|---|---|---|
@@ -94,7 +98,7 @@ SSD capacity is not its only property: latency, endurance, sustained writes, hea
 | Extra physical NICs | Separate physical interfaces for selected traffic roles | Distinct links and potential bandwidth separation | Ports, cabling, drivers and configuration; shared host/power remain. **Maintenance:** Track interface identity, cabling and drivers; verify bridge/routing roles after replacement or host updates. | Physical path separation or link capacity is needed |
 | VLANs on a shared NIC | Logical traffic roles carried by a controlled trunk | Segmentation without extra physical interfaces | Shared bandwidth/failure domain and correct tagging/policy required. **Maintenance:** Maintain explicit trunk membership and tagging across host/switch changes; test administration and denied cross-segment paths. | Logical separation is sufficient |
 
-Neither extra NICs nor VLANs removes the need to protect hypervisor administration. Use [DevHub's segmentation and access principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md#segmentation-and-access) for the general policy, then select host NIC/bridge roles that support the [home-and-lab boundary](../Network/README.md#segmentation-and-access).
+Neither extra NICs nor VLANs removes the need to protect hypervisor administration. Use [DevHub's segmentation and access principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md#segmentation-and-access) for the general policy, then select host NIC/bridge roles that support the [home-and-lab boundary](./network.md#segmentation-and-access).
 
 ---
 
@@ -149,7 +153,7 @@ Two hosts do not automatically provide HA. Distinct hosts, surviving capacity, s
 | [Hyper-V](https://learn.microsoft.com/en-us/windows-server/virtualization/hyper-v/overview) | Windows-oriented virtualization | Fits Windows administration and guest requirements | Edition, licensing and management constraints; platform-specific lifecycle. **Maintenance:** Coordinate Windows/host updates and guest maintenance; protect virtual-switch settings and validate checkpoints, backups and supported recovery. | Windows ecosystem learning/integration |
 | Bare-metal services/containers | Workloads run directly on the host without a hypervisor | Fewer layers and less virtualization overhead | Host maintenance affects workloads directly; less guest isolation and rebuild flexibility. **Maintenance:** fewer platform components, but OS/runtime updates and service recovery are tightly coupled | One-purpose hosts or tight resource limits |
 
-Use the platform's supported host OS. Ubuntu/Debian or RHEL-family utility guests fit different learning/ecosystem needs; immutable Kubernetes nodes are chosen with the [cluster platform](../../3_LLD/Cluster/README.md).
+Use the platform's supported host OS. Ubuntu/Debian or RHEL-family utility guests fit different learning/ecosystem needs; immutable Kubernetes nodes are chosen with the [cluster platform](./platform.md).
 
 ### Proxmox VE
 
@@ -170,7 +174,7 @@ Use the platform table to compare hardware support, management-appliance deploym
 |---|---|---|---|---|
 | [Ubuntu](https://documentation.ubuntu.com/server/) / [Debian](https://www.debian.org/doc/) utility guest | General-purpose Linux VM | Familiar packages and broad supported cloud-init workflows; useful Linux practice | OS/users/services/SSH maintenance and configuration drift. **Maintenance:** Patch packages, maintain users/SSH/services and review drift; refresh images and test the management/recovery path after changes. | Management and utility roles needing mutable Linux |
 | [RHEL](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux) and compatible family guests | Enterprise-oriented RPM/SELinux Linux environment | Practice with enterprise-Linux administration | Distribution-specific support, licensing/repository and compatibility choices. **Maintenance:** Maintain supported repositories/releases, security policy and service configuration; test major-version and SELinux behavior changes. | RPM/SELinux or enterprise ecosystem learning |
-| Minimal / immutable node system | Purpose-limited OS with controlled configuration/update paths | Smaller mutable surface and repeatable node lifecycle | Different diagnostics, extensions and application support; not a general utility host. **Maintenance:** Use supported image/API upgrades rather than ad-hoc repairs; retain declarative configuration, extension compatibility and recovery access. | Dedicated roles, with [Kubernetes node choices](../../3_LLD/Cluster/README.md#kubernetes-node-lifecycle) assessed separately |
+| Minimal / immutable node system | Purpose-limited OS with controlled configuration/update paths | Smaller mutable surface and repeatable node lifecycle | Different diagnostics, extensions and application support; not a general utility host. **Maintenance:** Use supported image/API upgrades rather than ad-hoc repairs; retain declarative configuration, extension compatibility and recovery access. | Dedicated roles, with [Kubernetes node choices](./platform.md#kubernetes-node-lifecycle) assessed separately |
 
 Keep the hypervisor's supported base rather than replacing its distribution underneath it. Choose each guest OS for its role, with a repeatable image/update process rather than one default for every machine.
 
@@ -180,7 +184,7 @@ Keep the hypervisor's supported base rather than replacing its distribution unde
 
 Inspect hardware, select supported images, plan management/guest boundaries, prepare storage/templates and allocate resources only after the design. CPU overcommit does not create capacity; host CPU passthrough can limit migration across unlike hardware.
 
-Use the LLD [Automation](../../3_LLD/Automation.md) guidance where useful. Verify guest readiness, resource pressure, restricted management and recoverability before expanding. Start small; add capacity or independent failure domains for a concrete need, not unsupported percentages of learning value.
+Use the [automation part](../04-automation/README.md) where useful. Verify guest readiness, resource pressure, restricted management and recoverability before expanding. Start small; add capacity or independent failure domains for a concrete need, not unsupported percentages of learning value.
 
 Define which parts a template, provisioning tool and configuration tool own. Prepare supported guest images, verify image integrity, separate credentials from configuration and pin tested versions of providers/components. Record expected networking and storage dependencies before cloning guests.
 

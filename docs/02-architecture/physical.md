@@ -1,6 +1,10 @@
-# Equipment Placement and Accessories
+# Physical Environment: Placement and Accessories
 
-Choose a location that makes equipment safe, cool, reachable and maintainable. Space, ventilation, safe electrical access and cable routing matter more than hiding equipment or making the installation look like a data center. This guide is generic; actual placement and purchases belong in the private homelab record.
+> **Part 2 · Architecture** — [Part overview](./README.md) · Next: [Network](./network.md)
+
+The architecture starts with the physical world because everything else depends on it. Every router, switch, host and disk needs a safe place, power, ventilation, cabling and room to be serviced; the [requirements](../01-foundations/requirements.md#constraints) for space, heat, noise and electrical safety are often the most decisive constraints of a home installation. A design that is perfect on paper but sits in an overheating cupboard, blocks the meter cabinet or cannot be reached during an outage is not a good design.
+
+Choose a location that makes equipment safe, cool, reachable and maintainable. Space, ventilation, safe electrical access and cable routing matter more than hiding equipment or making the installation look like a data center. This chapter is generic; actual placement and purchases belong in the private homelab record. Network-specific equipment choices are in the [network chapter](./network.md#equipment-and-management-choices), and host form factors in [compute](./compute.md#choosing-a-form-factor); this chapter covers where and how that equipment is installed and powered.
 
 ---
 
@@ -36,7 +40,7 @@ If a downstream switch is used near compute, it extends physical connectivity bu
 
 ## Meter Cabinets and Network Runs
 
-Connect a separate router's WAN port to the provider modem/router/ONT handoff and its LAN to the main switch, subject to the ISP's bridge/routing behavior. Check device port speeds, PoE needs and supported uplinks. Use the [Network guide](./Network/README.md) for network equipment and policy choices, and the [Wi-Fi placement guide](./Network/WiFi.md) for AP coverage.
+Connect a separate router's WAN port to the provider modem/router/ONT handoff and its LAN to the main switch, subject to the ISP's bridge/routing behavior. Check device port speeds, PoE needs and supported uplinks. Use the [Network guide](./network.md) for network equipment and policy choices, and the [Wi-Fi placement guide](./network.md#wi-fi) for AP coverage.
 
 Route fixed Ethernet through suitable conduits with accessible terminations and service slack. Label cable destinations and test runs end-to-end. Locate APs for radio coverage outside a metal or crowded cabinet; a central cabinet is not automatically a good Wi-Fi location.
 

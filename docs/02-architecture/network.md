@@ -1,15 +1,20 @@
 # Network
 
-> **Scope:** DevHub owns the [general network-design principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md), including segmentation, trust zones, and traffic-flow models. This guide applies them to home-and-lab connectivity, equipment choices, placement, and recovery. See [how DevHub and the homelab repositories fit together](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together) for the ownership rule and private-record boundary.
+> **Part 2 · Architecture** — [Part overview](./README.md) · Previous: [Physical](./physical.md) · Next: [Compute](./compute.md)
+
+> **Scope:** DevHub owns the [general network-design principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md), including segmentation, trust zones, and traffic-flow models. This chapter applies them to home-and-lab connectivity, equipment choices, Wi-Fi, placement, and recovery. See [how DevHub and the homelab repositories fit together](../../README.md#how-devhub-and-the-homelab-repositories-fit-together) for the ownership rule and private-record boundary.
 
 Design household/lab boundaries and recovery first, then select networking gear and its management software together. Use [DevHub networking](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/network) for the underlying protocols and commands rather than treating this guide as another general networking textbook.
 
 The network is one of the most consequential parts of a homelab: it connects every platform and may also support household work, communication and entertainment. A failed experiment should not unnecessarily remove those services or the management path needed to fix it. Spend effort on understandable traffic paths, safe changes and recovery before adding features.
 
+This is deliberately **one long chapter**. It starts with the requirements and the overall arrangement of routers and segments, zooms in on trust boundaries, networks inside the lab and equipment, then Wi-Fi, and finishes with recovery and verification. Everything about the network—from the high-level topology choice down to switch, cabling and SSID considerations—lives here, so a reader can follow one decision from its reason to its implementation checks without jumping between separate design and setup documents.
+
 ---
 
 ## Table of Contents
 
+- [Purpose and Requirements](#purpose-and-requirements)
 - [Design Options](#design-options)
   - [Flat or ISP-Managed Networks](#flat-or-isp-managed-networks)
   - [One Shared Segmented Gateway](#one-shared-segmented-gateway)
@@ -28,11 +33,32 @@ The network is one of the most consequential parts of a homelab: it connects eve
   - [Should You Build Your Own Firewall or Buy an Appliance?](#should-you-build-your-own-firewall-or-buy-an-appliance)
   - [Switching, Power and Cabling](#switching-power-and-cabling)
     - [Unmanaged, Managed, and Smart](#unmanaged-managed-and-smart)
+- [Wi-Fi](#wi-fi)
+  - [Wi-Fi Design Options](#wi-fi-design-options)
+  - [Wi-Fi Backhaul and Equipment](#wi-fi-backhaul-and-equipment)
+  - [Wi-Fi Implementation and Verification](#wi-fi-implementation-and-verification)
 - [Equipment Placement and Accessories](#equipment-placement-and-accessories)
 - [Availability, Backups and Recovery](#availability-backups-and-recovery)
   - [Backups That Survive the Outage](#backups-that-survive-the-outage)
   - [Temporary Virtual-Gateway Recovery](#temporary-virtual-gateway-recovery)
 - [Implementation and Verification](#implementation-and-verification)
+
+---
+
+## Purpose and Requirements
+
+The network turns the [foundation requirements](../01-foundations/requirements.md) into connectivity and boundaries. Before comparing routers or switches, write down what the network must achieve; every later section in this chapter answers one of these needs:
+
+| Requirement | Why it matters in a homelab | Where this chapter answers it |
+|---|---|---|
+| Household connectivity survives lab work | Family members, work calls and entertainment should not stop because a VM, cluster or experiment fails | [Design options](#design-options), [availability and recovery](#availability-backups-and-recovery) |
+| Experiments are contained | Disposable, misconfigured or compromised lab workloads should not freely reach household clients or management | [Segmentation and access](#segmentation-and-access), [trust zones](#trust-zones-and-traffic-flow) |
+| Administration is protected and recoverable | Gateway, switch, hypervisor and controller management has the highest impact if misused, and must remain reachable when something breaks | [Trust roles](#trust-roles-and-minimum-access), [implementation checks](#implementation-and-verification) |
+| Applications are reachable deliberately | Household clients may need selected lab applications; public exposure needs a separate, narrower decision | [Networks inside the lab](#networks-inside-the-lab), [ISP handoff and remote access](#isp-handoff-nat-and-remote-access) |
+| Coverage and capacity fit actual use | Wi-Fi reach, uplinks, PoE and backup/storage traffic determine whether the design works in practice | [Equipment](#equipment-and-management-choices), [Wi-Fi](#wi-fi) |
+| Cost and maintenance stay proportional | Every extra appliance, segment or plugin adds purchase, power, update and recovery work | [Design options](#design-options) and the central [cost guide](../01-foundations/cost.md) |
+
+The [design principles](../01-foundations/design-principles.md) apply directly here: keep the household foundation independent of disposable compute, learn enterprise segmentation patterns without paying for enterprise availability, and prefer an understandable, recoverable design over a feature-complete diagram. Name resolution and certificates build on this network but are described as [platform services](../03-platform-services/README.md); the physical location of the equipment is part of the [physical chapter](./physical.md).
 
 ---
 
@@ -49,7 +75,7 @@ A second router is not automatically safer; a shared gateway is not automaticall
 
 Maintenance descriptions are qualitative comparisons of ownership, not measured hours or promises that a product is maintenance-free. More segments, plugins, public services and independent devices increase work; operator familiarity, supported updates and tested recovery can matter more than initial installation speed.
 
-Apply the central [cost and scope test](../../1_Goals/Cost_and_Scope.md) before buying networking equipment. For example, test firewall rules, routing and VLAN policy using an existing supported gateway/switch or isolated virtual networks first. A separate physical firewall, switch or redundant gateway pair is justified when the goal requires a distinct physical failure boundary, sustained capacity or approved hands-on hardware practice—not just because the network diagram looks more complete. Virtual tests teach policy and traffic behavior but do not prove physical failover, radio coverage or cabling resilience.
+Apply the central [cost and scope test](../01-foundations/cost.md) before buying networking equipment. For example, test firewall rules, routing and VLAN policy using an existing supported gateway/switch or isolated virtual networks first. A separate physical firewall, switch or redundant gateway pair is justified when the goal requires a distinct physical failure boundary, sustained capacity or approved hands-on hardware practice—not just because the network diagram looks more complete. Virtual tests teach policy and traffic behavior but do not prove physical failover, radio coverage or cabling resilience.
 
 **Additional explanation below the table:** routing boundaries, shared dependencies and virtual placement are easier to misunderstand than a product comparison. The role-based text diagrams below show the traffic paths for each option. They are generic teaching designs, not a map of an actual household; arrows show connectivity, not permission to access everything along the path.
 
@@ -179,7 +205,7 @@ Provider access may use a modem, optical termination or another access device; r
 | Private/VPN application and admin access | Only authorized local/VPN clients reach services | Reduces public attack exposure; limits management reach | VPN identity, routing, updates and recovery still need maintenance; protect real endpoints. **Maintenance:** patch the entry point, revoke lost clients, manage keys and test a fallback administration path; VPN access does not justify broad internal permissions | Administration and services with no need for anonymous public reachability |
 | Deliberate public application exposure | Selected services are reachable from the internet | Supports genuinely public workloads | Requires authentication where appropriate, TLS, updates, narrowly scoped firewall rules and recovery; management UIs should not become public by default. **Maintenance:** ongoing certificate renewal, security updates, exposure review and monitoring; public reach adds obligations beyond merely opening a port | Applications whose purpose requires external public access |
 
-Use private/VPN access for administration where appropriate rather than exposing management UIs. For deliberately public applications, review authentication, updates, TLS, firewall scope and recovery separately. Store real internet-facing endpoints under the [sensitive-value rules](../../Repository_Guidelines.md#secrets-and-sensitive-artifacts), not in public examples.
+Use private/VPN access for administration where appropriate rather than exposing management UIs. For deliberately public applications, review authentication, updates, TLS, firewall scope and recovery separately. Store real internet-facing endpoints under the [sensitive-value rules](../repository-guidelines.md#secrets-and-sensitive-artifacts), not in public examples.
 
 ---
 
@@ -216,7 +242,7 @@ These are homelab example roles, not a prescribed VLAN count or a map of the own
 
 ## Trust Zones and Traffic Flow
 
-The detailed [trust-zone model and traffic-flow diagram](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md#trust-zones-and-traffic-flow), including Upper/Lower Red, are maintained in DevHub. This follows the [shared-principles versus homelab-application boundary](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together), rather than keeping a second explanation here.
+The detailed [trust-zone model and traffic-flow diagram](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md#trust-zones-and-traffic-flow), including Upper/Lower Red, are maintained in DevHub. This follows the [shared-principles versus homelab-application boundary](../../README.md#how-devhub-and-the-homelab-repositories-fit-together), rather than keeping a second explanation here.
 
 At homelab scale, apply the model only where it solves a real problem. Restrict management, contain disposable experiments, and keep trusted household clients separate from less-trusted devices. Hosting a public application may justify a DMZ and a narrow backend path; it does not require recreating every zone or a multi-tier DMZ. The [home-to-application](#reaching-applications-from-home) and [public-service DMZ](#public-services-and-the-dmz-boundary) examples below apply those principles to a small lab without implying production-grade isolation.
 
@@ -246,7 +272,7 @@ Shared gateway/firewall -> Lab VLAN 30 -> node VM A, node VM B, node VM C
 
 The Pod network is normally a logical cluster network, **not another physical VLAN**. A Service CIDR is an address space for virtual service frontends, not a second Ethernet segment. CNI implementations may use overlays or native routing; native/BGP designs can require upstream routes, while overlays require suitable underlay connectivity and MTU. None implies that a Pod CIDR number should become a VLAN ID. Specialized multi-network workloads can have extra interfaces/VLANs, but that is a separate requirement, not a Kubernetes prerequisite.
 
-Choose mutually non-overlapping node, Pod, Service, container, VPN and household ranges before installation; avoid inferring address ranges from VLAN IDs. Keep the actual CIDRs private and verify routes, firewall requirements and MTU for the chosen CNI. See [cluster networking choices](../../3_LLD/Cluster/README.md#networking-and-persistence) for Cilium, Calico and Flannel responsibilities.
+Choose mutually non-overlapping node, Pod, Service, container, VPN and household ranges before installation; avoid inferring address ranges from VLAN IDs. Keep the actual CIDRs private and verify routes, firewall requirements and MTU for the chosen CNI. See [cluster networking choices](./platform.md#networking-and-persistence) for Cilium, Calico and Flannel responsibilities.
 
 VLAN/gateway rules and [Kubernetes NetworkPolicy](https://kubernetes.io/docs/concepts/services-networking/network-policies/) enforce different boundaries. The gateway can restrict Home-to-Lab and Lab-to-Management traffic, but same-VLAN node traffic and Pod-to-Pod flows may never traverse it. An enforcing CNI can restrict workload ingress/egress, for example frontend-to-backend while denying unrelated Pods access to a database. Namespaces alone do not enforce that policy, and creating NetworkPolicy objects without an enforcing implementation has no effect. Neither mechanism replaces host, API-access or application security.
 
@@ -306,7 +332,7 @@ Do not build an extra cluster or activate a DMZ just to complete a diagram. Star
 
 Check gateway performance with inspection/VPN enabled, not just port speed. Choose switches by access/trunk controls, restricted management, port/uplink capacity and per-port **and total** PoE budget. An unmanaged switch passing tags does not enforce segmentation.
 
-Choose APs and Ethernet/fibre links for actual coverage, length, speed, power and installation requirements. Existing good cable may suffice; use suitable copper/PoE-rated cabling, not copper-clad aluminium. Include power, ventilation and support/return terms in the budget. See [Wi-Fi](./WiFi.md).
+Choose APs and Ethernet/fibre links for actual coverage, length, speed, power and installation requirements. Existing good cable may suffice; use suitable copper/PoE-rated cabling, not copper-clad aluminium. Include power, ventilation and support/return terms in the budget. See [Wi-Fi](#wi-fi).
 
 ### Router Platform Trade-offs
 
@@ -358,15 +384,65 @@ Choose copper by required speed, installation length, termination quality and Po
 
 ---
 
+## Wi-Fi
+
+Select coverage, backhaul, management and segmentation together with the rest of this network design rather than as a second, independent routing stack. Wireless access is where household devices, guests and limited-trust devices most often join the network, so radio placement and SSID-to-segment mapping are as much part of the [segmentation design](#segmentation-and-access) as the gateway rules are.
+
+> **Scope:** This section evaluates home-scale coverage and equipment. Use [DevHub's network-design principles](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Design.md) for general segmentation/access rules, and the [repository relationship](../../README.md#how-devhub-and-the-homelab-repositories-fit-together) for where shared explanations and private measurements belong.
+
+### Wi-Fi Design Options
+
+| Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| ISP/all-in-one Wi-Fi | Gateway and radio in one device | Few devices, often already available; economical if centrally located | Provider socket/cabinet may be a poor radio location; isolation and controls vary. **Maintenance:** relatively few settings/devices, but gateway maintenance also interrupts Wi-Fi; recheck guest isolation and credentials after reset/replacement | Coverage and security requirements are modest and verified |
+| Consumer mesh | Coordinated multi-unit wireless coverage, with wireless or supported wired backhaul | Convenient coverage expansion and lower setup effort where cabling is impractical | Check router/AP mode, VLAN SSIDs, guest isolation, subscription/cloud dependence and backhaul; mesh is not proof of segmentation. **Maintenance:** coordinated updates can simplify upkeep; still track unit support, app/account recovery and inter-node signal changes after moving furniture/units | Simple coverage is the priority and supported features satisfy policy |
+| Managed wired APs, e.g. [UniFi](https://help.ui.com/hc/en-us/categories/6583256751383-UniFi) / [Omada](https://www.tp-link.com/en/support/faq/) | Separate radios with Ethernet uplinks and coordinated SSID/VLAN management | Radio placement independent of routing; predictable uplinks and segmented wireless access | Cabling, controller availability/local recovery and compatible PoE/injectors; ecosystem features vary. **Maintenance:** more initial VLAN/PoE/coverage planning, then centralized profiles and updates; back up controller settings and verify SSID policy/roaming after changes | Maintainable coverage and wireless trust boundaries matter |
+| Mixed-vendor wired APs | Independently selected APs using supported networking standards | Purchasing freedom and standards-based flexibility | Several update/configuration workflows; roaming/security consistency needs coordination. **Maintenance:** higher manual coordination for channel/power/security settings and release cycles; retain exports and test client behavior across vendors | Interoperability and operations are understood |
+| Wireless repeater | A device retransmits an existing wireless connection | Low installation effort for limited reach extension | Adds a radio hop and airtime contention; cannot fix a poor upstream signal or internet link. **Maintenance:** another firmware/credential lifecycle and failure point; retest uplink quality after placement or upstream SSID changes | A bounded coverage gap with acceptable throughput/latency after testing |
+
+These are general approaches, not recommendations for the owner's installed models. First distinguish a coverage problem from an internet/uplink problem; adding radios does not fix every slow connection.
+
+### Wi-Fi Backhaul and Equipment
+
+| Option | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| Ethernet backhaul | AP/mesh units connect to the network by cable | Predictable uplink; leaves more airtime for clients; can carry compatible PoE | Cable installation, port capacity and power budget. **Maintenance:** initial physical work, then relatively stable links; diagnose cable, port and PoE faults separately | Cabling is feasible and stable capacity is important |
+| Wireless backhaul | Units use inter-node radio links | Coverage without new cable runs | Signal/interference and shared airtime constrain capacity; dedicated radios help but do not remove dependency. **Maintenance:** less installation work but potentially more recurring signal/channel diagnosis; review after environmental changes | Installation constraints outweigh performance costs and inter-node links test well |
+| 2.4 GHz | Lower-frequency Wi-Fi band used by many legacy/IoT clients | Useful reach and broad compatibility | Crowding and limited channel capacity; compatibility exceptions need containment. **Maintenance:** No separate software lifecycle beyond the AP; periodically review congestion, legacy-client exceptions and channel/power choices without weakening every SSID for one device. | Legacy devices and coverage-focused use |
+| 5 GHz | Higher-frequency band with more channel choices than 2.4 GHz in many regions | Capacity/channel-reuse opportunities for supported clients | Range/material losses and local DFS/channel rules; wide channels may reduce reuse. **Maintenance:** Review interference and local DFS/channel behavior after AP updates or placement changes; verify client coverage and roaming rather than maximizing channel width by default. | General modern-client capacity within measured coverage |
+| 6 GHz | Additional spectrum for compatible Wi-Fi generations/clients | Additional channel space where permitted | Client, security-mode and local regulatory support; reach remains placement-dependent. **Maintenance:** Keep AP/client firmware and permitted channel/security settings compatible; recheck coverage and local regulatory support as clients or deployment regions change. | Supported clients and justified spectrum/capacity needs |
+
+Mesh products may support wired backhaul, and managed APs may support meshing: compare features, not labels.
+
+Survey placement/building materials before AP count. Compare client support, bands, local spectrum rules, uplink and PoE budget; advertised PHY rates are not application throughput. More APs or maximum transmit power is not automatically better.
+
+An AP needs a good uplink where it is installed; a wireless mesh node at the edge of an already unusable signal cannot manufacture backhaul capacity. Test inter-node signal, not just client signal. Ethernet is predictable and leaves more airtime for clients, while wireless backhaul is a practical trade-off for rooms where installation cost or building constraints dominate.
+
+Use 2.4 GHz for coverage/legacy needs and suitable 5/6 GHz capability for supported clients where range and local rules allow. Wider channels can improve peak rates but reduce channel reuse and may be worse in crowded environments. Walls, floors, antenna orientation and client radios matter; a Wi-Fi-generation badge is not a coverage survey.
+
+Keep SSID count purposeful because each adds management airtime. A separate IoT compatibility SSID can avoid weakening every client network, but must map to real policy. AP management belongs on a restricted path; wireless clients should not gain administration merely because they can associate.
+
+### Wi-Fi Implementation and Verification
+
+Choose bridge/AP versus router mode deliberately to avoid unintended NAT/DHCP. Map required SSIDs to the correct segments, protect administration and use compatible WPA2/WPA3 modes. Limit SSID count and legacy exceptions.
+
+Validate association, addressing, backhaul, intended access/denials, roaming and recovery. Client roaming depends on placement, settings and client behavior; neither mesh branding nor multiple APs guarantees seamless handover.
+
+Measure in the rooms and usage conditions that matter, including latency and stability rather than only a speed test beside an AP. Check that a roaming client retains the expected network/policy and that one radio/client does not create an unintended bridge. Review guest client isolation on wired and wireless paths separately.
+
+Use compatible security modes and a documented update cadence. If legacy clients force an exception, contain it to their segment and record why. Exact SSIDs, AP placement and operational surveys remain private; a public explanation can show the evaluation process without a floor plan or device locations.
+
+---
+
 ## Equipment Placement and Accessories
 
-See the HLD [Equipment Placement and Accessories](../Placement.md) guide for meter-cabinet trade-offs, safe cabling, mini-PC ventilation, optional racks, rack units and power accessories. The network-specific [switching and cabling criteria](#switching-power-and-cabling) still apply wherever equipment is installed.
+See the [physical chapter](./physical.md) for meter-cabinet trade-offs, safe cabling, mini-PC ventilation, optional racks, rack units and power accessories. The network-specific [switching and cabling criteria](#switching-power-and-cabling) still apply wherever equipment is installed.
 
 ---
 
 ## Availability, Backups and Recovery
 
-**A shared gateway is an accepted single point of failure when its recovery time fits the household's needs.** Apply [Learn Enterprise Patterns Without Enterprise Availability](../../1_Goals/README.md#learn-enterprise-patterns-without-enterprise-availability) directly: learning enterprise patterns does not require paying for enterprise availability. The gateway, switch, ISP handoff and power can each interrupt service. VLANs, multiple VMs and configuration backups do not remove those failures.
+**A shared gateway is an accepted single point of failure when its recovery time fits the household's needs.** Apply [Learn Enterprise Patterns Without Enterprise Availability](../01-foundations/design-principles.md#learn-enterprise-patterns-without-enterprise-availability) directly: learning enterprise patterns does not require paying for enterprise availability. The gateway, switch, ISP handoff and power can each interrupt service. VLANs, multiple VMs and configuration backups do not remove those failures.
 
 Choose a realistic recovery target with the people who depend on the connection. Waiting for a replacement may be acceptable; remote work or accessibility needs may justify a spare or another connection. None of the options below is a promise of seamless failover.
 
@@ -387,7 +463,7 @@ HA is possible, but it is not the lowest-cost default. For UniFi, verify the cur
 
 Keep dated supported configuration backups before changes and after validation. Retain an encrypted/access-controlled **local offline copy and an off-site/cloud copy**, with credentials and recovery keys available without the failed gateway, controller or lab storage. A file on the gateway itself is not independent; a cloud-only backup is awkward when internet access is down.
 
-For UniFi, use the supported [System Config Backup and migration workflow](https://help.ui.com/hc/en-us/articles/360008976393) and verify target-model/software compatibility. Record provider settings, physical port roles, necessary DHCP/DNS and firewall intent, local management access and any device re-adoption steps securely. Do not commit raw exports or sensitive recovery inputs to Git. See [backup scope and independent copies](../../3_LLD/Storage_Backups/README.md#independent-copies-and-retention).
+For UniFi, use the supported [System Config Backup and migration workflow](https://help.ui.com/hc/en-us/articles/360008976393) and verify target-model/software compatibility. Record provider settings, physical port roles, necessary DHCP/DNS and firewall intent, local management access and any device re-adoption steps securely. Do not commit raw exports or sensitive recovery inputs to Git. See [backup scope and independent copies](../06-operations/backups.md#independent-copies-and-retention).
 
 Downloading a backup proves only that a file exists. Rehearse restoration on a compatible isolated target where practical, record what was actually tested and measure the manual recovery time before relying on it.
 
@@ -409,7 +485,7 @@ After choosing the design, plan addressing, port/SSID roles, provider requiremen
 
 Test DHCP/DNS, authorized services and intended denials in every enabled IP family. A failed ping does not prove isolation: establish that the service works from an authorized source, then test the same service from the denied source. Check household connectivity with lab compute off when independence is required.
 
-Use the [availability and recovery plan](#availability-backups-and-recovery) to choose restore/replacement versus supported redundancy according to outage impact. Duplicate boxes alone do not provide tested failover. Keep disruptive DHCP/RA/router experiments isolated and raw backups/endpoints protected under the [guidelines](../../Repository_Guidelines.md).
+Use the [availability and recovery plan](#availability-backups-and-recovery) to choose restore/replacement versus supported redundancy according to outage impact. Duplicate boxes alone do not provide tested failover. Keep disruptive DHCP/RA/router experiments isolated and raw backups/endpoints protected under the [guidelines](../repository-guidelines.md).
 
 Make changes in a recoverable order: retain a trusted wired bootstrap path, establish the new administration path, apply intended membership/policy and validate before removing the old path. Keep a protected configuration backup and know how to reach local management if internet or cloud sign-in fails.
 
