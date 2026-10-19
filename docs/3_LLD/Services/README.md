@@ -7,6 +7,7 @@ Choose useful workloads and their dependencies before picking delivery tools. No
 ## Table of Contents
 
 - [Workload Design](#workload-design)
+- [Service Scheduling](./Scheduling.md)
 - [GitOps and Continuous Delivery](#gitops-and-continuous-delivery)
 - [CI and Secret Delivery](#ci-and-secret-delivery)
 - [Implementation and Verification](#implementation-and-verification)
@@ -30,6 +31,8 @@ Choose single-host services versus [orchestration](../Cluster/README.md), privat
 Classify each workload by owner, purpose, dependencies, persistence and acceptable outage. Stateless experiments can often be recreated from images and configuration; stateful services need data lifecycle and migration plans. A household service promoted out of the experiment tier needs patching, access controls, monitoring and tested recovery.
 
 A reverse proxy or ingress can route several applications behind one entry point, but does not automatically authenticate users or make an application safe to expose. Prefer private access when public reachability provides no benefit. Keep application code/build artifacts in the appropriate project repository and let the homelab consume releases, rather than mixing every application into the infrastructure repository.
+
+Use [Service Scheduling](./Scheduling.md) to decide whether each component should run 24/7, on a defined schedule or only on demand. Plan automatic graceful lifecycle management before buying hardware that must remain on.
 
 ---
 

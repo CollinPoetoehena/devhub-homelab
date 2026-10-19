@@ -9,7 +9,9 @@ Apply the [repository relationship](../../README.md#how-devhub-and-the-homelab-r
 ## Table of Contents
 
 - [Platform](#platform)
+- [Automation](#automation)
 - [Workloads and Delivery](#workloads-and-delivery)
+- [Service Scheduling](#service-scheduling)
 - [Visibility and Data](#visibility-and-data)
 
 ---
@@ -22,11 +24,23 @@ Decide whether workloads need single-host containers, a scheduler or a broader a
 
 ---
 
+## Automation
+
+[Automation and configuration management](./Automation.md) covers the low-level choices for provisioning, host/guest configuration, workload delivery boundaries and validation. Automation is a useful cross-cutting principle, but the specific tools, ownership boundaries and workflows belong here alongside the platforms they operate.
+
+---
+
 ## Workloads and Delivery
 
 [Services](./Services/README.md) covers workload selection, exposure, GitOps/CD, CI and secret delivery. Tools are choices within those responsibilities, not independent top-level projects in this documentation.
 
 Define how code becomes an artifact, how approved intent reaches the platform and how credentials are delivered. Keep application repositories distinct from infrastructure integration where their release cycles differ. Reconciliation, packaging and infrastructure provisioning may cooperate, but must not fight over the same resource.
+
+---
+
+## Service Scheduling
+
+[Service scheduling](./Services/Scheduling.md) helps decide which components need to be always on, scheduled, or started on demand. Automatic graceful lifecycle management can reduce electricity and avoid risky manual shutdowns; keep the network foundation available when household connectivity depends on it.
 
 ---
 

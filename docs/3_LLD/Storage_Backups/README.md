@@ -2,11 +2,16 @@
 
 Design data ownership and acceptable loss/downtime before choosing disks or storage platforms.
 
+DevHub's [Storage Architecture reference](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/storage/Storage_Architecture.md) explains general media and backup concepts. This guide applies them to homelab choices. Before buying a device, also use the central [cost and scope guidance](../../1_Goals/Cost_and_Scope.md): start with the least complex design that meets a real need.
+
+The HLD [Systems Storage guide](../../2_HLD/Systems/Storage.md) covers the physical storage roles and broad architecture; this LLD focuses on backup, recovery and their operational trade-offs.
+
 ---
 
 ## Table of Contents
 
 - [Design Options](#design-options)
+- [Cost and Recovery Comparison](#cost-and-recovery-comparison)
 - [Backup and Recovery Choices](#backup-and-recovery-choices)
   - [Recovery Requirements and Backup Scope](#recovery-requirements-and-backup-scope)
   - [Independent Copies and Retention](#independent-copies-and-retention)
@@ -26,6 +31,38 @@ Design data ownership and acceptable loss/downtime before choosing disks or stor
 | [Kubernetes CSI](https://kubernetes.io/docs/concepts/storage/volumes/#csi) integrations | Driver-mediated volume lifecycle over a backend | Attachment, supported expansion, snapshots and application integration | Durability comes from backend design; verify access modes, node loss and backup coverage. **Maintenance:** Keep drivers, node components and backend credentials compatible; monitor volume lifecycle and test application-consistent restores. | Persistent Kubernetes workloads with a supported recovery model |
 
 Size capacity, endurance, I/O, replication overhead and surviving/rebuild capacity. Owning several hosts is not by itself a reason to run distributed storage.
+
+### Cost and Recovery Comparison
+
+This comparison is intentionally about the **whole recovery design**, not just the price per terabyte. Relative cost is qualitative because device prices, capacities, used-market quality, electricity rates, and cloud fees vary by location and time. Include purchase cost, additional power, replacement media, ongoing administration and restore testing. A low-cost drive that is never checked may be less useful than a smaller backup that is known to restore.
+
+| Setup | Primary data | Automated backup | Protection if a backup job/drive fails | Offline / off-site copy | Approximate cost and ongoing effort | Recovery limits | When it fits |
+|---|---|---|---|---|---|---|---|
+| No backup | Local SSD in a host | No | None; host/disk loss can lose data | None | Lowest purchase cost; least backup work, highest data-loss exposure | Rebuild only if data and configuration are reproducible; unique state may be lost | Disposable experiments with no valuable state |
+| One external HDD | Local SSD; HDD holds backup | Yes, while connected | Job alerts, verification and restore tests can catch some failures; the sole backup drive can still fail or be compromised | Not offline while connected; no off-site copy | Low additional hardware cost; modest job/health-check effort and one extra device | SSD and HDD can still share host, power, location and online deletion risk | Small lab protecting data against a primary disk/host failure |
+| Two external HDDs | Local SSD plus a regularly connected backup HDD | Routine automated backup to primary HDD | A second HDD can hold a periodic copy, if the copy succeeds and is checked | One drive can be disconnected and stored separately; still same-site unless moved off-site | Moderate one-time cost; manual/automated rotation and periodic verification | Not full 3-2-1 without an off-site copy; offline copy may be stale or damaged | Cost-conscious lab wanting protection from some online deletion and drive failures |
+| Two-bay NAS with two HDDs | NAS volume, often mirrored, plus client-local data as needed | NAS backup/snapshot jobs can be scheduled | RAID/mirroring supports availability for one-disk failure if configured; separate backup remains required | Not automatically offline or off-site | Higher initial cost (appliance, two drives and perhaps extra network gear), plus continuous electricity and appliance maintenance | NAS, credentials, network, power and site may be shared failure domains; RAID is not backup | Several clients need shared files or a genuine storage service |
+| Ceph/distributed storage | Data distributed across multiple nodes/disks | Replication/placement is usually automatic | Can remain available through designed node/disk failures when quorum, replicas and spare capacity are sufficient | Replicas are online and may share a site; independent backup still required | Highest equipment, power, network and operational complexity among these examples | Misconfiguration, correlated failure, full cluster/site loss, deletion or corruption can affect all replicas | Sustained distributed-storage learning or workload availability requirements justify the hardware and operations |
+
+The table is not a maturity ladder. A small lab can deliberately select local SSDs plus independent backups rather than progress to a NAS or Ceph. A backup job's own failure handling needs alerts, enough retention and a restore test; having two backup drives does not automatically make the copy process safe.
+
+For the value of data, define RPO (acceptable data-loss interval) and RTO (acceptable restoration time) before choosing backup frequency and media. The common 3-2-1 rule means three copies, two media types, one off-site. An SSD plus two HDDs can mimic the copy/media/offline parts, but if every drive stays in the same home it does **not** provide an off-site copy and should not be described as complete 3-2-1 protection.
+
+### Start Simple and Expand Only for a Need
+
+For many learning homelabs, local SSDs for active workloads plus one external HDD for automated backups is enough to learn hot versus cold storage, backup scheduling, integrity checking and restore procedures. A second HDD can provide an offline periodic copy. That protects against more risks than having no backup without requiring a separate storage appliance.
+
+A NAS is useful when multiple clients need shared files, a service needs supported network storage, or the owner wants to learn NAS operation as an ongoing project. It is not automatically required because multiple compute nodes exist. A NAS adds another host/appliance, drives, power, software, accounts, network dependencies and maintenance, and costs more than local SSDs and a simple external backup. Likewise, Ceph is valuable for explicit distributed-storage goals, but needs enough independent nodes and time for failure/rebuild operations.
+
+Do not buy advanced hardware simply because it is the most capable option or because one short experiment sounds interesting. Explore the architecture in theory or create a temporary VM/experiment on equipment already available, then remove it when the learning objective is complete. The [central cost and scope guide](../../1_Goals/Cost_and_Scope.md) explains this budget principle in more detail.
+
+### Enterprise Designs (Illustration Only)
+
+> **Illustration only:** The following describes common enterprise patterns to explain the concepts. It is not a recommendation or requirement for a homelab; the simpler options above may be entirely sufficient.
+
+Larger organizations commonly separate compute from shared storage, use redundant controllers/paths, protect data through policy-controlled snapshots and off-site/immutable backup, monitor capacity/health centrally, and document tested recovery objectives. Virtualization platforms may consume shared block or distributed storage; applications may use their own databases and object stores. A separate backup platform/account and an independent recovery location help limit shared failure and credential risks.
+
+This brings cost, power, network, staffing and operational responsibilities. "Enterprise" is not one design and not every organization has every component. Replicating the visible architecture without its failure domains, capacity planning, operations, security and recovery processes does not provide equivalent resilience. Learn the pieces that support an actual homelab goal and state clearly which failures the small setup accepts.
 
 Recreating a container elsewhere does not recreate its local data. Choose supported file/block integrations rather than treating all shared storage as interchangeable. Small or heterogeneous distributed-storage labs can teach the platform without meeting production-like resilience; replicas on guests sharing one disk are not independent copies. A CSI driver's installation does not establish data protection: understand physical placement and application lifecycle first.
 

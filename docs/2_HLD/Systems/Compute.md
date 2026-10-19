@@ -1,8 +1,8 @@
-# Hosts and Nodes
+# Compute
 
 Choose physical capacity and failure domains before allocating VMs or installing an orchestration platform. This category combines host roles, buying decisions, power costs and virtualization; there is no separate generic hardware/software catalog.
 
-> **Scope:** Use [DevHub's OS and hardware references](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/os_hardware) for shared fundamentals and inspection commands. This guide applies them to lab purchasing, capacity, power, and recovery; actual inventory and allocations remain private. See the [repository relationship](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together) rather than treating this as another general hardware reference.
+> **Scope:** Use DevHub's [compute hardware fundamentals](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/compute) and [operating-system references](https://github.com/CollinPoetoehena/DevHub/tree/main/reference/os) for shared fundamentals and inspection commands. This guide applies them to lab purchasing, capacity, power, and recovery; actual inventory and allocations remain private. See the [repository relationship](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together) rather than treating this as another general hardware reference.
 
 ---
 
@@ -25,7 +25,7 @@ Choose physical capacity and failure domains before allocating VMs or installing
 
 ## Design Roles and Capacity
 
-Possible roles include hypervisor hosts, management clients/VMs, utility guests, Kubernetes nodes and storage/backup services. A VM per tool is not inherently simpler. Keep administration/recovery usable when the workload cluster fails.
+Possible roles include hypervisor hosts, management clients/VMs, utility guests and Kubernetes nodes. A VM per tool is not inherently simpler. Keep administration/recovery usable when the workload cluster fails. Storage capacity and backend choices are described separately in [Storage](./Storage.md); local disks remain part of the compute host's capacity and failure domain.
 
 Estimate active CPU, memory, storage/I/O, network and headroom. One host is often enough for learning; independent hosts add capacity without cluster coupling, while a hypervisor cluster introduces quorum, fencing, migration/storage and surviving-capacity requirements. Kubernetes orchestration is a [separate LLD concern](../../3_LLD/Cluster/README.md).
 
@@ -54,7 +54,7 @@ Start a capacity budget with host overhead, always-on management, required workl
 
 Compare exact CPU generation/model, sustained performance, virtualization/IOMMU support, firmware, memory limits and SSD interfaces/health. CPU tier names and power ratings are not whole-system measurements. RAM/SSD headroom can matter more than a small CPU-tier difference.
 
-Compare new/refurbished/second-hand by delivered cost, inspection, warranty, returns and support. A marketplace name does not prove refurbishment quality. Employer equipment requires explicit transfer and approved data sanitization. Use [DevHub hardware inspection](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/os_hardware/Hardware_Specs.md#how-to-check-your-hardware-specs) for commands.
+Compare new/refurbished/second-hand by delivered cost, inspection, warranty, returns and support. A marketplace name does not prove refurbishment quality. Employer equipment requires explicit transfer and approved data sanitization. Use [DevHub hardware inspection](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/compute/Hardware_Specs.md#how-to-check-your-hardware-specs) for commands.
 
 ### Choosing a Form Factor
 
@@ -180,7 +180,7 @@ Keep the hypervisor's supported base rather than replacing its distribution unde
 
 Inspect hardware, select supported images, plan management/guest boundaries, prepare storage/templates and allocate resources only after the design. CPU overcommit does not create capacity; host CPU passthrough can limit migration across unlike hardware.
 
-Use [IaC and configuration management](./Automation.md) where useful. Verify guest readiness, resource pressure, restricted management and recoverability before expanding. Start small; add capacity or independent failure domains for a concrete need, not unsupported percentages of learning value.
+Use the LLD [Automation](../../3_LLD/Automation.md) guidance where useful. Verify guest readiness, resource pressure, restricted management and recoverability before expanding. Start small; add capacity or independent failure domains for a concrete need, not unsupported percentages of learning value.
 
 Define which parts a template, provisioning tool and configuration tool own. Prepare supported guest images, verify image integrity, separate credentials from configuration and pin tested versions of providers/components. Record expected networking and storage dependencies before cloning guests.
 

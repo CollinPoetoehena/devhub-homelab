@@ -17,12 +17,14 @@ Follow the story from purpose to infrastructure to workloads. Each category keep
 | Stage | Question | Category |
 |---|---|---|
 | 1. Goals | What should the lab teach or provide, and what can it cost? | [Goals and constraints](./1_Goals/README.md) |
-| 2. High-level design | What physical and logical foundation supports those goals? | [Network and hosts](./2_HLD/README.md) |
+| 2. High-level design | What physical and logical foundation supports those goals? | [Network and systems](./2_HLD/README.md) |
 | 3. Low-level design | What platform and services run on that foundation? | [Orchestration, services, monitoring and data](./3_LLD/README.md) |
 
 The [Documentation Structure & Guideline](Repository_Guidelines.md#documentation-structure--guideline) explains the organization and writing conventions. HLD/LLD describe levels of detail, not separate phases to blindly complete: workload/storage requirements can send you back to revisit host capacity or network design.
 
 Start with [learning enterprise patterns without enterprise availability](./1_Goals/README.md#learn-enterprise-patterns-without-enterprise-availability): shared hardware and accepted recovery downtime can be deliberate cost choices, not incomplete enterprise designs. Each category should identify the resulting failure domains rather than imply production-grade resilience.
+
+The [cost and scope guide](./1_Goals/Cost_and_Scope.md) is a central design constraint: start simple, count purchase and running costs, and add hardware only when an actual use case justifies the extra lifecycle.
 
 > **Old Design+Setup Approach:** Previously, design and setup were treated as separate phases, often leading to repeated adjustments and inefficiencies. The current approach integrates design and setup within the same topic to streamline the process and maintain context. It is now a complete and cohesive workflow that explains a story from start to finish with all necessary details included.
 

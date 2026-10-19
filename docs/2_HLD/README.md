@@ -9,7 +9,8 @@ Define boundaries, dependencies and capacity before selecting the platforms that
 ## Table of Contents
 
 - [Network Foundation](#network-foundation)
-- [Compute Foundation](#compute-foundation)
+- [Systems Foundation](#systems-foundation)
+- [Equipment Placement](#equipment-placement)
 - [Connecting the Layers](#connecting-the-layers)
 
 ---
@@ -22,13 +23,17 @@ Choose which connectivity must remain available independently of experiments, th
 
 ---
 
-## Compute Foundation
+## Systems Foundation
 
-[Hosts and nodes](./Hosts/README.md) covers purchasing, roles, electricity, capacity, failure domains and virtualization. A hypervisor host cluster belongs here; the [container-orchestration cluster](../3_LLD/Cluster/README.md) is a separate platform concern.
-
-[Provisioning and configuration](./Hosts/Automation.md) describes IaC and configuration-management concepts and tool choices within host lifecycle. Terraform and Ansible are options, not top-level documentation categories.
+[Systems](./Systems/README.md) groups the [Compute](./Systems/Compute.md) and [Storage](./Systems/Storage.md) foundations: host roles, capacity, power, virtualization and storage responsibilities are closely coupled because local storage commonly lives inside compute hardware. A hypervisor host cluster belongs in the Compute discussion; the [container-orchestration cluster](../3_LLD/Cluster/README.md) is a separate LLD platform concern. For backup/recovery options, continue to [Storage and Backups](../3_LLD/Storage_Backups/README.md).
 
 Physical capacity and failure domains constrain everything in the LLD. Decide reuse versus purchases, consolidated versus independent hosts, and bare metal versus virtualization before allocating logical nodes. Reserve maintenance/recovery capacity and count whole-system power. A hypervisor cluster is a management/availability choice with its own quorum/storage obligations, not an automatic consequence of owning two PCs.
+
+---
+
+## Equipment Placement
+
+[Equipment placement and accessories](./Placement.md) covers safe locations, meter cabinets, ventilation, racks, rack units, power strips, optional UPSes and whole-lab energy monitoring. Actual placements and purchased models belong in the private homelab.
 
 ---
 

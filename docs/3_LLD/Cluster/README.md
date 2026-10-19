@@ -17,7 +17,7 @@ Start with workload/learning needs, not a predetermined Kubernetes installation.
 
 A hypervisor cluster is not an orchestration cluster. Compare workload models and lifecycle ownership before choosing a platform.
 
-Choose single-node/outage-tolerant operation versus an HA control plane deliberately. More virtual nodes on one physical host teach distributed behavior without physical resilience. See [quorum and failure domains](../../2_HLD/Hosts/README.md#quorum-and-failure-domains).
+Choose single-node/outage-tolerant operation versus an HA control plane deliberately. More virtual nodes on one physical host teach distributed behavior without physical resilience. See [quorum and failure domains](../../2_HLD/Systems/Compute.md#quorum-and-failure-domains).
 
 | Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
 |---|---|---|---|---|

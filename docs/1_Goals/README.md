@@ -9,6 +9,7 @@ Choose the purpose before buying equipment or installing tools.
 - [Design the Purpose](#design-the-purpose)
   - [Why Build a Homelab?](#why-build-a-homelab)
 - [Keep the Scope Sustainable](#keep-the-scope-sustainable)
+- [Cost, Scope and Buying Decisions](./Cost_and_Scope.md)
 - [Learn Enterprise Patterns Without Enterprise Availability](#learn-enterprise-patterns-without-enterprise-availability)
 - [From Goals to Categories](#from-goals-to-categories)
 
@@ -42,6 +43,8 @@ It is also a personal playground: a place to try unfamiliar ideas, make mistakes
 Prefer a small stable foundation and disposable experiments. One host can teach many concepts; extra machines are justified by capacity, physical-failure practice or actual availability requirements, not an enterprise-rack aesthetic.
 
 Self-hosting adds patching, backup and recovery obligations. Keep essential household routing separate from experimental compute dependencies. Automation is useful when it saves work or supports learning, not when it makes every simple task a development project.
+
+It is easy to overspend on equipment that looks impressive but is unnecessary for your goals; use the central [cost and scope guide](./Cost_and_Scope.md) before expanding.
 
 Include time and operational cost as well as purchase cost. Software that is free to download still needs updates and recovery work; repurposed hardware still consumes electricity. Prefer one well-understood service with tested recovery over a long list that nobody can operate after an outage.
 

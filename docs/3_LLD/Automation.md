@@ -1,8 +1,8 @@
-# Provisioning and Configuration Management
+# Automation and Configuration Management
 
-Automation belongs to the lifecycle it manages, not a top-level folder named after a selected tool.
+Automation is a cross-cutting design principle; its concrete tool choices, ownership boundaries and workflows are low-level implementation decisions. Choose tools in the context of the platforms and services they manage, rather than creating categories for individual products.
 
-This category evaluates automation for lab hosts and recovery. Follow the [repository relationship](../../../README.md#how-devhub-and-the-homelab-repositories-fit-together): shared workflows and reusable components stay in DevHub, public examples explain lab integration, and actual composition, inputs, and results stay private.
+This guide evaluates automation for lab infrastructure and services. Follow the [repository relationship](../../README.md#how-devhub-and-the-homelab-repositories-fit-together): shared workflows and reusable components stay in DevHub, public examples explain lab integration, and actual composition, inputs, and results stay private.
 
 ---
 
@@ -52,7 +52,7 @@ Agree input/output contracts between layers. Avoid mixing resource creation and 
 | [Salt](https://docs.saltproject.io/) | Configuration and remote-execution platform with several execution models | Flexible orchestration/enforcement across hosts | Choose and secure the controller/agent or agentless model; another operational lifecycle. **Maintenance:** Keep execution components and state definitions compatible; secure keys and monitor failed jobs or disconnected minions. | Fleet execution and convergence needs justify its scope |
 | [Packer](https://developer.hashicorp.com/packer/docs) | Automated machine-image build workflows | Consistent, reproducible baselines reduce repeated installation | Images need refresh, testing and compatible builders; not ongoing configuration management. **Maintenance:** rebuild after base-image/security changes and verify boot/integration before promoting templates | Repeated guest/template creation |
 | [cloud-init](https://cloudinit.readthedocs.io/en/latest/) | Supported first-boot guest initialization | Establishes identity, networking and bootstrap configuration | Image/platform support varies; not a replacement for all ongoing maintenance. **Maintenance:** Refresh base images and bootstrap data; test a clean first boot after image/platform changes rather than assuming reruns repair existing guests. | Bootstrapping supported cloud/VM images |
-| Supported node-OS API | The purpose-built OS's configuration/bootstrap/upgrade interface | Matches immutable/API-managed lifecycle rather than mutable-host assumptions | Explicit credential, compatibility and apply ownership; use the platform's supported tooling. **Maintenance:** Track supported image/API/provider versions, rotate access credentials and test configuration apply, upgrade and rebuild paths. | Dedicated node systems such as [Talos](../../3_LLD/Cluster/README.md#kubernetes-node-lifecycle) |
+| Supported node-OS API | The purpose-built OS's configuration/bootstrap/upgrade interface | Matches immutable/API-managed lifecycle rather than mutable-host assumptions | Explicit credential, compatibility and apply ownership; use the platform's supported tooling. **Maintenance:** Track supported image/API/provider versions, rotate access credentials and test configuration apply, upgrade and rebuild paths. | Dedicated node systems such as [Talos](./Cluster/README.md#kubernetes-node-lifecycle) |
 | Bounded scripts | Explicit glue or diagnostic programs | Simple for small tasks with clear inputs/outputs | Error handling, exit statuses, safe reruns and idempotency are yours. **Maintenance:** Maintain dependencies, error handling and tests; verify safe reruns when platform commands or output formats change. | Tasks not better served by a supported module/provider |
 
 Ansible may provision too, but its check mode is not equivalent to a resource-state plan. An immutable/API-managed node OS does not automatically accept conventional SSH/package-management roles.
@@ -69,10 +69,10 @@ For configuration tools, prefer reusable roles and supported modules over shell 
 
 ## Implementation and Verification
 
-Choose ownership and input contracts first, then version compatible tools/components and test local behavior before a reviewed live change. Keep credentials, state/plans and sensitive endpoints protected under the [guidelines](../../Repository_Guidelines.md). Validation or mocked tests do not prove successful real provisioning.
+Choose ownership and input contracts first, then version compatible tools/components and test local behavior before a reviewed live change. Keep credentials, state/plans and sensitive endpoints protected under the [guidelines](../Repository_Guidelines.md). Validation or mocked tests do not prove successful real provisioning.
 
 Reuse independently maintained components through [DevHub packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md). The public homelab documents concepts; actual roots, inventories and runbooks remain private.
 
 Start with local formatting/schema checks, then focused unit or mocked tests, then an isolated integration target where appropriate. For configuration, test both first convergence and a rerun; for provisioning, inspect replacement/destruction behavior and state protection. For backups, automate job monitoring but still test restores.
 
-Keep plan/apply separation and environment-specific approvals. Restrict CI runner access, protect secrets and backend keys, and avoid uploading private plans or logs publicly. Maintain a documented bootstrap path for the tools themselves: a broken automation controller should not prevent recovering the hosts that run it. The [project-structure guide](../../Project_Structure.md) explains where consumers, shared components and documentation belong.
+Keep plan/apply separation and environment-specific approvals. Restrict CI runner access, protect secrets and backend keys, and avoid uploading private plans or logs publicly. Maintain a documented bootstrap path for the tools themselves: a broken automation controller should not prevent recovering the hosts that run it. The [project-structure guide](../Project_Structure.md) explains where consumers, shared components and documentation belong.

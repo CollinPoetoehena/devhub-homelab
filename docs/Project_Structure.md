@@ -70,7 +70,7 @@ Public homelab knowledge base
     Repository_Guidelines.md
     Project_Structure.md     this maintained overview
     1_Goals/                generic purpose and constraints
-    2_HLD/                  network/Wi-Fi, hosts and host automation
+    2_HLD/                  network/Wi-Fi and Systems (Compute/Storage)
     3_LLD/                  orchestration, delivery, monitoring, data protection
 
 Private homelab integration

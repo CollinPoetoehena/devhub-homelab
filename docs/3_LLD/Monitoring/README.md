@@ -59,7 +59,7 @@ Choose integrations and operational familiarity rather than expecting one system
 
 Set bounded resource/retention budgets, narrow scrape permissions and authenticated dashboards. Avoid unbounded labels and collection of sensitive identifiers. Configure ingestion/discovery, test queries and controlled alert delivery/grouping/silences.
 
-Monitor storage/backup health and consider whole-system power measurements for [electricity planning](../../2_HLD/Hosts/README.md#electricity-and-consolidation). If the main stack shares the workload cluster, decide whether limited independent checks are useful. Record actual targets/output privately, not in the public reference.
+Monitor storage/backup health and consider whole-system power measurements for [electricity planning](../../2_HLD/Systems/Compute.md#electricity-and-consolidation). If the main stack shares the workload cluster, decide whether limited independent checks are useful. Record actual targets/output privately, not in the public reference.
 
 Alerts should name an impact and a next action, with a sensible delay to avoid transient noise. Test delivery through a controlled failure, then recovery and silence handling. Separate "the monitoring system has no data" from "the service is healthy": missing exporters or a failed pipeline can otherwise produce false reassurance.
 
