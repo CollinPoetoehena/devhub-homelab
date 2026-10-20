@@ -52,6 +52,8 @@ Every component should exist because a [requirement](./requirements.md) or a bou
 
 Apply the [purchase test](./cost.md#the-most-important-constraint-buy-for-a-real-need) before buying, and prefer a temporary experiment on existing equipment when the goal is to understand a concept once. This principle is deliberately first: most other principles become much easier to follow when the homelab is not carrying equipment and services that nobody needs.
 
+Purpose also sets an attention and responsibility budget. Follow [relaxation and enjoyment over productivity and pressure](./goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure): household independence, bounded maintenance and focused lab sessions protect the freedom to experiment without making the hobby a second job.
+
 ---
 
 ## Learn Enterprise Patterns Without Enterprise Availability

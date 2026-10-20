@@ -29,6 +29,8 @@ Metrics support trends/thresholds; logs explain events; dashboards correlate; al
 
 Choose signals from questions: is the household connection working, is a host under memory pressure, did a backup finish and can a service serve requests? A dashboard full of numbers does not answer those automatically. Start with a small set of actionable checks and add detail when an investigation needs it.
 
+Apply the boundary that [notifications are not automatic interruptions](../01-foundations/goals-and-scope.md#notifications-are-not-automatic-interruptions). Classify alerts by impact and required response: routine experiment failures can wait for a lab session; credible security, data-loss or essential-household incidents need a deliberately chosen response path. Group duplicate symptoms, silence expected maintenance downtime and keep nonurgent notifications out of work and rest. Test routing and silence expiry as well as delivery; reducing noise must not hide a genuinely urgent condition.
+
 An external VM is only independent of Kubernetes, not necessarily of the host, power or storage running it. Hosted checks may observe public reachability but cannot always diagnose private paths. Match placement to the failure you need to see, and accept blind spots explicitly when the lab is allowed to go dark.
 
 ---

@@ -4,6 +4,8 @@ This documentation is written to be **read like a book, from start to finish**. 
 
 It is the open-source version of my homelab journey: the reasoning, options, trade-offs and lessons are public, while the actual environment—exact topology, addresses, inventory, configuration and operational records—stays in the private repository. See [why there are two homelab repositories](../README.md#why-two-homelab-repositories).
 
+The book is a reference to explore at your own pace, not a completion checklist. Its guiding boundary is [relaxation and enjoyment over productivity and pressure](./01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure): the lab should support life, not interrupt work, rest or everyday activities.
+
 ---
 
 ## Table of Contents

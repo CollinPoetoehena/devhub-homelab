@@ -25,6 +25,8 @@ This chapter closes the storyline by answering: **how is the homelab run day to 
 
 Maintenance requirements come from the [foundations](../01-foundations/requirements.md): the time available, the household's tolerance for outages and the security exposure of each component. A realistic maintenance routine is small, regular and predictable. If it does not fit the time available, the answer is usually to reduce what is operated—fewer services, simpler foundations—rather than to skip updates. This is the principle [spend maintenance effort where the learning is](../01-foundations/design-principles.md#spend-maintenance-effort-where-the-learning-is).
 
+Respect [relaxation and enjoyment over productivity and pressure](../01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure): plan routine upkeep for chosen lab time, not alongside work, errands or rest. Optional [timeboxes](../01-foundations/goals-and-scope.md#timebox-without-turning-it-into-a-deadline) can give maintenance a start/stop boundary without turning it into a quota. [Track follow-ups](../../README.md#task-tracking) so routine work can wait without being forgotten; configure ordinary lab alerts not to interrupt or demand assessment outside a chosen lab session. Reserve prompt notification for a credible emergency, as described in [Notifications Are Not Automatic Interruptions](../01-foundations/goals-and-scope.md#notifications-are-not-automatic-interruptions). If routine obligations repeatedly demand immediate attention, reduce or move the services that create them rather than accepting permanent personal on-call coverage.
+
 ---
 
 ## Updates and Patching
@@ -75,6 +77,8 @@ Adjust the intervals to the homelab's size and the time available. The value com
 ## Experiment Cleanup
 
 Experiments are meant to end. When an experiment has answered its question, keep the learning—notes, diagrams, scripts and measurements—and remove the infrastructure: VMs, volumes, credentials and tokens, DNS records, firewall exceptions, monitoring targets and scheduled jobs. If an experiment should continue, [promote it deliberately](../05-services/workloads.md#promoting-an-experiment) with the obligations of its new tier. An experiment that just keeps running is the most common way for a homelab to accumulate unmaintained, unpatched and unnoticed components.
+
+Before cleanup, [record the results and outcomes](../05-services/workloads.md#recording-experiment-and-workload-outcomes), including failures, limitations and remaining questions. Short Markdown notes preserve what the temporary environment taught you so you can revisit or repeat the exercise without leaving it running.
 
 ---
 

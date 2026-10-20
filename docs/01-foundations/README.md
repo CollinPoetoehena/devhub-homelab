@@ -9,6 +9,8 @@ This part answers the first two questions of the [storyline](../README.md#the-st
 1. **Why am I building this?** — [Goals and Scope](./goals-and-scope.md)
 2. **What principles and requirements guide it?** — [Requirements](./requirements.md), [Design Principles](./design-principles.md) and [Cost, Scope and Buying Decisions](./cost.md)
 
+Start with the boundary of [relaxation and enjoyment over productivity and pressure](./goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure): focused hobby time, manageable responsibilities and freedom to stop guide the technical choices that follow.
+
 ---
 
 ## Table of Contents

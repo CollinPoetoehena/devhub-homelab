@@ -21,7 +21,7 @@ Services sit in the implementation layer because they are where the architecture
 
 | # | Chapter | Question it answers | What you take away |
 |---|---|---|---|
-| 1 | [Workloads](./workloads.md) | How do I decide what a workload needs and how it is operated? | Workload types and exposure options, service tiers applied to workloads, the service record, promoting experiments and retiring services |
+| 1 | [Workloads](./workloads.md) | How do I decide what a workload needs and how it is operated? | Workload types and exposure options, service tiers applied to workloads, the service record, recording test outcomes and learning, promoting experiments and retiring services |
 | 2 | [Self-Hosted Services](./self-hosted-services.md) | Which kinds of services are worth running, and what do they demand? | Self-host versus hosted, common service categories with their trade-offs, and a sensible order for adding services |
 
 ---
@@ -39,6 +39,8 @@ Requirement or learning goal
 ```
 
 Skipping a step is how homelab services become fragile: a service deployed without a backup becomes a data-loss risk once someone relies on it, and a service without a recorded purpose is hard to retire. The [workload chapter](./workloads.md) turns this chain into a short, repeatable routine.
+
+Keep [experiment and workload outcome notes](./workloads.md#recording-experiment-and-workload-outcomes) alongside the relevant documentation: what was tested, what happened and what it taught you. Those records preserve understanding after an experiment is removed and give later tests something concrete to compare against.
 
 ---
 

@@ -13,6 +13,10 @@ This chapter is about *how to decide* what runs on the homelab and what each wor
 - [Workload Design](#workload-design)
 - [Service Tiers Applied to Workloads](#service-tiers-applied-to-workloads)
 - [The Service Record](#the-service-record)
+- [Recording Experiment and Workload Outcomes](#recording-experiment-and-workload-outcomes)
+  - [Why Keep the Results?](#why-keep-the-results)
+  - [What to Record](#what-to-record)
+  - [Where to Keep It and When to Update It](#where-to-keep-it-and-when-to-update-it)
 - [Promoting an Experiment](#promoting-an-experiment)
 - [Retiring a Service](#retiring-a-service)
 - [Implementation and Verification](#implementation-and-verification)
@@ -79,6 +83,44 @@ The public book provides the template; the actual records for installed services
 
 ---
 
+## Recording Experiment and Workload Outcomes
+
+**Document what you tried, what happened and what you learned**, not only how to deploy the workload. This applies to disposable experiments as well as tests of long-lived services: a failed deployment, access-policy check, restore exercise or upgrade can all produce useful learning. Keep a short Markdown (`.md`) record of meaningful tests and outcomes in the owning repository, even if the experiment will be removed. A running workload, a configuration file or a completed task does not by itself explain what was actually verified.
+
+### Why Keep the Results?
+
+Notes let you return to an experiment after its details have faded, without reconstructing the whole setup or repeating the same investigation. Explaining the result in your own words helps distinguish what you understand from what merely appeared to work: why did the system behave that way, which dependency mattered, and what evidence supports the explanation? On a later read, you can revisit assumptions, connect the result to another concept and improve your understanding rather than relying on a vague memory of success.
+
+Recording failures and unexpected outcomes is just as useful. It preserves troubleshooting paths, prevents repeatedly trying the same unsuccessful fix and makes unanswered questions visible. A dated result with relevant versions and conditions also gives a comparison point for a later change: if behavior differs after an upgrade or configuration change, you have a basis for investigating why. It is evidence for those recorded conditions, not a guarantee that another version or environment behaves identically.
+
+The notes help make later decisions deliberate: whether a tool serves the goal, whether a workload is ready for promotion, which recovery step needs improving and what to test next. They also let you delete disposable infrastructure without losing the value of the exercise. Retaining the learning is more useful than keeping an unused service online just to remember how it worked.
+
+### What to Record
+
+Use the following prompts as a lightweight structure, not a requirement for a lengthy report after every command:
+
+| Item | What to capture |
+|---|---|
+| Question and expected outcome | What were you trying to learn or verify? What result would support or contradict the expectation? |
+| Context and starting state | Date, relevant versions, prerequisites, test data and dependencies needed to interpret or repeat the exercise. Keep actual environment details private. |
+| Method | The meaningful steps, safe change or fault introduced, and links to the versioned configuration, test code or runbook used. Avoid copying a second configuration into prose. |
+| Observed result and evidence | What actually happened, including failures and unexpected behavior; relevant measurements, assertions or protected evidence references. Distinguish passed, failed, inconclusive and not tested. |
+| Explanation and limits | Why you think it happened, what the result demonstrates and what it does not. Separate observations from hypotheses; for example, guest failover does not prove physical-host resilience. |
+| Outcome and next step | What you learned, what remains unclear, whether to repeat, improve, remove or promote the workload, and any linked follow-up task. |
+| Recovery and cleanup | Whether the starting state was restored, temporary resources and credentials removed, or anything remains to be cleaned up. |
+
+For example, a synthetic restore-test note could say that a disposable dataset was backed up, deleted and restored, that its contents were compared successfully, and what recovery time was measured. It should also say whether off-site recovery or loss of the backup host was **not** exercised. That is more informative than simply writing "backups work." This is an illustration of a record, not a claim that a test has been performed.
+
+### Where to Keep It and When to Update It
+
+Keep a small exercise as a subsection of the owning workload or subject chapter. If a set of tests needs its own Markdown record, keep it alongside the owning project documentation and link it from the subject chapter or service record; do not create a parallel design/setup documentation tree. Application-specific tests belong with the application, while the homelab record links them and captures integration outcomes. Add a short result after a meaningful test or before cleanup, and leave a resumption note if the investigation is unfinished.
+
+Actual installation details and operational results belong in the private record; sensitive logs, screenshots, exports and secrets belong in protected storage, not pasted into Markdown or committed merely because a repository is private. Link to an access-controlled evidence location when needed. The public book owns this method and independently generalized lessons, never raw private test records; follow the [publication boundary](../repository-guidelines.md#publication-boundary).
+
+Keep the effort proportionate to the learning. A few clear sentences may be enough for a small experiment; a recovery exercise may need more evidence and context. The goal is to make returning and understanding easier, not to produce a perfect report or create another obligation. Use [task tracking](../../README.md#task-tracking) for follow-ups and preserve the [enjoyment-over-pressure boundary](../01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure).
+
+---
+
 ## Promoting an Experiment
 
 Experiments are meant to be created, observed and removed. Sometimes one proves useful enough to keep. Promotion is a deliberate step, not a side effect of an experiment that kept running:
@@ -106,5 +148,7 @@ Select delivery/secret ownership first, then define resources, health checks, le
 Use disposable isolated experiments and publish only generalized lessons. Exact values, installed workloads and operational output remain private; this document is not the owner's deployment plan.
 
 Build/test artifacts before deployment, pin compatible releases, then validate health and actual allowed/denied access. Readiness, liveness and startup checks answer different questions; a process running is not necessarily ready to serve. Define resource budgets and disruption behavior according to the service, not generic percentages.
+
+Record the observed results and any untested cases using [Recording Experiment and Workload Outcomes](#recording-experiment-and-workload-outcomes). Link the evidence from the service record so later changes and recovery exercises can build on it rather than relying on memory.
 
 Delivery-specific checks—controlled drift, data-aware rollback and the end-to-end pipeline—are described in [Deployment](../04-automation/deployment.md#implementation-and-verification); secret rotation in [Secrets Management](../03-platform-services/secrets.md#implementation-and-verification).
