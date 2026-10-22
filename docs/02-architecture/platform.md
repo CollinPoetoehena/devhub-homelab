@@ -13,6 +13,7 @@ Start with workload/learning needs, not a predetermined Kubernetes installation.
 ## Table of Contents
 
 - [Design Options](#design-options)
+- [Environment Strategy](#environment-strategy)
 - [Kubernetes Node Lifecycle](#kubernetes-node-lifecycle)
 - [Networking and Persistence](#networking-and-persistence)
 - [Implementation and Verification](#implementation-and-verification)
@@ -35,6 +36,26 @@ Choose single-node/outage-tolerant operation versus an HA control plane delibera
 | HA Kubernetes control plane | Supported consensus members across independent failure domains | Can tolerate supported member failures while retaining control-plane quorum | More resources, compatible placement, backups and recovery planning; workers do not vote in etcd. **Maintenance:** Stage member upgrades while preserving quorum; monitor certificates/etcd health and test member loss and recovery across real failure domains. | Availability requirement justifies independent placement and operations |
 
 Kubernetes can be worthwhile for learning even when the workloads would fit Compose, but distinguish that learning goal from a claim that it is operationally necessary. Separate control-plane consensus from worker capacity. HA control planes need independent failure placement and recovery planning; scaling workers does not repair lost control-plane quorum.
+
+---
+
+## Environment Strategy
+
+Environment labels describe the purpose and change policy of workloads, not necessarily separate physical infrastructure. **Dev** is for active changes, **Tst (Test)** for repeatable checks, **Acc (Acceptance)** for review against expected behavior, and **PRD (Production)** for stable services. Decide which distinctions are useful before building four copies of everything.
+
+| Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| One environment (PRD-only) | A single environment runs stable workloads; experiments use disposable local or temporary resources where possible | Lowest ongoing compute and administration cost; fewest copies of stateful services | No separate pre-release environment, so changes can affect the stable workloads. **Maintenance:** Maintain one platform and its backups, and use careful change windows and tested recovery because there is no separate environment to catch mistakes. | A small homelab, limited hardware, or services where a separate test stack adds little value |
+| Separate Dev, Tst, Acc and PRD | Four environments with their own workload configuration and, depending on design, separate clusters or virtual machines | Clear progression and room to validate changes before release; failures can be scoped more deliberately | Duplicates resource use, configuration, credentials, upgrades and data handling; extra environments do not help if they are not kept representative. **Maintenance:** Keep four configurations and their dependencies compatible, patch each, and maintain separate access, data and recovery procedures. | A specific need for staged release practice and enough spare capacity and time to operate every stage |
+| One DTA plus one PRD | A shared non-production environment covers Dev/Test/Acc, alongside a separate production workload environment | Practical middle ground: production changes can be checked in DTA without maintaining four full stacks | DTA and PRD can still diverge; shared physical hosts remain a common failure domain. **Maintenance:** Keep DTA close enough to PRD to make tests useful, label/protect data and credentials, and patch, back up and verify both environments. | A homelab that wants release/testing practice while keeping the environment count and resource cost modest |
+
+For a resource-limited homelab, start with **one environment** and make workloads reproducible, backed up and easy to restore. Add a small, preferably on-demand **DTA** and a separate **PRD** workload boundary only when there is enough capacity and a real testing benefit. Give DTA only the resources needed for tests; size PRD for its actual always-on services and recovery needs rather than duplicating every service at full scale. “Production” in a homelab describes the stability expectation, not business-grade availability.
+
+The environments can share the same physical equipment. For example, one hypervisor host can run separate workload VMs, or one hypervisor cluster can host VMs for multiple environments. A separate physical stack or hypervisor cluster per environment is usually unnecessary and expensive for a homelab. Virtualization does not create independent failure domains: environments on one host share its outage, power, storage and maintenance. A single host can be operated standalone; a multi-node hypervisor cluster may have quorum or node-count requirements that should be checked for the chosen product.
+
+Kubernetes is one example of how the environment choices might be implemented, not a prescribed setup. A single small Kubernetes node can combine control-plane and workload roles; this is the simplest footprint but a node outage takes down the cluster. One control-plane node plus one worker separates those roles and is useful for learning, but it is still **not highly available**: loss or maintenance of the sole control plane interrupts cluster management. Separate Kubernetes clusters for DTA and PRD offer a stronger workload boundary but consume more resources and add lifecycle work. Namespaces in one cluster are cheaper and useful for organization, quotas and some policy, but are not equivalent to separate clusters or a strong security boundary: cluster administrators, cluster-scoped resources, node capacity and underlying storage/network remain shared.
+
+The exact environment layout, runtime, node count and resource allocation depend on the specific homelab: available hardware and capacity, workloads, failure tolerance, and the hypervisor, orchestrator, automation and other tools selected. The examples here are starting points for comparison, not requirements; adapt them to the capabilities and operating model of the chosen tools. Keep production-like data and credentials out of experiments; use synthetic or sanitized test data. Verify that the chosen backup and restore process covers each environment and its state, not just its VM or Kubernetes manifests.
 
 ---
 

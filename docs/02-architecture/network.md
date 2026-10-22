@@ -25,6 +25,8 @@ This is deliberately **one long chapter**. It starts with the requirements and t
   - [Trust Roles and Minimum Access](#trust-roles-and-minimum-access)
 - [Trust Zones and Traffic Flow](#trust-zones-and-traffic-flow)
 - [Networks Inside the Lab](#networks-inside-the-lab)
+  - [VM and Container Network Attachment](#vm-and-container-network-attachment)
+  - [Text Diagrams for Lab Attachment Choices](#text-diagrams-for-lab-attachment-choices)
   - [Kubernetes Nodes, Pods and Services](#kubernetes-nodes-pods-and-services)
   - [Reaching Applications from Home](#reaching-applications-from-home)
   - [Public Services and the DMZ Boundary](#public-services-and-the-dmz-boundary)
@@ -251,6 +253,79 @@ At homelab scale, apply the model only where it solves a real problem. Restrict 
 ## Networks Inside the Lab
 
 Not every logical network inside a workload platform needs another physical VLAN. Use VLANs for meaningful machine/network trust boundaries; let the platform manage its internal networking. This keeps the physical network understandable without giving up workload-level controls. Docker bridge networks and isolated hypervisor test switches follow a similar distinction: they are not automatically extra gateway VLANs, and attaching them to a physical bridge changes their exposure.
+
+### VM and Container Network Attachment
+
+Before attaching a VM or container, decide whether it needs to be a peer on the Lab network, only needs outbound downloads, or should remain inside a disposable exercise. DevHub owns the [general network-mode explanations and diagrams](https://github.com/CollinPoetoehena/DevHub/blob/main/reference/network/Network_Modes.md); the comparison here applies them to homelab goals rather than prescribing an actual deployment.
+
+**Keep three meanings of bridge separate:** provider bridge/passthrough changes the ISP-to-gateway handoff; an uplinked hypervisor bridge attaches guests to a selected LAN/VLAN; a usual Docker bridge creates a host-local container subnet with managed outbound NAT. AP/bridge mode on Wi-Fi equipment is another device role, normally extending an existing network instead of adding routing. None of these labels alone proves isolation.
+
+| Option / tool | What it is | Benefits | Drawbacks / responsibilities | Use cases / when to choose |
+|---|---|---|---|---|
+| VM bridged to the Lab segment | Guest NIC connects through the hypervisor switch to the selected Lab network; [Proxmox VE](https://pve.proxmox.com/wiki/Network_Configuration) uses Linux bridges | Ordinary server/node addresses and direct, policy-controlled application access; no extra host NAT layer | Guest shares the selected segment, so experimental DHCP/RA can escape; same-segment traffic may bypass the gateway. **Maintenance:** preserve guest VLAN membership, address ownership and host/guest filtering; recheck after bridge/NIC changes | Stable server or Kubernetes node VMs that are intended Lab peers, not disruptive network experiments |
+| VM NAT / shared NAT network | Hypervisor or router translates a private guest network's outbound traffic; [VirtualBox](https://www.virtualbox.org/manual/ch06.html) distinguishes per-VM NAT from a shared NAT Network | Convenient downloads and disposable environments without upstream route changes; a shared network lets test guests communicate | Inbound access needs selected forwarding; outbound access can still reach household services unless denied; another NAT layer complicates diagnosis. **Maintenance:** track guest ranges, DHCP/DNS, forwards and egress policy, and remove temporary entries | Short-lived development VMs or multi-VM tests that need outbound dependencies rather than LAN identities |
+| Routed guest subnet without NAT | An explicit route reaches a guest subnet through a host or lab router | Preserves guest source addresses and supports controlled access without another translation layer | Requires return routes and filtering, often beyond ISP-gateway capabilities. **Maintenance:** keep upstream routes, host forwarding and IPv4/IPv6 rules consistent across reboots and address changes | Routing practice or a managed home/lab foundation where route ownership is clear |
+| Host-only test network | Private guest switch with a host-side interface, normally without a physical uplink | Workstation can administer a contained development environment | Host remains reachable; host forwarding or another NIC can undermine the boundary. **Maintenance:** review host filtering, forwarding, membership and any DHCP service | Tests needing host access but no ordinary household/LAN path |
+| Internal / isolated guest switch | Selected test VMs share a switch without a physical uplink or host-side IP interface | Contains DHCP, RA and router exercises; easy to break and reset without involving the household network | No normal external updates or network administration; adding a router/uplink changes the boundary. **Maintenance:** inspect every test NIC and keep any internal addressing/DNS services disposable | The downstream side of the [optional router VM exercise](#a-separate-lab-router-physical-or-virtual), or a fully offline multi-VM topology |
+| Disconnected VM / container [none](https://docs.docker.com/engine/network/drivers/none/) | VM has no active network attachment; container has only loopback | Minimal network exposure and clear offline/failure-test behavior | No downloads, remote storage or network administration; shared files and other privileges remain separate concerns. **Maintenance:** retain console/offline inputs and check that no additional attachment is introduced | Network-independent jobs or deliberate link-loss tests |
+| Container [user-defined bridge](https://docs.docker.com/engine/network/drivers/bridge/) | Application containers share a host-local network, with selected services published through host ports or a reverse proxy | Good single-host/Compose starting point; application-name DNS and no LAN address needed for every container | Peers can normally reach each other's ports; published bindings and runtime firewall rules determine exposure. **Maintenance:** review network membership, address overlap, port bindings and actual allowed/denied paths after runtime changes | Ordinary self-hosted stacks; keep databases internal and publish only the intended application entry point |
+| Container [host networking](https://docs.docker.com/engine/network/drivers/host/) | Workload shares the host network namespace rather than a separate container IP | Supports workloads with a concrete host-network requirement without a bridge/NAT path | Shares host-local networking and ports; port-publishing mappings do not apply, and platform behavior differs. **Maintenance:** audit listening addresses, conflicts and host policy after updates; document why isolation is reduced | A proven protocol or application requirement, not the default fix for a discovery problem |
+| Container [macvlan](https://docs.docker.com/engine/network/drivers/macvlan/) | Workload obtains its own IP/MAC presence on the selected physical segment | Useful for a service that genuinely needs a separate LAN identity | Multiple-MAC support and unique address allocation are required; host-to-container communication is restricted by default. **Maintenance:** coordinate addresses with DHCP/IP management, preserve parent/VLAN membership and test the intended host-access path | A specific legacy or direct-LAN requirement that ordinary application publishing cannot meet |
+| Container [ipvlan](https://docs.docker.com/engine/network/drivers/ipvlan/) | Direct container addressing using the parent's MAC, with different L2/L3 variants | Useful where upstream MAC limits make separate container MACs undesirable | Host access is restricted by default; L3 requires routes and does not support ordinary L2 broadcast discovery. **Maintenance:** maintain parent/VLAN selection, addresses, routes and variant-specific policy | A deliberately managed underlay with a reason to use direct container addressing |
+| Platform-managed overlay or native routing | Workload platform connects applications across hosts; [Docker overlay](https://docs.docker.com/engine/network/drivers/overlay/) and Kubernetes CNI are different implementations | Multi-node communication without manually publishing each internal workload on the LAN | Requires underlay reachability, policy and suitable MTU; encapsulation is not automatically encryption. Docker overlay requires Swarm membership. **Maintenance:** update the chosen platform/plugin, test cross-node paths and maintain routing/tunnel dependencies | A multi-host platform already justified by the [platform design](./platform.md#design-options), not a prerequisite for a single Compose host |
+
+For a small starting point, use ordinary Lab attachment for intended server/node VMs and a user-defined bridge for a single-host application stack. Keep DHCP/router experiments on internal switches, using host-only access only when reaching the host is acceptable. Add direct-LAN containers, routed subnets or overlays only when a requirement justifies the extra maintenance. Actual choices, addresses and test results belong in the private record.
+
+### Text Diagrams for Lab Attachment Choices
+
+These are synthetic alternatives, not the actual home topology. Arrows show potential paths, not permission; `X` marks an absent attachment, not a firewall rule.
+
+**Lab peer VM versus an application inside that VM:**
+
+```text
+Home client -- approved application path -- gateway policy -- Lab segment
+                                                               |
+                                                    hypervisor uplink/bridge
+                                                               |
+                                                       server VM (Lab IP)
+                                                               |
+                                                 selected published app port
+                                                               |
+                                                  container bridge -- app
+                                                                   -- database
+                                                                      (not published)
+```
+
+The VM's bridge and the container's bridge solve different attachment problems. Publishing only the app does not isolate it from its database peers; application authentication and workload policy still matter. Traffic between same-segment peers may not cross the gateway shown for the Home-to-Lab path.
+
+**Disposable routing exercise with a controlled upstream:**
+
+```text
+Physical gateway -- restricted Lab uplink -- router VM WAN
+                                             |
+                                  routing + firewall (+ optional NAT)
+                                             |
+                                         router VM LAN
+                                             |
+                                  internal switch -- test VMs
+                                             X no direct household uplink
+
+Hypervisor recovery access: outside the router VM's downstream network
+```
+
+Only the router VM should provide the exercise's intended upstream path. Check all test NICs so a second attachment does not bypass it. Enforce the physical gateway's Lab-to-household restrictions as well: NAT inside the exercise does not provide that policy.
+
+**Host access versus guest-only communication:**
+
+```text
+Host-only:  host interface -- private switch -- test VMs
+                                    X no physical uplink by default
+
+Internal:   test VM A ------ private switch -- test VM B
+                                    X no host IP interface or physical uplink
+```
+
+Do not "fix" an isolated exercise by bridging it into a household or management segment. If external updates are necessary, design a temporary restricted path and remove it afterward. Inspect IPv6 as well as IPv4; an unexpected Router Advertisement or second interface can invalidate the intended isolation.
 
 ### Kubernetes Nodes, Pods and Services
 
@@ -495,6 +570,7 @@ Use a short acceptance record rather than treating a successful internet speed t
 |---|---|
 | Dependencies | Identify who supplies routing, DHCP, DNS, switching, Wi-Fi, management and power; turn off experimental compute to test claimed independence |
 | Segmentation | Test permitted and denied application traffic, gateway administration and same-VLAN/client isolation separately; repeat in every enabled IP family |
+| VM/container attachment | Verify bridge/VLAN and all NIC memberships, address/DHCP ownership, host-to-guest and guest-to-household paths, published bindings and intended denials; confirm isolated DHCP/RA stays inside the exercise and retest after reboot |
 | Capacity | Check routed/inspected/VPN traffic and busy backup/storage paths, not just interface link rates; inspect errors, uplink contention and PoE load |
 | Recovery | Reach local administration without cloud sign-in; retrieve offline backups/keys and rehearse compatible restoration or the chosen fallback |
 | Change safety | Save the last working configuration, change one boundary at a time, verify it and retain a known-good rollback path |
