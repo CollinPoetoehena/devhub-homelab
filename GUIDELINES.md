@@ -52,8 +52,8 @@ DevHub is the author's shared home for personal-project practices and reusable t
 
 Useful DevHub entry points for the author's project workflow:
 
-- [Task tracking](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/TASK-TRACKING.md) describes the optional private backlog shared across personal projects.
-- [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/USAGE.md#ai-customizations) describes the APM-based common agents, skills and scoped instructions; [project-specific guidance](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/apm/common/README.md#project-specific-guidance) explains how a project adds local context.
+- [Task tracking](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/how-to/TASK-TRACKING.md) describes the optional private backlog shared across personal projects.
+- [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/USAGE.md#ai-customizations) describes the APM-based common agents, skills and scoped instructions; [consumer-specific guidance](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/apm/README.md#consumer-specific-guidance) explains how a project adds local context.
 - [Project conventions](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/ARCHITECTURE.md#naming-conventions) and [repository boundaries](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/ARCHITECTURE.md#separate-repositories) describe shared organization choices.
 - [Reusable GitHub Actions guidance](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/GITHUB-ACTIONS.md) describes the intended consumer model; check its current status before adopting a workflow.
 - [DevHub packages](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md) lists the packages maintained there; check each package's README for its current capabilities and release status.

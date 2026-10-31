@@ -1,0 +1,10 @@
+# Shared AI guidance for the public homelab repository.
+name: devhub-homelab
+version: 1.0.0
+description: Public homelab agent configuration
+targets:
+  - copilot
+dependencies:
+  apm:
+    - CollinPoetoehena/DevHub/packages/apm/common
+    - CollinPoetoehena/DevHub/packages/apm/homelab

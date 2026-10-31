@@ -1,9 +1,0 @@
-# Homelab Copilot Instructions
-
-This repository is a standalone homelab book; the root [README](../README.md) is its main entry point. Read [Repository Architecture](../ARCHITECTURE.md) for repository scope and the applicable [Guidelines](../GUIDELINES.md) before changing documentation, especially [content ownership](../GUIDELINES.md#content-ownership), [DevHub relationship and scope](../GUIDELINES.md#devhub-relationship-and-scope), and the [publication boundary](../GUIDELINES.md#publication-boundary).
-
-- Explain the homelab-relevant concepts, options and trade-offs in this guide. Link authoritative standards and product documentation for deeper detail; do not make DevHub a prerequisite or theory source.
-- Preserve the public/private boundary. Do not copy or inspect private inventory, settings, outputs or implementation to prepare public content. Follow the documented sanitization procedure for authorized publication work.
-- This is a documentation book, not an implementation-code repository or deployment mirror. Keep actual code and configuration private or in separately reviewed reusable-package repositories; fenced examples must be generic and non-deployable as a copy of the homelab.
-- Distinguish generic examples, planned work and verified behavior. Do not present a design, diagram or checklist as evidence of deployment.
-- DevHub's common APM package is optional and is not declared by this repository. In the author's shared workspace, DevHub's root `apm.yml` depends on `packages/apm/common`; its [AI customization guide](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/USAGE.md#ai-customizations) describes setup, and the [common package guide](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/apm/common/README.md#project-specific-guidance) describes project-specific context. Do not assume those customizations are installed or discovered in a standalone clone.

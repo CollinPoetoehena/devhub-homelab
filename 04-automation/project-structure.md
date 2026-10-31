@@ -68,7 +68,7 @@ This is a **sanitized responsibility view**, not an exact directory listing. The
 ```text
 Public homelab guide
   README.md                 purpose, three-repository relationship and entry point
-  .github/                  project-specific Copilot instructions
+  AGENTS.md                 repository-specific agent guidance
   docs/
     README.md               the book: layers, storyline and table of contents
     GUIDELINES.md

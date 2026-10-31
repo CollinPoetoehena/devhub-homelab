@@ -158,6 +158,8 @@ DevHub is my central hub for personal projects and shared engineering practices.
 
 **The homelab is one of my personal projects.** DevHub is where I maintain shared repository practices, reusable engineering workflows, AI customizations and optional project tracking. This guide explains homelab-specific concepts and decisions itself; the private homelab records what I actually chose and implemented. Separate repositories protect publication and operational boundaries.
 
+TODO: remove devhub-sdks later and update with latest results.
+
 | Location | Owns | Examples |
 |---|---|---|
 | [DevHub](https://github.com/CollinPoetoehena/DevHub) | Shared practices and project tooling for my personal projects | Repository standards, reusable-workflow guidance, AI customizations, task tracking, and a catalog of packages maintained there |
@@ -191,7 +193,7 @@ Preserve the repositories' information boundaries: DevHub owns shared project pr
 
 Lightweight task tracking is useful: a small task, visible status, completion check, and next-step note keep follow-ups out of my head and make it easy to pause and resume. It should reduce pressure, not turn the homelab into a delivery obligation.
 
-I track **all my personal projects centrally in DevHub**, including public and private homelab work. The homelab is one part of that hub, not a separate backlog. See [Central DevHub Task Tracking](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/TASK-TRACKING.md) for the private project, statuses, privacy rules, and workflow.
+I track **all my personal projects centrally in DevHub**, including public and private homelab work. The homelab is one part of that hub, not a separate backlog. See [Central DevHub Task Tracking](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/how-to/TASK-TRACKING.md) for the private project, statuses, privacy rules, and workflow.
 
 Keep the homelab's [relaxation, enjoyment, and focus boundary](./01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure): work when interested, leave a resumption note, and use [optional timeboxes](./01-foundations/goals-and-scope.md#timebox-without-turning-it-into-a-deadline) as permission to stop, not deadlines. Follow the [publication boundary](./GUIDELINES.md#publication-boundary); a private project never makes public issue contents private.
 
@@ -211,9 +213,9 @@ Examples are illustrative and must be adapted to the reader's requirements; fenc
 <a id="ai-and-copilot-skills"></a>
 ## AI Customizations
 
-This repository is readable without AI customizations. Its project-specific [Copilot instructions](.github/copilot-instructions.md) summarize relevant context and link to the [repository guidelines](./GUIDELINES.md). No local APM manifest or homelab-specific skill is required.
+This repository is readable without AI customizations. Its root [agent guidance](./AGENTS.md) summarizes relevant context and links to the [repository guidelines](./GUIDELINES.md). The [APM manifest](./apm.yml) declares the shared common and homelab packages for optional AI-assisted maintenance; reading the guide does not require installing them or a homelab-specific skill.
 
-In my shared project workspace, DevHub provides common Copilot agents, skills and scoped instructions through its APM package. The [DevHub AI customizations guide](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/USAGE.md#ai-customizations) describes that optional setup; the [common package guide](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/apm/common/README.md#project-specific-guidance) explains how projects add their own context. These customizations support maintenance work but do not supply homelab concepts or replace this guide.
+In my shared project workspace, DevHub provides common Copilot agents, skills and scoped instructions through its APM package. The [DevHub AI customizations guide](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/USAGE.md#ai-customizations) describes that optional setup; the [APM overview's consumer-specific guidance](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/apm/README.md#consumer-specific-guidance) explains how projects add their own context. These customizations support maintenance work but do not supply homelab concepts or replace this guide.
 
 **Documentation owns project policy.** The [repository guidelines](./GUIDELINES.md), including the [Documentation Structure & Guideline](./GUIDELINES.md#documentation-structure--guideline), remain authoritative for both homelab repositories. Follow the documented publication procedure, distinguish plans from verified results and validate changes. Publication and live infrastructure operations still require explicit authorization.
 
