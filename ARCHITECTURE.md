@@ -5,6 +5,7 @@ This repository is one documentation book: the book is the product, not a wrappe
 ## Table of Contents
 
 - [Repository scope and ownership](#repository-scope-and-ownership)
+- [Repository boundary](#repository-boundary)
 - [The book structure](#the-book-structure)
   - [Documentation layers](#documentation-layers)
   - [The storyline](#the-storyline)
@@ -16,15 +17,21 @@ This repository is one documentation book: the book is the product, not a wrappe
 
 ## Repository scope and ownership
 
-The public repository owns standalone homelab explanations: goals, requirements, design options, trade-offs, generic examples and reusable lessons. The private homelab repository owns the actual environment, implementation, operational records and recovery details. [DevHub](https://github.com/CollinPoetoehena/DevHub) owns shared personal-project practices and reusable tooling. See [Guidelines](./GUIDELINES.md#content-ownership) for detailed ownership and the [publication boundary](./GUIDELINES.md#publication-boundary).
+The public repository owns standalone homelab explanations: goals, requirements, design options, trade-offs, generic examples and reusable lessons. The private homelab repository owns the actual environment, implementation, operational records and recovery details. [DevHub](https://github.com/CollinPoetoehena/DevHub) owns shared personal-project practices, including [relaxation and enjoyment over productivity and pressure](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/GUIDELINES.md#relaxation-and-enjoyment-over-productivity-and-pressure), and reusable tooling. See [Guidelines](./GUIDELINES.md#content-ownership) for detailed ownership and the [publication boundary](./GUIDELINES.md#publication-boundary).
 
 This document describes how the public book is organized; it is not a complete or verified description of the live homelab. For system-design content, see [Part 2 · Architecture](./02-architecture/README.md) and [Part 3 · Platform Services](./03-platform-services/README.md).
+
+## Repository boundary
+
+This public repository is separate from the private homelab repository because their access rights differ. It is also a standalone book with its own editorial and publication lifecycle, not a mirror of the private implementation. This boundary lets the book explain homelab concepts publicly while keeping actual configuration and operational records private.
+
+The public homelab is a separate repository because of its visibility and book/publication boundary, not because the book is itself a monorepo. See DevHub's [monorepo or polyrepo guidance](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/GUIDELINES.md#monorepo-or-polyrepo) for the broader repository-boundary criteria.
 
 ## The book structure
 
 The book is written to be **read from start to finish**, following the homelab journey: why it is built, what requirements guide it, how the design meets them, and how it can be implemented, operated and recovered. Chapters build on earlier ones and link back to the foundations when a choice needs justification.
 
-The root [README](./README.md#table-of-contents-of-the-book) is the book's main entry point and complete chapter index. Numbered root folders define reading order, each part README introduces its chapters, and each subject chapter links to neighboring chapters. Readers can also explore individual subjects at their own pace: this is not a completion checklist. The guiding boundary remains [relaxation and enjoyment over productivity and pressure](./01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure).
+The root [README](./README.md#table-of-contents-of-the-book) is the book's main entry point and complete chapter index. Numbered root folders define reading order, each part README introduces its chapters, and each subject chapter links to neighboring chapters. Readers can also explore individual subjects at their own pace: this is not a completion checklist. The guiding boundary remains [relaxation and enjoyment over productivity and pressure](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/GUIDELINES.md#relaxation-and-enjoyment-over-productivity-and-pressure), with a homelab-specific summary in [Goals and Scope](./01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure).
 
 ### Documentation layers
 

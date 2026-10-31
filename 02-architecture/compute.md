@@ -23,6 +23,7 @@ Choose physical capacity and failure domains before allocating VMs or installing
   - [Proxmox VE](#proxmox-ve)
   - [XCP-ng, VMware and Native Hypervisors](#xcp-ng-vmware-and-native-hypervisors)
   - [Bare Metal and Guest Operating Systems](#bare-metal-and-guest-operating-systems)
+  - [Booting an OS and Creating Installation Media](#booting-an-os-and-creating-installation-media)
 - [Implementation and Verification](#implementation-and-verification)
 - [Further Reading](#further-reading)
 
@@ -178,6 +179,14 @@ Use the platform table to compare hardware support, management-appliance deploym
 | Minimal / immutable node system | Purpose-limited OS with controlled configuration/update paths | Smaller mutable surface and repeatable node lifecycle | Different diagnostics, extensions and application support; not a general utility host. **Maintenance:** Use supported image/API upgrades rather than ad-hoc repairs; retain declarative configuration, extension compatibility and recovery access. | Dedicated roles, with [Kubernetes node choices](./platform.md#kubernetes-node-lifecycle) assessed separately |
 
 Keep the hypervisor's supported base rather than replacing its distribution underneath it. Choose each guest OS for its role, with a repeatable image/update process rather than one default for every machine.
+
+### Booting an OS and Creating Installation Media
+
+An operating system manages the computer's hardware and provides the services applications use. At startup, firmware initializes the machine and selects a boot device (BIOS) or boot entry (UEFI). A boot manager or loader then starts an installer environment or loads the installed OS kernel and any early-startup files it needs. The kernel initializes system resources and hands control to userspace, which starts services and applications. Exact steps vary by platform.
+
+For a bare-metal installation, download the installer image from the OS or hypervisor's official source and verify its checksum or signature when provided. Use a trusted image-writing tool to create bootable media; copying an ISO file onto a USB drive by itself usually does not make it bootable. Check the target drive carefully because writing the image erases it. Then use the computer's one-time boot menu to start the installer, follow that platform's installation guidance, and remove the media before confirming the installed system boots. For a virtual machine, attach the installer ISO as virtual media instead.
+
+Use the platform-specific instructions for current steps and requirements: [Proxmox VE installation](https://pve.proxmox.com/wiki/Installation), [Rufus create bootable USB drive](https://rufus.ie/en/), [Ubuntu bootable USB](https://ubuntu.com/tutorials/create-a-usb-stick-on-ubuntu), or [Windows installation media](https://support.microsoft.com/en-us/windows/deployment/install-upgrade/create-installation-media-for-windows). For deeper background, see the authors' [Operating System Concepts](https://www.os-book.com/OS10/), the Linux kernel's [x86 boot protocol](https://www.kernel.org/doc/html/latest/arch/x86/boot.html), and the UEFI [Boot Manager specification](https://uefi.org/specs/UEFI/2.10/03_Boot_Manager.html).
 
 ---
 
