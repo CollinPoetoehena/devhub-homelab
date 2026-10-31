@@ -195,7 +195,7 @@ Lightweight task tracking is useful: a small task, visible status, completion ch
 
 I track **all my personal projects centrally in DevHub**, including public and private homelab work. The homelab is one part of that hub, not a separate backlog. See [Central DevHub Task Tracking](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/how-to/TASK-TRACKING.md) for the private project, statuses, privacy rules, and workflow.
 
-Keep the homelab's [relaxation, enjoyment, and focus boundary](./01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure): work when interested, leave a resumption note, and use [optional timeboxes](./01-foundations/goals-and-scope.md#timebox-without-turning-it-into-a-deadline) as permission to stop, not deadlines. Follow the [publication boundary](./GUIDELINES.md#publication-boundary); a private project never makes public issue contents private.
+Keep the homelab's [relaxation, enjoyment, and focus boundary](./01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure): work when interested, leave a resumption note, and use optional timeboxes as permission to stop, not deadlines. The full shared guidance lives in [DevHub's guidelines](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/GUIDELINES.md#relaxation-and-enjoyment-over-productivity-and-pressure). Follow the [publication boundary](./GUIDELINES.md#publication-boundary); a private project never makes public issue contents private.
 
 ---
 

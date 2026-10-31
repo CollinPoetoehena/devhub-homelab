@@ -33,7 +33,7 @@ This is the shared guideline for the [public homelab](https://github.com/CollinP
 | Information | Owner |
 |---|---|
 | Homelab-relevant concepts, design options, trade-offs, selection criteria, generic setup and lessons | Public homelab, with links to official standards and product documentation |
-| Shared personal-project practices, repository conventions, reusable-workflow guidance, AI customizations and task tracking | [DevHub](https://github.com/CollinPoetoehena/DevHub) |
+| Shared personal-project practices—including enjoyment, focus and pressure boundaries—repository conventions, reusable-workflow guidance, AI customizations and task tracking | [DevHub](https://github.com/CollinPoetoehena/DevHub) |
 | Actual equipment, non-sensitive internal settings, topology, decisions and operating procedures | Private homelab |
 | Sensitive public IPs, global prefixes and identifying public domains/access endpoints | Encrypted/protected storage; private prose uses references |
 | Packages maintained in DevHub | [DevHub package index](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/README.md); check each entry for its actual implementation and release status |
@@ -53,6 +53,7 @@ DevHub is the author's shared home for personal-project practices and reusable t
 Useful DevHub entry points for the author's project workflow:
 
 - [Task tracking](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/how-to/TASK-TRACKING.md) describes the optional private backlog shared across personal projects.
+- [Relaxation and enjoyment over productivity and pressure](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/GUIDELINES.md#relaxation-and-enjoyment-over-productivity-and-pressure) is the shared source for enjoyment, focus, sustainable scope and avoiding unnecessary pressure. This guide retains a short homelab-specific summary in [Goals and Scope](./01-foundations/goals-and-scope.md#relaxation-and-enjoyment-over-productivity-and-pressure).
 - [AI customizations](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/USAGE.md#ai-customizations) describes the APM-based common agents, skills and scoped instructions; [consumer-specific guidance](https://github.com/CollinPoetoehena/DevHub/blob/main/packages/apm/README.md#consumer-specific-guidance) explains how a project adds local context.
 - [Project conventions](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/ARCHITECTURE.md#naming-conventions) and [repository boundaries](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/ARCHITECTURE.md#separate-repositories) describe shared organization choices.
 - [Reusable GitHub Actions guidance](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/GITHUB-ACTIONS.md) describes the intended consumer model; check its current status before adopting a workflow.

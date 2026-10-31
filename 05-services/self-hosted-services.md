@@ -44,7 +44,7 @@ Self-hosting is a means, not a goal. A hosted service is often the cheaper and m
 
 A useful test: *if the homelab were off for a week, who would notice, and would anything be lost?* If the answer is "everyone" or "irreplaceable data," either operate the service at the household-service tier with tested recovery, or choose a hosted or local-first alternative.
 
-This is also a personal boundary, not just an availability decision. [Keep household dependencies out of experiments](../01-foundations/goals-and-scope.md#keep-household-dependencies-out-of-experiments) so you can pause the hobby without feeling obliged to fix it during work or other activities. Taking on another service should preserve enjoyment, not create an accidental on-call role.
+This is also a personal boundary, not just an availability decision. Keep other people's dependencies out of experiments, following the [shared personal-project principles](https://github.com/CollinPoetoehena/DevHub/blob/main/docs/GUIDELINES.md#relaxation-and-enjoyment-over-productivity-and-pressure), so you can pause the hobby without feeling obliged to fix it during work or other activities. Taking on another service should preserve enjoyment, not create an accidental on-call role.
 
 ---
 
